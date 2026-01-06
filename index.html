@@ -281,6 +281,35 @@
                         <div id="warningMessages" class="warning-messages"></div>
                     </fieldset>
 
+                    <!-- Images -->
+                    <fieldset class="form-section">
+                        <legend>Images</legend>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="companyLogo">Company Logo (for document header)</label>
+                                <div class="image-upload-container">
+                                    <input type="file" id="companyLogo" accept="image/*" class="image-upload-input">
+                                    <div class="image-preview" id="companyLogoPreview">
+                                        <span class="placeholder-text">📷 Click or drag to upload logo</span>
+                                    </div>
+                                    <button type="button" class="btn btn-small btn-secondary" id="btnClearCompanyLogo" style="display:none;">Clear</button>
+                                </div>
+                                <small class="help-text">Recommended: PNG or SVG, 200x80px</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="vesselImage">Vessel Photo</label>
+                                <div class="image-upload-container">
+                                    <input type="file" id="vesselImage" accept="image/*" class="image-upload-input">
+                                    <div class="image-preview vessel-preview" id="vesselImagePreview">
+                                        <span class="placeholder-text">📷 Click or drag to upload vessel photo</span>
+                                    </div>
+                                    <button type="button" class="btn btn-small btn-secondary" id="btnClearVesselImage" style="display:none;">Clear</button>
+                                </div>
+                                <small class="help-text">Optional: Photo of the vessel for documentation</small>
+                            </div>
+                        </div>
+                    </fieldset>
+
                     <!-- Document Author -->
                     <fieldset class="form-section">
                         <legend>Document Author</legend>
@@ -308,12 +337,16 @@
             <!-- Output Panel -->
             <section class="output-panel" id="outputPanel">
                 <div class="output-tabs no-print">
-                    <button class="tab-btn active" data-tab="wms">Work Method Statement</button>
-                    <button class="tab-btn" data-tab="email">Email Text</button>
+                    <button class="tab-btn active" data-tab="wms">WMS</button>
+                    <button class="tab-btn" data-tab="erp">ERP</button>
+                    <button class="tab-btn" data-tab="whsmp">WHSMP</button>
+                    <button class="tab-btn" data-tab="swms">SWMS</button>
+                    <button class="tab-btn" data-tab="email">Email</button>
                 </div>
                 <div class="output-actions no-print">
                     <button id="btnPrint" class="btn btn-secondary">Print / Save PDF</button>
                     <button id="btnCopyEmail" class="btn btn-secondary" style="display:none;">Copy to Clipboard</button>
+                    <button id="btnGenerateAll" class="btn btn-primary">Generate All Docs</button>
                 </div>
                 <div class="output-content" id="outputContent">
                     <div class="placeholder-message">
@@ -797,6 +830,860 @@
                 Franmarine Underwater Services<br>
                 13 Possner Way, Henderson WA 6166
             </p>
+        </div>
+    </script>
+
+    <!-- Emergency Response Plan Template -->
+    <script id="erp-template" type="text/x-handlebars-template">
+        <div class="wms-document erp-document">
+            <!-- Cover Page -->
+            <div class="wms-cover page-break-after">
+                {{#if companyLogo}}
+                <div class="cover-logo">
+                    <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+                </div>
+                {{/if}}
+                <div class="cover-header">
+                    <p class="doc-type">PROJECT MANAGEMENT PLAN</p>
+                </div>
+                <div class="cover-title">
+                    <h1>EMERGENCY RESPONSE PLAN</h1>
+                    <h3>In Water Hull Clean – '{{vesselName}}'</h3>
+                    <h4>{{clientName}}</h4>
+                    <p class="location">{{cleaningLocation}}</p>
+                    <p class="job-number">{{jobNumber}}</p>
+                    <p class="date">{{proposedMonth}} {{proposedYear}}</p>
+                </div>
+                {{#if vesselImage}}
+                <div class="vessel-image-container">
+                    <img src="{{vesselImage}}" alt="{{vesselName}}" class="vessel-image">
+                </div>
+                {{/if}}
+                <div class="cover-footer">
+                    <p class="confidential">CONFIDENTIAL</p>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="wms-toc page-break-after">
+                <h2>TABLE OF CONTENTS</h2>
+                <ol class="toc-list">
+                    <li><a href="#erp-purpose">PURPOSE</a></li>
+                    <li><a href="#erp-scope">SCOPE</a></li>
+                    <li><a href="#erp-contacts">EMERGENCY CONTACTS</a></li>
+                    <li><a href="#erp-response">EMERGENCY RESPONSE PROCEDURES</a></li>
+                    <li><a href="#erp-diving">DIVING EMERGENCIES</a></li>
+                    <li><a href="#erp-medical">MEDICAL EMERGENCIES</a></li>
+                    <li><a href="#erp-environmental">ENVIRONMENTAL EMERGENCIES</a></li>
+                    <li><a href="#erp-evacuation">EVACUATION PROCEDURES</a></li>
+                </ol>
+            </div>
+
+            <!-- 1. Purpose -->
+            <section id="erp-purpose" class="wms-section">
+                <h2>1 PURPOSE</h2>
+                <p>This Emergency Response Plan (ERP) has been developed to provide guidance for emergency situations that may occur during the in-water hull cleaning operations on '{{vesselName}}' at {{cleaningLocation}}.</p>
+                <p>This document establishes procedures for responding to various emergency scenarios and ensures all personnel are aware of their responsibilities during an emergency.</p>
+            </section>
+
+            <!-- 2. Scope -->
+            <section id="erp-scope" class="wms-section">
+                <h2>2 SCOPE</h2>
+                <p>This ERP applies to all personnel involved in the in-water hull cleaning operations, including:</p>
+                <ul>
+                    <li>Franmarine diving personnel</li>
+                    <li>Support personnel</li>
+                    <li>Client representatives</li>
+                    <li>Visitors to the worksite</li>
+                </ul>
+                <p><strong>Project Details:</strong></p>
+                <table class="wms-table">
+                    <tbody>
+                        <tr><td>Job Number</td><td>{{jobNumber}}</td></tr>
+                        <tr><td>Vessel</td><td>{{vesselName}}</td></tr>
+                        <tr><td>Client</td><td>{{clientName}}</td></tr>
+                        <tr><td>Location</td><td>{{cleaningLocation}}</td></tr>
+                        <tr><td>Proposed Dates</td><td>{{proposedStartDate}} ({{estimatedDuration}} days)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 3. Emergency Contacts -->
+            <section id="erp-contacts" class="wms-section page-break-before">
+                <h2>3 EMERGENCY CONTACTS</h2>
+                <table class="wms-table contacts-table">
+                    <caption>Table 1: Emergency Contact Details</caption>
+                    <thead>
+                        <tr><th>Service</th><th>Contact Number</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="contact-emergency"><td>EMERGENCY SERVICES</td><td>000</td></tr>
+                        <tr><td>Ambulance (non-emergency)</td><td>13 12 33</td></tr>
+                        <tr><td>Police (non-emergency)</td><td>131 444</td></tr>
+                        <tr><td>Poisons Information Centre</td><td>13 11 26</td></tr>
+                        <tr class="contact-highlight"><td>Diving Emergency Service (DES)</td><td>1800 088 200</td></tr>
+                        <tr><td>Fremantle Hospital</td><td>(08) 9431 3333</td></tr>
+                        <tr><td>Fiona Stanley Hospital</td><td>(08) 6152 2222</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="wms-table contacts-table">
+                    <caption>Table 2: Project Contacts</caption>
+                    <thead>
+                        <tr><th>Role</th><th>Name</th><th>Contact</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Franmarine Operations Manager</td><td>Sam Diamond</td><td>TBC</td></tr>
+                        <tr><td>Franmarine HSEQ Manager</td><td>Belinda Brooks</td><td>TBC</td></tr>
+                        <tr><td>Dive Supervisor (On-Site)</td><td>TBC</td><td>TBC</td></tr>
+                        <tr><td>Client Representative</td><td>TBC</td><td>TBC</td></tr>
+                        <tr><td>FPA Emergency</td><td>Fremantle Port Authority</td><td>(08) 9430 3555</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="hospital-info">
+                    <h3>NEAREST HOSPITAL WITH HYPERBARIC FACILITY</h3>
+                    <p><strong>Fiona Stanley Hospital</strong></p>
+                    <p>11 Robin Warren Drive, Murdoch WA 6150</p>
+                    <p>Phone: (08) 6152 2222</p>
+                    <p>Estimated Drive Time: ~15 minutes from AMC Henderson</p>
+                </div>
+            </section>
+
+            <!-- 4. Emergency Response Procedures -->
+            <section id="erp-response" class="wms-section">
+                <h2>4 EMERGENCY RESPONSE PROCEDURES</h2>
+                <h3>INITIAL RESPONSE</h3>
+                <p>In any emergency, personnel should follow these initial steps:</p>
+                <ol>
+                    <li><strong>STOP</strong> – Cease all operations immediately if safe to do so</li>
+                    <li><strong>ASSESS</strong> – Determine the nature and severity of the emergency</li>
+                    <li><strong>COMMUNICATE</strong> – Alert the Dive Supervisor and other personnel</li>
+                    <li><strong>ACT</strong> – Follow the appropriate emergency procedure</li>
+                    <li><strong>REPORT</strong> – Document and report the incident</li>
+                </ol>
+
+                <h3>EMERGENCY ALARM SIGNALS</h3>
+                <table class="wms-table">
+                    <thead>
+                        <tr><th>Signal</th><th>Meaning</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>3 Short Blasts</td><td>Emergency - Abort Dive</td><td>All divers return to surface immediately</td></tr>
+                        <tr><td>Continuous Blast</td><td>Site Evacuation</td><td>All personnel evacuate to muster point</td></tr>
+                        <tr><td>2 Short Blasts</td><td>All Clear</td><td>Emergency concluded, resume operations if safe</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 5. Diving Emergencies -->
+            <section id="erp-diving" class="wms-section page-break-before">
+                <h2>5 DIVING EMERGENCIES</h2>
+                
+                <h3>5.1 LOSS OF AIR SUPPLY</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Diver to switch to bailout/emergency air supply</li>
+                        <li>Signal emergency to surface</li>
+                        <li>Commence controlled ascent if possible</li>
+                        <li>Standby diver prepared for deployment</li>
+                        <li>Supervisor to coordinate recovery</li>
+                    </ol>
+                </div>
+
+                <h3>5.2 DIVER ENTANGLEMENT</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Diver to stop movement and assess situation</li>
+                        <li>Attempt to free self without excessive movement</li>
+                        <li>Signal situation to surface</li>
+                        <li>Standby diver to be deployed if diver cannot self-rescue</li>
+                        <li>Cutting tools to be used as last resort</li>
+                    </ol>
+                </div>
+
+                <h3>5.3 DIVER UNCONSCIOUS/UNRESPONSIVE</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Deploy standby diver immediately</li>
+                        <li>Maintain diver's air supply</li>
+                        <li>Recover diver to surface using emergency recovery system</li>
+                        <li>Commence first aid/CPR as required</li>
+                        <li>Call 000 and DES (1800 088 200)</li>
+                        <li>Prepare for evacuation to hyperbaric facility</li>
+                    </ol>
+                </div>
+
+                <h3>5.4 DECOMPRESSION ILLNESS (DCI)</h3>
+                <div class="procedure-box warning">
+                    <p><strong>Signs & Symptoms:</strong> Joint pain, numbness, tingling, weakness, dizziness, breathing difficulties, skin rash, confusion</p>
+                    <ol>
+                        <li>Remove diver from water</li>
+                        <li>Administer 100% oxygen</li>
+                        <li>Place diver in recovery position</li>
+                        <li>Contact DES immediately: <strong>1800 088 200</strong></li>
+                        <li>Arrange urgent transport to Fiona Stanley Hospital hyperbaric unit</li>
+                        <li>Do NOT re-compress diver in water</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 6. Medical Emergencies -->
+            <section id="erp-medical" class="wms-section">
+                <h2>6 MEDICAL EMERGENCIES</h2>
+                
+                <h3>6.1 FIRST AID</h3>
+                <p>First aid equipment location: Dive control station / Support vehicle</p>
+                <p>Trained first aiders: All diving personnel hold current first aid certifications</p>
+
+                <h3>6.2 SERIOUS INJURY</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Ensure scene is safe</li>
+                        <li>Call 000 for ambulance</li>
+                        <li>Administer first aid within competency level</li>
+                        <li>Do not move patient unless immediate danger</li>
+                        <li>Notify Franmarine Operations Manager</li>
+                        <li>Preserve incident scene</li>
+                    </ol>
+                </div>
+
+                <h3>6.3 CARDIAC ARREST</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Check for danger</li>
+                        <li>Check response - shake and shout</li>
+                        <li>Call 000</li>
+                        <li>Start CPR - 30 compressions : 2 breaths</li>
+                        <li>Apply AED as soon as available</li>
+                        <li>Continue until paramedics arrive</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 7. Environmental Emergencies -->
+            <section id="erp-environmental" class="wms-section page-break-before">
+                <h2>7 ENVIRONMENTAL EMERGENCIES</h2>
+
+                <h3>7.1 INVASIVE MARINE SPECIES (IMS) DETECTION</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Cease cleaning operations immediately</li>
+                        <li>Document with photographs/video</li>
+                        <li>Do not disturb or remove the organism</li>
+                        <li>Notify Dive Supervisor immediately</li>
+                        <li>Contact DPIRD on (08) 9368 3657</li>
+                        <li>Site placed under DPIRD custody</li>
+                        <li>Await further DPIRD instructions</li>
+                    </ol>
+                </div>
+
+                <h3>7.2 SPILL/CONTAMINATION</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Stop source of spill if safe to do so</li>
+                        <li>Contain spill using available materials</li>
+                        <li>Prevent spill from entering water</li>
+                        <li>Notify Dive Supervisor and FPA</li>
+                        <li>Deploy spill kit if available</li>
+                        <li>Document extent and type of spill</li>
+                    </ol>
+                </div>
+
+                <h3>7.3 SEVERE WEATHER</h3>
+                <div class="procedure-box">
+                    <ol>
+                        <li>Monitor weather forecasts prior to and during operations</li>
+                        <li>Abort diving operations if conditions deteriorate</li>
+                        <li>Secure all equipment</li>
+                        <li>Personnel to shelter in vehicles or designated areas</li>
+                        <li>Do not resume operations until conditions are safe</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 8. Evacuation -->
+            <section id="erp-evacuation" class="wms-section">
+                <h2>8 EVACUATION PROCEDURES</h2>
+
+                <h3>MUSTER POINT</h3>
+                <p>The designated muster point for this project is: <strong>{{cleaningLocation}} - Main Gate/Entry Point</strong></p>
+                <p>All personnel must proceed to the muster point when the evacuation alarm sounds and await roll call.</p>
+
+                <h3>EVACUATION PROCEDURE</h3>
+                <ol>
+                    <li>On hearing continuous alarm or evacuation instruction, cease all work</li>
+                    <li>Recover diver to surface if dive in progress (unless unsafe to do so)</li>
+                    <li>Secure equipment if time permits</li>
+                    <li>Proceed to muster point by safest route</li>
+                    <li>Report to Dive Supervisor for roll call</li>
+                    <li>Do not re-enter work area until "All Clear" is given</li>
+                </ol>
+
+                <div class="hospital-directions">
+                    <h3>ROUTE TO NEAREST HOSPITAL</h3>
+                    <p><strong>From AMC Henderson to Fiona Stanley Hospital:</strong></p>
+                    <ol>
+                        <li>Exit AMC onto Cockburn Road</li>
+                        <li>Turn right onto Stock Road</li>
+                        <li>Continue onto Forrest Road</li>
+                        <li>Turn right onto Murdoch Drive</li>
+                        <li>Hospital entrance on left (Robin Warren Drive)</li>
+                    </ol>
+                    <p>Estimated time: 15 minutes</p>
+                </div>
+            </section>
+
+            <!-- Document Control -->
+            <section class="wms-section document-control">
+                <table class="control-table">
+                    <tr>
+                        <th>Document</th>
+                        <th>Revision Number</th>
+                        <th>Date</th>
+                        <th>Notes</th>
+                        <th>Changes Approved by</th>
+                    </tr>
+                    <tr>
+                        <td>{{jobNumber}}-Emergency Response Plan</td>
+                        <td>01</td>
+                        <td>{{revisionDate}}</td>
+                        <td>Document Created</td>
+                        <td>{{authorName}}</td>
+                    </tr>
+                </table>
+
+                <div class="copyright-notice">
+                    <p class="copyright-year">©{{currentYear}} Franmarine. All Rights Reserved.</p>
+                </div>
+            </section>
+        </div>
+    </script>
+
+    <!-- Work Health and Safety Management Plan Template -->
+    <script id="whsmp-template" type="text/x-handlebars-template">
+        <div class="wms-document whsmp-document">
+            <!-- Cover Page -->
+            <div class="wms-cover page-break-after">
+                {{#if companyLogo}}
+                <div class="cover-logo">
+                    <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+                </div>
+                {{/if}}
+                <div class="cover-header">
+                    <p class="doc-type">PROJECT MANAGEMENT PLAN</p>
+                </div>
+                <div class="cover-title">
+                    <h1>WORK HEALTH AND SAFETY MANAGEMENT PLAN</h1>
+                    <h3>In Water Hull Clean – '{{vesselName}}'</h3>
+                    <h4>{{clientName}}</h4>
+                    <p class="location">{{cleaningLocation}}</p>
+                    <p class="job-number">{{jobNumber}}</p>
+                    <p class="date">{{proposedMonth}} {{proposedYear}}</p>
+                </div>
+                {{#if vesselImage}}
+                <div class="vessel-image-container">
+                    <img src="{{vesselImage}}" alt="{{vesselName}}" class="vessel-image">
+                </div>
+                {{/if}}
+                <div class="cover-footer">
+                    <p class="confidential">CONFIDENTIAL</p>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="wms-toc page-break-after">
+                <h2>TABLE OF CONTENTS</h2>
+                <ol class="toc-list">
+                    <li><a href="#whsmp-purpose">PURPOSE OF DOCUMENT</a></li>
+                    <li><a href="#whsmp-team">PROJECT WHS TEAM</a></li>
+                    <li><a href="#whsmp-legislation">LEGISLATION & STANDARDS</a></li>
+                    <li><a href="#whsmp-hazard">HAZARD IDENTIFICATION & RISK MANAGEMENT</a></li>
+                    <li><a href="#whsmp-personnel">PERSONNEL & TRAINING</a></li>
+                    <li><a href="#whsmp-operations">DAILY OPERATIONS</a></li>
+                    <li><a href="#whsmp-ppe">PERSONAL PROTECTIVE EQUIPMENT</a></li>
+                    <li><a href="#whsmp-incident">INCIDENT REPORTING</a></li>
+                </ol>
+            </div>
+
+            <!-- 1. Purpose -->
+            <section id="whsmp-purpose" class="wms-section">
+                <h2>1 PURPOSE OF DOCUMENT</h2>
+                <h3>PURPOSE</h3>
+                <p>This Work Health and Safety Management Plan (WHSMP) has been developed to outline the work health and safety relationship between Franmarine and {{clientName}}. The WHSMP demonstrates Franmarine's ability to exceed all work health and safety requirements whilst working towards our own safety objective of zero injuries.</p>
+                <p>The Franmarine Health and Safety Management System is certified by DNV to ISO 45001:2018 Occupational health and safety management systems under the scope of management of diving and integrated underwater services provided to the defence, infrastructure, shipping and oil and gas industries.</p>
+                <p>All Diving Operations will be carried out in accordance with AS/NZS 2299.1:2015 Occupational Diving Operations as a minimum, using Surface Supplied Breathing Apparatus.</p>
+
+                <h3>SAFETY OBJECTIVES</h3>
+                <p>The aim of Franmarine, through their HSEQ Policies, is to identify, assess and control potential risks and hazards. We believe that injury in the workplace is entirely preventable.</p>
+                <ul>
+                    <li>Franmarine has a goal of <strong>zero injuries</strong> for every project</li>
+                    <li>Franmarine fully supports employees requiring rehabilitation and return to work programs</li>
+                    <li>All levels of management shall have direct involvement and demonstrate commitment to Health and Safety</li>
+                    <li>All personnel have duty of care responsibilities related to health and safety</li>
+                </ul>
+
+                <h3>FRANMARINE POLICIES</h3>
+                <table class="wms-table">
+                    <tbody>
+                        <tr><td>FRA-POL-012</td><td>Health & Safety Policy</td></tr>
+                        <tr><td>FRA-POL-007</td><td>Environmental Policy</td></tr>
+                        <tr><td>FRA-POL-006</td><td>Quality Policy</td></tr>
+                        <tr><td>FRA-POL-009</td><td>Rehabilitation and Return to Work Policy</td></tr>
+                        <tr><td>FRA-POL-011</td><td>Training Policy and Development</td></tr>
+                        <tr><td>FRA-POL-008</td><td>Fitness for Work Policy</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 2. Project WHS Team -->
+            <section id="whsmp-team" class="wms-section">
+                <h2>2 PROJECT WHS TEAM</h2>
+                <p>Whilst each and every employee of Franmarine takes responsibility for WHS very seriously, the Management Team below hold the following statutory responsibilities.</p>
+                <table class="wms-table">
+                    <caption>Table 1: Roles and Responsibilities</caption>
+                    <thead>
+                        <tr><th>Name</th><th>Role</th><th>WHS Responsibility</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Adam Falconer-West</td>
+                            <td>Chief Executive Officer</td>
+                            <td>Provision of a work environment without risk to health and safety</td>
+                        </tr>
+                        <tr>
+                            <td>Sam Diamond</td>
+                            <td>Operations Manager West</td>
+                            <td>Safe Systems of Work and Plant and Equipment. Provision of supervision and training</td>
+                        </tr>
+                        <tr>
+                            <td>Kirby Hamilton</td>
+                            <td>Operations Manager East</td>
+                            <td>Ensuring Staff understand their roles. Safe use, handling and storage of Plant</td>
+                        </tr>
+                        <tr>
+                            <td>TBC</td>
+                            <td>Project Manager</td>
+                            <td>Onsite Inspection of workplace to assess for risks</td>
+                        </tr>
+                        <tr>
+                            <td>Belinda Brooks</td>
+                            <td>HSEQ Manager</td>
+                            <td>WHS Audits, Safe Systems of work. Regular monitoring of worker health. Incident Management</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 3. Legislation -->
+            <section id="whsmp-legislation" class="wms-section page-break-before">
+                <h2>3 LEGISLATION & STANDARDS</h2>
+                <p>All Franmarine diving operations will conform to all applicable Acts and Regulations, including:</p>
+                <table class="wms-table">
+                    <tbody>
+                        <tr><td>Work Health and Safety Act 2020 (WA)</td></tr>
+                        <tr><td>Work Health and Safety (General) Regulations 2022 (WA)</td></tr>
+                        <tr><td>Environmental Protection Act 1986 (WA)</td></tr>
+                        <tr><td>Dangerous Goods (Road and Rail transport) Act 2008</td></tr>
+                        <tr><td>Marine Safety Act 1998</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>STANDARDS</h3>
+                <p>All Franmarine operations conducted according to AS/NZS 2299.1:2015 Occupational diving operations, Part 1: Standard operational practice.</p>
+            </section>
+
+            <!-- 4. Hazard Identification -->
+            <section id="whsmp-hazard" class="wms-section">
+                <h2>4 HAZARD IDENTIFICATION & RISK MANAGEMENT</h2>
+                <p>Franmarine has procedures in place for the systematic review of health and safety hazards and risk over the life cycle of the diving project.</p>
+                <p>When the risk is assessed as high, a Safe Work Method Statement (SWMS) shall be developed. A SWMS must be included with all diving tasks as diving works are designated high risk works.</p>
+
+                <h3>RISK MATRIX</h3>
+                <table class="wms-table risk-matrix">
+                    <thead>
+                        <tr>
+                            <th>Likelihood</th>
+                            <th>Insignificant</th>
+                            <th>Minor</th>
+                            <th>Moderate</th>
+                            <th>Major</th>
+                            <th>Catastrophic</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Almost Certain</td><td class="risk-high">HIGH</td><td class="risk-high">HIGH</td><td class="risk-extreme">EXTREME</td><td class="risk-extreme">EXTREME</td><td class="risk-extreme">EXTREME</td></tr>
+                        <tr><td>Likely</td><td class="risk-medium">MEDIUM</td><td class="risk-high">HIGH</td><td class="risk-high">HIGH</td><td class="risk-extreme">EXTREME</td><td class="risk-extreme">EXTREME</td></tr>
+                        <tr><td>Possible</td><td class="risk-low">LOW</td><td class="risk-medium">MEDIUM</td><td class="risk-high">HIGH</td><td class="risk-high">HIGH</td><td class="risk-extreme">EXTREME</td></tr>
+                        <tr><td>Unlikely</td><td class="risk-low">LOW</td><td class="risk-low">LOW</td><td class="risk-medium">MEDIUM</td><td class="risk-medium">MEDIUM</td><td class="risk-high">HIGH</td></tr>
+                        <tr><td>Rare</td><td class="risk-low">LOW</td><td class="risk-low">LOW</td><td class="risk-low">LOW</td><td class="risk-medium">MEDIUM</td><td class="risk-medium">MEDIUM</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>HIERARCHY OF CONTROLS</h3>
+                <ol class="hierarchy-list">
+                    <li><strong>Eliminate</strong> - Remove the hazard completely</li>
+                    <li><strong>Substitute</strong> - Replace a hazardous process/substance with one which is less hazardous</li>
+                    <li><strong>Isolation</strong> - Remove the person from the hazardous environment</li>
+                    <li><strong>Engineering</strong> - Provide physical barriers or engineered modifications</li>
+                    <li><strong>Administrative</strong> - Establish policies, procedures and work practices</li>
+                    <li><strong>PPE</strong> - Use equipment that provides protection to individuals</li>
+                </ol>
+            </section>
+
+            <!-- 5. Personnel & Training -->
+            <section id="whsmp-personnel" class="wms-section page-break-before">
+                <h2>5 PERSONNEL & TRAINING</h2>
+                <p>All personnel assigned to this project shall be qualified and experienced as per the Franmarine Diving Operation Manual requirements.</p>
+
+                <h3>AIR DIVING SUPERVISOR QUALIFICATIONS</h3>
+                <ul>
+                    <li>ADAS Part 3 (or equivalent) Diving Supervisor certification</li>
+                    <li>Current AS/NZS 2299.1 medical fitness certificate</li>
+                    <li>Current first aid and oxygen administration certifications</li>
+                    <li>Project-specific inductions as required</li>
+                </ul>
+
+                <h3>DIVER QUALIFICATIONS</h3>
+                <ul>
+                    <li>ADAS Part 2 (or equivalent) Occupational Diver certification</li>
+                    <li>Current AS/NZS 2299.1 medical fitness certificate</li>
+                    <li>Current first aid certification</li>
+                </ul>
+            </section>
+
+            <!-- 6. Daily Operations -->
+            <section id="whsmp-operations" class="wms-section">
+                <h2>6 DAILY OPERATIONS</h2>
+
+                <h3>TOOLBOX MEETINGS</h3>
+                <p>All Supervisors are required to hold "Toolbox" meetings at the start of each shift to discuss current activities, highlighting any hazards and safety matters.</p>
+
+                <h3>FATIGUE MANAGEMENT</h3>
+                <p>All employees should monitor themselves and others for signs of fatigue. The Franmarine Fatigue Assessment Checklist HSE-FOR-008 shall be used when concerns arise.</p>
+
+                <h3>ALCOHOL AND DRUGS</h3>
+                <p>Franmarine has <strong>zero tolerance</strong> to alcohol and illicit drugs in the workplace. All Employees shall comply with any random drug and alcohol testing.</p>
+            </section>
+
+            <!-- 7. PPE -->
+            <section id="whsmp-ppe" class="wms-section">
+                <h2>7 PERSONAL PROTECTIVE EQUIPMENT</h2>
+                <p>Franmarine shall provide the following PPE to all personnel as a minimum:</p>
+                <table class="wms-table">
+                    <thead>
+                        <tr><th>Equipment</th><th>Standard</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Safety Helmet (hard hat)</td><td>AS/NZS 1801</td></tr>
+                        <tr><td>Safety Glasses</td><td>AS/NZS 1337</td></tr>
+                        <tr><td>Safety Footwear (steel toe)</td><td>AS/NZS 2210.3</td></tr>
+                        <tr><td>High Visibility Clothing</td><td>AS/NZS 4602</td></tr>
+                        <tr><td>Hearing Protection</td><td>AS/NZS 1270</td></tr>
+                        <tr><td>Safety Gloves</td><td>AS/NZS 2161</td></tr>
+                    </tbody>
+                </table>
+                <p>The minimum on-site requirement is a hard hat, steel toe capped boots and high visibility clothing with reflective strips.</p>
+            </section>
+
+            <!-- 8. Incident Reporting -->
+            <section id="whsmp-incident" class="wms-section">
+                <h2>8 INCIDENT REPORTING</h2>
+                <p>All incidents, near misses, and hazards must be reported immediately to the Dive Supervisor.</p>
+                <p>For full details on Franmarine Accident and Incidents, see Incident and Investigation Procedure HSE-PRO-025.</p>
+
+                <h3>INCIDENT CLASSIFICATION</h3>
+                <table class="wms-table">
+                    <thead>
+                        <tr><th>Classification</th><th>Description</th><th>Reporting</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Near Miss</td><td>Event with potential for injury/damage</td><td>Internal report within 24 hours</td></tr>
+                        <tr><td>Minor Injury</td><td>First aid treatment only</td><td>Internal report within 24 hours</td></tr>
+                        <tr><td>Medical Treatment</td><td>Requires medical professional</td><td>Client and WorkSafe notification</td></tr>
+                        <tr><td>Serious Incident</td><td>Hospitalization, dangerous occurrence</td><td>Immediate WorkSafe notification</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Document Control -->
+            <section class="wms-section document-control">
+                <table class="control-table">
+                    <tr>
+                        <th>Document</th>
+                        <th>Revision Number</th>
+                        <th>Date</th>
+                        <th>Notes</th>
+                        <th>Changes Approved by</th>
+                    </tr>
+                    <tr>
+                        <td>{{jobNumber}}-WHSMP</td>
+                        <td>01</td>
+                        <td>{{revisionDate}}</td>
+                        <td>Document Created</td>
+                        <td>{{authorName}}</td>
+                    </tr>
+                </table>
+
+                <div class="copyright-notice">
+                    <p class="copyright-year">©{{currentYear}} Franmarine. All Rights Reserved.</p>
+                </div>
+            </section>
+        </div>
+    </script>
+
+    <!-- Safe Work Method Statement Template -->
+    <script id="swms-template" type="text/x-handlebars-template">
+        <div class="wms-document swms-document">
+            <!-- Cover/Header -->
+            <div class="swms-header">
+                {{#if companyLogo}}
+                <div class="swms-logo">
+                    <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+                </div>
+                {{/if}}
+                <div class="swms-title-block">
+                    <h1>SAFE WORK METHOD STATEMENT (SWMS)</h1>
+                    <h2>HIGH RISK CONSTRUCTION WORK</h2>
+                </div>
+            </div>
+
+            <!-- Project Details -->
+            <section class="swms-section">
+                <table class="swms-info-table">
+                    <tr>
+                        <td><strong>Job Number:</strong></td>
+                        <td>{{jobNumber}}</td>
+                        <td><strong>Date:</strong></td>
+                        <td>{{revisionDate}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Work Activity:</strong></td>
+                        <td colspan="3">In Water Hull Clean – '{{vesselName}}'</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Client:</strong></td>
+                        <td>{{clientName}}</td>
+                        <td><strong>Location:</strong></td>
+                        <td>{{cleaningLocation}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prepared By:</strong></td>
+                        <td>{{authorName}}</td>
+                        <td><strong>Duration:</strong></td>
+                        <td>{{estimatedDuration}} days</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Scope of Work -->
+            <section class="swms-section">
+                <h3>SCOPE OF WORK</h3>
+                <p>In-water hull cleaning of '{{vesselName}}' to remove all biofouling from {{scopeAreasText}} using diver-operated cleaning equipment {{#if captureRequired}}with capture and filtration systems{{/if}}.</p>
+            </section>
+
+            <!-- High Risk Work Activities -->
+            <section class="swms-section">
+                <h3>HIGH RISK WORK ACTIVITIES (WHS Regulations)</h3>
+                <table class="swms-check-table">
+                    <tbody>
+                        <tr><td>☑</td><td>Diving work (any depth)</td></tr>
+                        <tr><td>☑</td><td>Work in or near water where there is risk of drowning</td></tr>
+                        <tr><td>☐</td><td>Work at heights greater than 2 metres</td></tr>
+                        <tr><td>☐</td><td>Work involving powered mobile plant</td></tr>
+                        <tr><td>☐</td><td>Work in confined spaces</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Required Licences/Competencies -->
+            <section class="swms-section">
+                <h3>REQUIRED LICENCES & COMPETENCIES</h3>
+                <table class="swms-table">
+                    <thead>
+                        <tr><th>Licence/Competency</th><th>Required For</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>ADAS Part 3 Diving Supervisor</td><td>Dive Supervisor</td></tr>
+                        <tr><td>ADAS Part 2 Occupational Diver</td><td>All Divers</td></tr>
+                        <tr><td>Current Diving Medical Certificate</td><td>All Diving Personnel</td></tr>
+                        <tr><td>First Aid & Oxygen Administration</td><td>All Personnel</td></tr>
+                        <tr><td>Site-specific Inductions</td><td>All Personnel</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PPE Requirements -->
+            <section class="swms-section">
+                <h3>PERSONAL PROTECTIVE EQUIPMENT</h3>
+                <div class="ppe-grid">
+                    <div class="ppe-item">☑ Hard Hat</div>
+                    <div class="ppe-item">☑ Safety Glasses</div>
+                    <div class="ppe-item">☑ Steel Cap Boots</div>
+                    <div class="ppe-item">☑ Hi-Vis Clothing</div>
+                    <div class="ppe-item">☑ Gloves</div>
+                    <div class="ppe-item">☑ Hearing Protection</div>
+                    <div class="ppe-item">☑ Diving Equipment (SSBA)</div>
+                    <div class="ppe-item">☑ Dive Knife</div>
+                </div>
+            </section>
+
+            <!-- Hazard Analysis Table -->
+            <section class="swms-section page-break-before">
+                <h3>HAZARD IDENTIFICATION & CONTROL MEASURES</h3>
+                <table class="swms-hazard-table">
+                    <thead>
+                        <tr>
+                            <th>Step/Task</th>
+                            <th>Hazard</th>
+                            <th>Risk Rating</th>
+                            <th>Control Measures</th>
+                            <th>Residual Risk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1. Mobilisation</td>
+                            <td>Manual handling injury</td>
+                            <td class="risk-medium">MEDIUM</td>
+                            <td>Use mechanical aids, team lifting for heavy items, pre-lift assessment</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>2. Equipment Setup</td>
+                            <td>Slips, trips, falls</td>
+                            <td class="risk-medium">MEDIUM</td>
+                            <td>Clear work area, maintain housekeeping, use appropriate footwear</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>3. Diver Entry</td>
+                            <td>Drowning</td>
+                            <td class="risk-high">HIGH</td>
+                            <td>Secure dive ladder, standby diver ready, continuous surface monitoring</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>4. Underwater Work</td>
+                            <td>Loss of air supply</td>
+                            <td class="risk-extreme">EXTREME</td>
+                            <td>Emergency bailout supply, pre-dive checks, continuous air monitoring, standby diver</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>4. Underwater Work</td>
+                            <td>Entanglement</td>
+                            <td class="risk-high">HIGH</td>
+                            <td>Umbilical management, dive knife carried, standby diver ready for rescue</td>
+                            <td class="risk-medium">MEDIUM</td>
+                        </tr>
+                        <tr>
+                            <td>4. Underwater Work</td>
+                            <td>Decompression illness</td>
+                            <td class="risk-high">HIGH</td>
+                            <td>Follow DCIEM tables, no-decompression limits, O2 kit on standby, DES contact available</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>4. Underwater Work</td>
+                            <td>Cuts/abrasions from fouling</td>
+                            <td class="risk-medium">MEDIUM</td>
+                            <td>Protective dive suit, gloves, controlled cleaning technique</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>5. Hull Cleaning</td>
+                            <td>Rotating equipment contact</td>
+                            <td class="risk-high">HIGH</td>
+                            <td>Isolation of vessel propulsion confirmed, vessel "cold ship" or locked out</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>5. Hull Cleaning</td>
+                            <td>Marine stingers/hazards</td>
+                            <td class="risk-medium">MEDIUM</td>
+                            <td>Full body suit, pre-dive inspection, diver briefing on local hazards</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>6. Diver Recovery</td>
+                            <td>Fall from height</td>
+                            <td class="risk-high">HIGH</td>
+                            <td>Secure ladder, assisted exit, recovery system tested before dive</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                        <tr>
+                            <td>7. Waste Handling</td>
+                            <td>Biological contamination</td>
+                            <td class="risk-medium">MEDIUM</td>
+                            <td>Gloves worn, contained waste disposal, hand washing facilities</td>
+                            <td class="risk-low">LOW</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Emergency Procedures Summary -->
+            <section class="swms-section">
+                <h3>EMERGENCY PROCEDURES</h3>
+                <table class="swms-table">
+                    <thead>
+                        <tr><th>Emergency</th><th>Response</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Diver Distress</td>
+                            <td>Abort dive, deploy standby diver, recover casualty, administer O2, call DES 1800 088 200</td>
+                        </tr>
+                        <tr>
+                            <td>Medical Emergency</td>
+                            <td>Call 000, administer first aid, notify supervisor</td>
+                        </tr>
+                        <tr>
+                            <td>IMS Detection</td>
+                            <td>Stop work, photograph, do not disturb, call DPIRD (08) 9368 3657</td>
+                        </tr>
+                        <tr>
+                            <td>Fire</td>
+                            <td>Raise alarm, evacuate to muster point, call 000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Sign-off -->
+            <section class="swms-section">
+                <h3>SWMS ACKNOWLEDGEMENT</h3>
+                <p>All personnel must sign below to confirm they have read, understood, and agree to follow this SWMS.</p>
+                <table class="swms-signoff-table">
+                    <thead>
+                        <tr><th>Name</th><th>Signature</th><th>Date</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Document Control -->
+            <section class="swms-section">
+                <table class="control-table">
+                    <tr>
+                        <td><strong>Document:</strong></td>
+                        <td>{{jobNumber}}-SWMS</td>
+                        <td><strong>Revision:</strong></td>
+                        <td>01</td>
+                        <td><strong>Date:</strong></td>
+                        <td>{{revisionDate}}</td>
+                    </tr>
+                </table>
+                <p class="copyright-year">©{{currentYear}} Franmarine. All Rights Reserved.</p>
+            </section>
         </div>
     </script>
 

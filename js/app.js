@@ -6,6 +6,9 @@
 const App = {
     currentJob: null,
     activeTab: 'wms',
+    companyLogo: null,    // Base64 encoded company logo
+    vesselImage: null,    // Base64 encoded vessel image
+    generatedDocs: null,  // Store generated documents
 
     /**
      * Initialize the application
@@ -119,6 +122,10 @@ const App = {
             this.closeVesselModal();
         });
 
+        // Image uploads
+        this.bindImageUpload('companyLogo', 'companyLogoPreview', 'btnClearCompanyLogo');
+        this.bindImageUpload('vesselImage', 'vesselImagePreview', 'btnClearVesselImage');
+
         // Action buttons
         document.getElementById('btnNewJob').addEventListener('click', () => this.newJob());
         document.getElementById('btnLoadJob').addEventListener('click', () => this.showSavedJobs());
@@ -126,6 +133,7 @@ const App = {
         document.getElementById('btnGenerateEmail').addEventListener('click', () => this.generateEmail());
         document.getElementById('btnGenerateWMS').addEventListener('click', () => this.generateWMS());
         document.getElementById('btnPrint').addEventListener('click', () => window.print());
+        document.getElementById('btnGenerateAll').addEventListener('click', () => this.generateAllDocuments());
 
         // Tab switching
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -170,6 +178,136 @@ const App = {
         });
     },
     
+    // ============================================
+    // Image Upload Methods
+    // ============================================
+    
+    /**
+     * Bind image upload handlers
+     */
+    bindImageUpload(inputId, previewId, clearBtnId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        const clearBtn = document.getElementById(clearBtnId);
+        
+        if (!input || !preview) return;
+        
+        // Click on preview to trigger file input
+        preview.addEventListener('click', () => input.click());
+        
+        // Handle file selection
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                this.processImageUpload(file, inputId, previewId, clearBtnId);
+            }
+        });
+        
+        // Drag and drop
+        preview.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            preview.style.borderColor = 'var(--primary)';
+            preview.style.background = 'var(--gray-100)';
+        });
+        
+        preview.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            preview.style.borderColor = '';
+            preview.style.background = '';
+        });
+        
+        preview.addEventListener('drop', (e) => {
+            e.preventDefault();
+            preview.style.borderColor = '';
+            preview.style.background = '';
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                this.processImageUpload(file, inputId, previewId, clearBtnId);
+            }
+        });
+        
+        // Clear button
+        if (clearBtn) {
+            clearBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.clearImage(inputId, previewId, clearBtnId);
+            });
+        }
+    },
+    
+    /**
+     * Process image upload
+     */
+    processImageUpload(file, inputId, previewId, clearBtnId) {
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file.');
+            return;
+        }
+        
+        // Max size 5MB
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Image too large. Maximum size is 5MB.');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64 = e.target.result;
+            
+            // Store in app state
+            if (inputId === 'companyLogo') {
+                this.companyLogo = base64;
+            } else if (inputId === 'vesselImage') {
+                this.vesselImage = base64;
+            }
+            
+            // Update preview
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = `<img src="${base64}" alt="Uploaded image">`;
+            preview.classList.add('has-image');
+            
+            // Show clear button
+            const clearBtn = document.getElementById(clearBtnId);
+            if (clearBtn) {
+                clearBtn.style.display = 'inline-flex';
+            }
+        };
+        reader.readAsDataURL(file);
+    },
+    
+    /**
+     * Clear uploaded image
+     */
+    clearImage(inputId, previewId, clearBtnId) {
+        // Clear from state
+        if (inputId === 'companyLogo') {
+            this.companyLogo = null;
+        } else if (inputId === 'vesselImage') {
+            this.vesselImage = null;
+        }
+        
+        // Reset input
+        const input = document.getElementById(inputId);
+        if (input) input.value = '';
+        
+        // Reset preview
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            const placeholderText = inputId === 'companyLogo' 
+                ? '📷 Click or drag to upload logo'
+                : '📷 Click or drag to upload vessel photo';
+            preview.innerHTML = `<span class="placeholder-text">${placeholderText}</span>`;
+            preview.classList.remove('has-image');
+        }
+        
+        // Hide clear button
+        const clearBtn = document.getElementById(clearBtnId);
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+    },
+
     // ============================================
     // Settings Modal Methods
     // ============================================
@@ -640,6 +778,11 @@ const App = {
             operatingProfileCompliance = "The vessel has operated in international waters, requiring full biosecurity assessment and elevated controls as outlined in this WMS.";
         }
 
+        // Get month and year for document headers
+        const proposedDate = formData.proposedStartDate ? new Date(formData.proposedStartDate) : new Date();
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+
         return {
             ...formData,
             ...determination,
@@ -654,6 +797,14 @@ const App = {
             afsCertValid: !!formData.afcProductName,
             afcWithinServiceLife: formData.afcCondition === 'sound',
             currentYear: new Date().getFullYear(),
+            
+            // Images
+            companyLogo: this.companyLogo,
+            vesselImage: this.vesselImage,
+            
+            // Date formatting for headers
+            proposedMonth: months[proposedDate.getMonth()],
+            proposedYear: proposedDate.getFullYear(),
             
             // Format dates for display
             proposedStartDate: this.formatDateDisplay(formData.proposedStartDate),
@@ -726,6 +877,95 @@ const App = {
     },
 
     /**
+     * Generate Emergency Response Plan
+     */
+    generateERP() {
+        const formData = this.getFormData();
+        
+        if (!this.validateBasicFields(formData)) return;
+
+        const templateData = this.prepareTemplateData(formData);
+        const html = Templates.render('erp', templateData);
+
+        document.getElementById('outputContent').innerHTML = html;
+        this.switchTab('erp');
+    },
+
+    /**
+     * Generate Work Health and Safety Management Plan
+     */
+    generateWHSMP() {
+        const formData = this.getFormData();
+        
+        if (!this.validateBasicFields(formData)) return;
+
+        const templateData = this.prepareTemplateData(formData);
+        const html = Templates.render('whsmp', templateData);
+
+        document.getElementById('outputContent').innerHTML = html;
+        this.switchTab('whsmp');
+    },
+
+    /**
+     * Generate Safe Work Method Statement
+     */
+    generateSWMS() {
+        const formData = this.getFormData();
+        
+        if (!this.validateBasicFields(formData)) return;
+
+        const templateData = this.prepareTemplateData(formData);
+        const html = Templates.render('swms', templateData);
+
+        document.getElementById('outputContent').innerHTML = html;
+        this.switchTab('swms');
+    },
+
+    /**
+     * Generate all documents
+     */
+    generateAllDocuments() {
+        const formData = this.getFormData();
+        
+        if (!this.validateBasicFields(formData)) return;
+
+        const templateData = this.prepareTemplateData(formData);
+        
+        // Generate WMS first (shown by default)
+        const wmsHtml = Templates.render('wms', templateData);
+        document.getElementById('outputContent').innerHTML = wmsHtml;
+        this.switchTab('wms');
+        
+        // Store all generated documents
+        this.generatedDocs = {
+            wms: wmsHtml,
+            erp: Templates.render('erp', templateData),
+            whsmp: Templates.render('whsmp', templateData),
+            swms: Templates.render('swms', templateData),
+            email: Templates.render('email', templateData)
+        };
+        
+        alert('All documents generated! Use the tabs to switch between them.');
+    },
+
+    /**
+     * Validate basic required fields
+     */
+    validateBasicFields(formData) {
+        if (!formData.vesselName) {
+            alert('Please enter a vessel name.');
+            document.getElementById('vesselName').focus();
+            return false;
+        }
+        if (!formData.clientName) {
+            alert('Please enter a client name.');
+            document.getElementById('clientName').focus();
+            return false;
+        }
+        return true;
+    },
+
+    /**
      * Copy email content to clipboard
      */
     async copyEmail() {
@@ -763,12 +1003,37 @@ const App = {
         // Update copy button visibility
         document.getElementById('btnCopyEmail').style.display = tab === 'email' ? 'inline-flex' : 'none';
 
-        // If switching to email tab and content exists
-        if (tab === 'email') {
-            const formData = this.getFormData();
-            if (formData.vesselName) {
-                const templateData = this.prepareTemplateData(formData);
-                const html = Templates.render('email', templateData);
+        // Check if we have pre-generated content
+        if (this.generatedDocs && this.generatedDocs[tab]) {
+            document.getElementById('outputContent').innerHTML = this.generatedDocs[tab];
+            return;
+        }
+
+        // Generate content on tab switch if form has data
+        const formData = this.getFormData();
+        if (formData.vesselName && formData.clientName) {
+            const templateData = this.prepareTemplateData(formData);
+            let html = '';
+            
+            switch(tab) {
+                case 'wms':
+                    html = Templates.render('wms', templateData);
+                    break;
+                case 'erp':
+                    html = Templates.render('erp', templateData);
+                    break;
+                case 'whsmp':
+                    html = Templates.render('whsmp', templateData);
+                    break;
+                case 'swms':
+                    html = Templates.render('swms', templateData);
+                    break;
+                case 'email':
+                    html = Templates.render('email', templateData);
+                    break;
+            }
+            
+            if (html) {
                 document.getElementById('outputContent').innerHTML = html;
             }
         }
@@ -783,9 +1048,17 @@ const App = {
             this.generateNewJob();
             this.setDefaultDates();
             this.updateCalculations();
+            
+            // Clear images
+            this.clearImage('companyLogo', 'companyLogoPreview', 'btnClearCompanyLogo');
+            this.clearImage('vesselImage', 'vesselImagePreview', 'btnClearVesselImage');
+            
+            // Clear generated docs
+            this.generatedDocs = null;
+            
             document.getElementById('outputContent').innerHTML = `
                 <div class="placeholder-message">
-                    <p>Complete the form and click "Generate WMS" to preview the document.</p>
+                    <p>Complete the form and click "Generate WMS" or "Generate All Docs" to preview documents.</p>
                 </div>
             `;
         }

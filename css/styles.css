@@ -1464,3 +1464,422 @@ body {
     color: white !important;
 }
 
+/* ============================================
+   Image Upload Styles
+   ============================================ */
+
+.image-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.image-upload-input {
+    display: none;
+}
+
+.image-preview {
+    width: 100%;
+    min-height: 100px;
+    max-height: 150px;
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--gray-50);
+    overflow: hidden;
+    position: relative;
+}
+
+.image-preview:hover {
+    border-color: var(--primary);
+    background: var(--gray-100);
+}
+
+.image-preview.has-image {
+    border-style: solid;
+    border-color: var(--success);
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.image-preview .placeholder-text {
+    color: var(--gray-400);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: var(--space-md);
+}
+
+.image-preview.vessel-preview {
+    min-height: 150px;
+    max-height: 200px;
+}
+
+.btn-small {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.8rem;
+}
+
+/* ============================================
+   Document Templates - Additional Styles
+   ============================================ */
+
+/* Cover page with logo */
+.wms-cover .cover-logo {
+    text-align: center;
+    padding: var(--space-xl) 0;
+}
+
+.wms-cover .cover-logo .company-logo {
+    max-width: 200px;
+    max-height: 80px;
+    object-fit: contain;
+}
+
+.wms-cover .vessel-image-container {
+    text-align: center;
+    margin: var(--space-xl) auto;
+    max-width: 400px;
+}
+
+.wms-cover .vessel-image {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.wms-cover .doc-type {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: var(--space-md);
+}
+
+/* ERP-specific styles */
+.erp-document .contacts-table {
+    margin-bottom: var(--space-lg);
+}
+
+.erp-document .contact-emergency {
+    background: var(--danger);
+    color: white;
+    font-weight: bold;
+}
+
+.erp-document .contact-emergency td {
+    padding: var(--space-md);
+}
+
+.erp-document .contact-highlight {
+    background: var(--warning);
+    font-weight: 600;
+}
+
+.erp-document .procedure-box {
+    background: var(--gray-50);
+    border-left: 4px solid var(--primary);
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.erp-document .procedure-box.warning {
+    border-left-color: var(--danger);
+    background: #fff5f5;
+}
+
+.erp-document .procedure-box ol {
+    margin-left: var(--space-lg);
+}
+
+.erp-document .procedure-box li {
+    margin-bottom: var(--space-sm);
+}
+
+.erp-document .hospital-info,
+.erp-document .hospital-directions {
+    background: var(--info);
+    color: white;
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+}
+
+.erp-document .hospital-info h3,
+.erp-document .hospital-directions h3 {
+    color: white;
+    margin-bottom: var(--space-sm);
+}
+
+/* WHSMP-specific styles */
+.whsmp-document .risk-matrix {
+    font-size: 0.85rem;
+}
+
+.whsmp-document .risk-matrix th,
+.whsmp-document .risk-matrix td {
+    text-align: center;
+    padding: var(--space-sm);
+}
+
+.whsmp-document .risk-low {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.whsmp-document .risk-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.whsmp-document .risk-high {
+    background: #fed7aa;
+    color: #9a3412;
+}
+
+.whsmp-document .risk-extreme {
+    background: #fecaca;
+    color: #991b1b;
+    font-weight: bold;
+}
+
+.whsmp-document .hierarchy-list {
+    counter-reset: hierarchy;
+    list-style: none;
+    padding-left: 0;
+}
+
+.whsmp-document .hierarchy-list li {
+    counter-increment: hierarchy;
+    padding: var(--space-sm) var(--space-md);
+    margin: var(--space-xs) 0;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    border-radius: var(--radius-sm);
+}
+
+.whsmp-document .hierarchy-list li:nth-child(2) {
+    opacity: 0.9;
+}
+
+.whsmp-document .hierarchy-list li:nth-child(3) {
+    opacity: 0.8;
+}
+
+.whsmp-document .hierarchy-list li:nth-child(4) {
+    opacity: 0.7;
+}
+
+.whsmp-document .hierarchy-list li:nth-child(5) {
+    opacity: 0.6;
+}
+
+.whsmp-document .hierarchy-list li:nth-child(6) {
+    opacity: 0.5;
+}
+
+/* SWMS-specific styles */
+.swms-document {
+    font-size: 0.9rem;
+}
+
+.swms-document .swms-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.swms-document .swms-logo .company-logo {
+    max-height: 60px;
+}
+
+.swms-document .swms-title-block {
+    text-align: right;
+}
+
+.swms-document .swms-title-block h1 {
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+.swms-document .swms-title-block h2 {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    font-weight: normal;
+}
+
+.swms-document .swms-section {
+    margin-bottom: var(--space-lg);
+}
+
+.swms-document .swms-section h3 {
+    background: var(--primary);
+    color: white;
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-md);
+    font-size: 0.95rem;
+}
+
+.swms-document .swms-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.swms-document .swms-info-table td {
+    padding: var(--space-sm);
+    border: 1px solid var(--gray-300);
+}
+
+.swms-document .swms-check-table {
+    width: 100%;
+}
+
+.swms-document .swms-check-table td {
+    padding: var(--space-sm);
+}
+
+.swms-document .swms-check-table td:first-child {
+    width: 30px;
+    font-size: 1.2rem;
+}
+
+.swms-document .swms-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.swms-document .swms-table th,
+.swms-document .swms-table td {
+    padding: var(--space-sm);
+    border: 1px solid var(--gray-300);
+    text-align: left;
+}
+
+.swms-document .swms-table th {
+    background: var(--gray-100);
+}
+
+.swms-document .swms-hazard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.swms-document .swms-hazard-table th,
+.swms-document .swms-hazard-table td {
+    padding: var(--space-sm);
+    border: 1px solid var(--gray-300);
+    vertical-align: top;
+}
+
+.swms-document .swms-hazard-table th {
+    background: var(--primary);
+    color: white;
+    font-size: 0.75rem;
+}
+
+.swms-document .swms-hazard-table .risk-low {
+    background: #d1fae5;
+    color: #065f46;
+    text-align: center;
+    font-weight: 600;
+}
+
+.swms-document .swms-hazard-table .risk-medium {
+    background: #fef3c7;
+    color: #92400e;
+    text-align: center;
+    font-weight: 600;
+}
+
+.swms-document .swms-hazard-table .risk-high {
+    background: #fed7aa;
+    color: #9a3412;
+    text-align: center;
+    font-weight: 600;
+}
+
+.swms-document .swms-hazard-table .risk-extreme {
+    background: #fecaca;
+    color: #991b1b;
+    text-align: center;
+    font-weight: 600;
+}
+
+.swms-document .ppe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+}
+
+.swms-document .ppe-item {
+    background: var(--gray-100);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+}
+
+.swms-document .swms-signoff-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.swms-document .swms-signoff-table th,
+.swms-document .swms-signoff-table td {
+    padding: var(--space-md);
+    border: 1px solid var(--gray-300);
+}
+
+.swms-document .swms-signoff-table th {
+    background: var(--gray-100);
+    width: 33%;
+}
+
+.swms-document .swms-signoff-table td {
+    height: 40px;
+}
+
+/* Print styles for all documents */
+@media print {
+    .wms-cover .cover-logo,
+    .wms-cover .vessel-image-container,
+    .swms-header .swms-logo {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .wms-cover .company-logo,
+    .wms-cover .vessel-image,
+    .swms-header .company-logo {
+        max-width: 100% !important;
+    }
+    
+    .erp-document .contact-emergency,
+    .erp-document .contact-highlight,
+    .erp-document .hospital-info,
+    .erp-document .hospital-directions,
+    .whsmp-document .risk-matrix td,
+    .swms-document .swms-hazard-table td {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .swms-document .ppe-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+

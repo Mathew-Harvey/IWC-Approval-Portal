@@ -36,8 +36,15 @@ if (!MARINESIA_API_KEY) {
     process.exit(1);
 }
 
+// Log API key status (masked for security)
+const maskedKey = MARINESIA_API_KEY ? `${MARINESIA_API_KEY.substring(0, 4)}...${MARINESIA_API_KEY.substring(MARINESIA_API_KEY.length - 4)}` : 'NOT SET';
+console.log(`🔑 Marinesia API Key: ${maskedKey}`);
+
 if (!AISSTREAM_API_KEY) {
     console.warn('⚠️  WARNING: AISSTREAM_API_KEY is not set. AISStream features will be disabled.');
+} else {
+    const maskedAISKey = `${AISSTREAM_API_KEY.substring(0, 4)}...${AISSTREAM_API_KEY.substring(AISSTREAM_API_KEY.length - 4)}`;
+    console.log(`🔑 AISStream API Key: ${maskedAISKey}`);
 }
 
 // ============================================
@@ -326,13 +333,43 @@ app.get('/api/marinesia/vessel/:mmsi/profile', async (req, res) => {
         const { mmsi } = req.params;
         const url = `https://api.marinesia.com/api/v1/vessel/${mmsi}/profile?key=${MARINESIA_API_KEY}`;
         
-        const response = await fetch(url);
-        const data = await response.json();
+        if (NODE_ENV !== 'production') {
+            console.log(`📤 Marinesia API: GET /vessel/${mmsi}/profile`);
+        }
         
+        const response = await fetch(url);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error(`❌ Marinesia API returned non-JSON (${response.status})`);
+            console.error(`   URL: ${url.replace(MARINESIA_API_KEY, '***')}`);
+            console.error(`   Response preview: ${text.substring(0, 300)}`);
+            
+            // Try to extract error message from HTML if possible
+            let errorMessage = 'Marinesia API returned an error';
+            if (text.includes('rate limit') || text.includes('Rate Limit')) {
+                errorMessage = 'Rate limit exceeded. Please try again later.';
+            } else if (text.includes('Invalid') || text.includes('invalid')) {
+                errorMessage = 'Invalid API key or request.';
+            } else if (response.status === 404) {
+                errorMessage = 'Vessel not found.';
+            }
+            
+            return res.status(response.status).json({ 
+                error: true, 
+                message: errorMessage,
+                status: response.status
+            });
+        }
+        
+        const data = await response.json();
         res.status(response.status).json(data);
     } catch (error) {
-        console.error('Marinesia API error:', error.message);
-        res.status(500).json({ error: true, message: 'Failed to fetch from Marinesia' });
+        console.error('❌ Marinesia API error:', error.message);
+        console.error('   Stack:', error.stack);
+        res.status(500).json({ error: true, message: 'Failed to fetch from Marinesia', details: error.message });
     }
 });
 
@@ -343,13 +380,38 @@ app.get('/api/marinesia/vessel/profile', async (req, res) => {
         
         const url = `https://api.marinesia.com/api/v1/vessel/profile?${queryParams}`;
         
-        const response = await fetch(url);
-        const data = await response.json();
+        if (NODE_ENV !== 'production') {
+            console.log(`📤 Marinesia API: GET /vessel/profile?${queryParams.toString().replace(MARINESIA_API_KEY, '***')}`);
+        }
         
+        const response = await fetch(url);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error(`❌ Marinesia API returned non-JSON (${response.status})`);
+            console.error(`   Response preview: ${text.substring(0, 300)}`);
+            
+            let errorMessage = 'Marinesia API returned an error';
+            if (text.includes('rate limit') || text.includes('Rate Limit')) {
+                errorMessage = 'Rate limit exceeded. Please try again later.';
+            } else if (text.includes('Invalid') || text.includes('invalid')) {
+                errorMessage = 'Invalid API key or request.';
+            }
+            
+            return res.status(response.status).json({ 
+                error: true, 
+                message: errorMessage,
+                status: response.status
+            });
+        }
+        
+        const data = await response.json();
         res.status(response.status).json(data);
     } catch (error) {
-        console.error('Marinesia API error:', error.message);
-        res.status(500).json({ error: true, message: 'Failed to fetch from Marinesia' });
+        console.error('❌ Marinesia API error:', error.message);
+        res.status(500).json({ error: true, message: 'Failed to fetch from Marinesia', details: error.message });
     }
 });
 
@@ -359,12 +421,24 @@ app.get('/api/marinesia/vessel/:mmsi/location/latest', async (req, res) => {
         const url = `https://api.marinesia.com/api/v1/vessel/${mmsi}/location/latest?key=${MARINESIA_API_KEY}`;
         
         const response = await fetch(url);
-        const data = await response.json();
         
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error(`Marinesia API returned non-JSON (${response.status}):`, text.substring(0, 200));
+            return res.status(response.status).json({ 
+                error: true, 
+                message: 'Marinesia API returned an error',
+                status: response.status
+            });
+        }
+        
+        const data = await response.json();
         res.status(response.status).json(data);
     } catch (error) {
         console.error('Marinesia API error:', error.message);
-        res.status(500).json({ error: true, message: 'Failed to fetch from Marinesia' });
+        res.status(500).json({ error: true, message: 'Failed to fetch from Marinesia', details: error.message });
     }
 });
 

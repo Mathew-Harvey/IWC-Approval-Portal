@@ -30,9 +30,9 @@ A web application for generating In-Water Cleaning (IWC) notification packages a
      - **Build Command:** `npm install`
      - **Start Command:** `npm start`
 
-3. **Set Environment Variables (optional but recommended):**
-   - `MARINESIA_API_KEY` - Your Marinesia API key
-   - `AISSTREAM_API_KEY` - Your AISStream API key
+3. **Set Environment Variables (required):**
+   - `MARINESIA_API_KEY` - Your Marinesia API key (required)
+   - `AISSTREAM_API_KEY` - Your AISStream API key (optional)
    - `NODE_ENV` - `production`
 
 4. **Deploy!** Render will build and deploy automatically.
@@ -43,21 +43,47 @@ A web application for generating In-Water Cleaning (IWC) notification packages a
 |----------|----------|-------------|
 | `PORT` | No | Auto-set by Render |
 | `NODE_ENV` | No | `production` for production |
-| `MARINESIA_API_KEY` | No | Marinesia API key (has default) |
-| `AISSTREAM_API_KEY` | No | AISStream API key (has default) |
+| `MARINESIA_API_KEY` | **Yes** | Marinesia API key - Get at [marinesia.com](https://marinesia.com) |
+| `AISSTREAM_API_KEY` | No | AISStream API key - Get at [aisstream.io](https://aisstream.io) |
+
+**Note:** See [SETUP.md](SETUP.md) for detailed local development setup instructions.
 
 ## Local Development
 
-```bash
-# Install dependencies
-npm install
+### Setup
 
-# Start server
-npm start
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-# Open browser
-open http://localhost:3001
-```
+2. **Create `.env` file:**
+   ```bash
+   # Copy the example file
+   cp .env.example .env
+   
+   # Or create manually with these variables:
+   ```
+   
+   Create a `.env` file in the root directory with:
+   ```env
+   MARINESIA_API_KEY=your_marinesia_api_key_here
+   AISSTREAM_API_KEY=your_aisstream_api_key_here
+   NODE_ENV=development
+   PORT=3001
+   ```
+
+3. **Start the server:**
+   ```bash
+   npm start
+   ```
+
+4. **Open browser:**
+   ```
+   http://localhost:3001
+   ```
+
+**Note:** The `.env` file is already in `.gitignore` and will not be committed to the repository.
 
 ## API Endpoints
 

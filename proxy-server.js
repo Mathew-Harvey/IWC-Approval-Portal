@@ -8,6 +8,11 @@
  * Deployment: Render, Railway, Heroku, or any Node.js host
  */
 
+// Load environment variables from .env file (development only)
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
@@ -20,9 +25,20 @@ const app = express();
 // Configuration (from environment variables)
 // ============================================
 const PORT = process.env.PORT || 3001;
-const MARINESIA_API_KEY = process.env.MARINESIA_API_KEY || 'JlOZeHWxHmsGRViFvaVwSNiCH';
-const AISSTREAM_API_KEY = process.env.AISSTREAM_API_KEY || '38bd336ae27761db109eec3c6d6c684c404708b0';
+const MARINESIA_API_KEY = process.env.MARINESIA_API_KEY;
+const AISSTREAM_API_KEY = process.env.AISSTREAM_API_KEY;
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+// Validate required environment variables
+if (!MARINESIA_API_KEY) {
+    console.error('❌ ERROR: MARINESIA_API_KEY is not set in environment variables');
+    console.error('   Please set it in your .env file or as an environment variable');
+    process.exit(1);
+}
+
+if (!AISSTREAM_API_KEY) {
+    console.warn('⚠️  WARNING: AISSTREAM_API_KEY is not set. AISStream features will be disabled.');
+}
 
 // ============================================
 // Vessel Cache for AISStream Data

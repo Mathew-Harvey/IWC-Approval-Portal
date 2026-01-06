@@ -1,108 +1,52 @@
 /**
  * Vessel API Service
- * Integrates with Marinesia API and AISStream for comprehensive vessel lookup
  * 
- * Supports two deployment modes:
- * 1. Local development with proxy server (npm start) - Full functionality
- * 2. GitHub Pages / static hosting - Marinesia only via CORS proxy
+ * Integrates with backend server for vessel lookups:
+ * - Marinesia API (vessel profiles, locations)
+ * - AISStream (real-time AIS data cache)
  * 
- * API Keys are stored in localStorage for security.
+ * All API calls go through our server - no CORS issues!
  */
 
 const VesselApiService = {
-    // Deployment detection
-    isLocalDev: false,
-    
-    // CORS proxy for client-side requests (when not using local proxy)
-    CORS_PROXY: 'https://corsproxy.io/?',
-    
-    // API endpoints
-    MARINESIA_BASE: 'https://api.marinesia.com/api/v1',
-    LOCAL_PROXY_BASE: '/marinesia/api/v1',
-    AISSTREAM_BASE: '/aisstream',
-    
-    // Default API key (can be overridden by user)
-    DEFAULT_MARINESIA_KEY: 'JlOZeHWxHmsGRViFvaVwSNiCH',
+    // API base URL - empty for same-origin requests (production)
+    API_BASE: '',
     
     /**
-     * Initialize the service - detect deployment mode
+     * Initialize the service
      */
     async init() {
-        // Check if we're running with local proxy
+        console.log('🚀 Vessel API Service initializing...');
+        
         try {
-            const response = await fetch('/health', { method: 'GET' });
+            const response = await fetch('/health');
             if (response.ok) {
                 const data = await response.json();
-                if (data.status === 'ok') {
-                    this.isLocalDev = true;
-                    console.log('🔧 Running with local proxy server');
-                    return { mode: 'local', marinesia: true, aisstream: true };
-                }
+                console.log('✅ API Server connected:', data.services);
+                return {
+                    mode: 'server',
+                    marinesia: data.services.marinesia === 'available',
+                    aisstream: data.services.aisstream === 'connected'
+                };
             }
         } catch (e) {
-            // Not running with proxy
+            console.warn('⚠️ Could not connect to API server');
         }
         
-        this.isLocalDev = false;
-        console.log('🌐 Running in client-side mode (GitHub Pages compatible)');
-        return { mode: 'static', marinesia: true, aisstream: false };
-    },
-    
-    /**
-     * Get API key from localStorage or use default
-     */
-    getMarinesiaKey() {
-        return localStorage.getItem('marinesia_api_key') || this.DEFAULT_MARINESIA_KEY;
-    },
-    
-    /**
-     * Get AISStream API key from localStorage
-     */
-    getAISStreamKey() {
-        return localStorage.getItem('aisstream_api_key') || '';
-    },
-    
-    /**
-     * Save API keys to localStorage
-     */
-    saveApiKeys(marinesiaKey, aisstreamKey) {
-        if (marinesiaKey) {
-            localStorage.setItem('marinesia_api_key', marinesiaKey);
-        }
-        if (aisstreamKey) {
-            localStorage.setItem('aisstream_api_key', aisstreamKey);
-        }
-    },
-    
-    /**
-     * Build URL for Marinesia API - handles both local and static deployment
-     */
-    buildMarinesiaUrl(endpoint) {
-        const apiKey = this.getMarinesiaKey();
-        const separator = endpoint.includes('?') ? '&' : '?';
-        
-        if (this.isLocalDev) {
-            // Use local proxy
-            return `${this.LOCAL_PROXY_BASE}${endpoint}${separator}key=${apiKey}`;
-        } else {
-            // Use CORS proxy for static deployment
-            const targetUrl = `${this.MARINESIA_BASE}${endpoint}${separator}key=${apiKey}`;
-            return `${this.CORS_PROXY}${encodeURIComponent(targetUrl)}`;
-        }
+        return { mode: 'offline', marinesia: false, aisstream: false };
     },
 
     /**
-     * Smart search for vessels - returns combined results from multiple sources
+     * Smart search - returns combined results from all sources
      */
     async smartSearch(query) {
         const trimmedQuery = query.trim().toUpperCase();
+        console.log(`🔍 Searching: "${trimmedQuery}"`);
         
-        console.log(`🔍 Smart search: "${trimmedQuery}" (mode: ${this.isLocalDev ? 'local' : 'static'})`);
-        
-        // Get local saved vessels that match
+        // Get local saved vessels
         const localResults = this.getLocalMatches(trimmedQuery);
         
-        // Get mock/demo vessels that match
+        // Get demo vessels
         const mockResults = this.getMockResults(trimmedQuery);
         
         // Determine query type
@@ -110,22 +54,13 @@ const VesselApiService = {
         const isIMO = /^\d{7}$/.test(trimmedQuery);
         
         // Search APIs in parallel
-        const searchPromises = [
-            this.searchMarinesia(trimmedQuery, isMMSI, isIMO)
-        ];
-        
-        // Only search AISStream if running with local proxy
-        if (this.isLocalDev) {
-            searchPromises.push(this.searchAISStream(trimmedQuery));
-        }
-        
-        const results = await Promise.allSettled(searchPromises);
-        
-        const apiResults = results[0].status === 'fulfilled' ? results[0].value : [];
-        const aisStreamResults = (results[1]?.status === 'fulfilled') ? results[1].value : [];
+        const [apiResults, aisStreamResults] = await Promise.all([
+            this.searchMarinesia(trimmedQuery, isMMSI, isIMO),
+            this.searchAISStream(trimmedQuery)
+        ]);
         
         const total = apiResults.length + aisStreamResults.length + localResults.length + mockResults.length;
-        console.log(`   Marinesia: ${apiResults.length} | AISStream: ${aisStreamResults.length} | Local: ${localResults.length} | Demo: ${mockResults.length}`);
+        console.log(`   Results: Marinesia=${apiResults.length}, AISStream=${aisStreamResults.length}, Local=${localResults.length}, Demo=${mockResults.length}`);
         
         return {
             apiResults,
@@ -149,7 +84,6 @@ const VesselApiService = {
             } else if (query.length >= 3) {
                 const results = await this.searchByFilter(`name:${query}`);
                 
-                // Try first word if no results
                 if (results.length === 0 && query.includes(' ')) {
                     const firstWord = query.split(' ')[0];
                     if (firstWord.length >= 3) {
@@ -166,25 +100,16 @@ const VesselApiService = {
     },
 
     /**
-     * Search AISStream cached vessel data (only available with local proxy)
+     * Search AISStream cache
      */
     async searchAISStream(query) {
-        if (!this.isLocalDev) {
-            return [];
-        }
-        
         try {
-            const response = await fetch(`${this.AISSTREAM_BASE}/search?query=${encodeURIComponent(query)}`);
+            const response = await fetch(`/api/aisstream/search?query=${encodeURIComponent(query)}`);
             
-            if (!response.ok) {
-                return [];
-            }
+            if (!response.ok) return [];
             
             const result = await response.json();
-            
-            if (result.error || !result.data) {
-                return [];
-            }
+            if (result.error || !result.data) return [];
             
             return result.data.map(v => this.transformAISStreamVessel(v));
         } catch (error) {
@@ -197,12 +122,8 @@ const VesselApiService = {
      * Get AISStream connection status
      */
     async getAISStreamStatus() {
-        if (!this.isLocalDev) {
-            return { connectionStatus: 'unavailable', reason: 'Client-side mode' };
-        }
-        
         try {
-            const response = await fetch(`${this.AISSTREAM_BASE}/status`);
+            const response = await fetch('/api/aisstream/status');
             if (!response.ok) return { connectionStatus: 'unavailable' };
             return await response.json();
         } catch (error) {
@@ -211,7 +132,7 @@ const VesselApiService = {
     },
 
     /**
-     * Transform AISStream vessel data to our format
+     * Transform AISStream vessel to our format
      */
     transformAISStreamVessel(vessel) {
         const countryMap = this.getCountryMap();
@@ -244,22 +165,22 @@ const VesselApiService = {
             20: 'Wing in Ground', 30: 'Fishing', 31: 'Towing', 32: 'Towing (Large)',
             33: 'Dredging', 34: 'Diving Operations', 35: 'Military Operations',
             36: 'Sailing', 37: 'Pleasure Craft', 40: 'High-Speed Craft',
-            50: 'Pilot Vessel', 51: 'Search and Rescue Vessel', 52: 'Tug',
-            53: 'Port Tender', 54: 'Anti-Pollution Vessel', 55: 'Law Enforcement',
+            50: 'Pilot Vessel', 51: 'Search and Rescue', 52: 'Tug',
+            53: 'Port Tender', 54: 'Anti-Pollution', 55: 'Law Enforcement',
             58: 'Medical Transport', 59: 'Naval Ship',
             60: 'Passenger Ship', 69: 'Passenger Ship',
             70: 'Cargo Ship', 79: 'Cargo Ship',
             80: 'Tanker', 89: 'Tanker',
-            90: 'Other Type'
+            90: 'Other'
         };
         return types[typeCode] || (typeCode ? `Type ${typeCode}` : 'Unknown');
     },
 
     /**
-     * Get local storage vessels that match query
+     * Get local storage vessels that match
      */
     getLocalMatches(query) {
-        const vessels = StorageService.getVessels() || [];
+        const vessels = StorageService?.getVessels?.() || [];
         const q = query.toLowerCase();
         
         return vessels.filter(v => 
@@ -270,7 +191,7 @@ const VesselApiService = {
     },
 
     /**
-     * Legacy search function - returns combined results
+     * Legacy search function
      */
     async search(query) {
         const results = await this.smartSearch(query);
@@ -282,7 +203,6 @@ const VesselApiService = {
             ...results.mockResults
         ];
         
-        // Remove duplicates
         const seen = new Set();
         return allResults.filter(v => {
             const key = v.imoNumber || v.mmsi || v.vesselName;
@@ -293,25 +213,19 @@ const VesselApiService = {
     },
 
     /**
-     * Get vessel profile by MMSI from Marinesia
+     * Get vessel by MMSI from Marinesia
      */
     async getByMMSI(mmsi) {
         try {
-            const url = this.buildMarinesiaUrl(`/vessel/${mmsi}/profile`);
-            const response = await fetch(url);
+            const response = await fetch(`/api/marinesia/vessel/${mmsi}/profile`);
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    return null;
-                }
+                if (response.status === 404) return null;
                 throw new Error(`API error: ${response.status}`);
             }
 
             const result = await response.json();
-            
-            if (result.error || !result.data) {
-                return null;
-            }
+            if (result.error || !result.data) return null;
 
             return this.transformVessel(result.data);
         } catch (error) {
@@ -325,18 +239,12 @@ const VesselApiService = {
      */
     async searchByFilter(filterString) {
         try {
-            const url = this.buildMarinesiaUrl(`/vessel/profile?filters=${encodeURIComponent(filterString)}&limit=10`);
-            const response = await fetch(url);
+            const response = await fetch(`/api/marinesia/vessel/profile?filters=${encodeURIComponent(filterString)}&limit=10`);
 
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
 
             const result = await response.json();
-            
-            if (result.error || !result.data) {
-                return [];
-            }
+            if (result.error || !result.data) return [];
 
             return result.data.map(v => this.transformVessel(v));
         } catch (error) {
@@ -346,7 +254,7 @@ const VesselApiService = {
     },
 
     /**
-     * Transform Marinesia API vessel to our format
+     * Transform Marinesia vessel to our format
      */
     transformVessel(vessel) {
         const countryMap = this.getCountryMap();
@@ -367,7 +275,7 @@ const VesselApiService = {
     },
 
     /**
-     * Get country code to name mapping
+     * Country code mapping
      */
     getCountryMap() {
         return {
@@ -387,22 +295,16 @@ const VesselApiService = {
     },
 
     /**
-     * Get vessel's latest location from Marinesia
+     * Get vessel's latest location
      */
     async getLatestLocation(mmsi) {
         try {
-            const url = this.buildMarinesiaUrl(`/vessel/${mmsi}/location/latest`);
-            const response = await fetch(url);
+            const response = await fetch(`/api/marinesia/vessel/${mmsi}/location/latest`);
 
-            if (!response.ok) {
-                return null;
-            }
+            if (!response.ok) return null;
 
             const result = await response.json();
-            
-            if (result.error || !result.data) {
-                return null;
-            }
+            if (result.error || !result.data) return null;
 
             return {
                 latitude: result.data.lat,
@@ -422,35 +324,34 @@ const VesselApiService = {
     },
 
     /**
-     * Get navigational status text
+     * Navigational status text
      */
     getNavStatus(status) {
         const statuses = {
             0: 'Under way using engine', 1: 'At anchor', 2: 'Not under command',
             3: 'Restricted manoeuvrability', 4: 'Constrained by draught',
             5: 'Moored', 6: 'Aground', 7: 'Engaged in fishing',
-            8: 'Under way sailing', 11: 'Power-driven vessel towing astern',
-            12: 'Power-driven vessel pushing ahead', 14: 'AIS-SART (active)',
+            8: 'Under way sailing', 11: 'Power-driven towing astern',
+            12: 'Power-driven pushing ahead', 14: 'AIS-SART',
             15: 'Not defined'
         };
         return statuses[status] || 'Unknown';
     },
 
     /**
-     * Test API connection
+     * Test API connections
      */
     async testConnection() {
         const results = {
             marinesia: { status: 'error', message: 'Not tested' },
-            aisstream: { status: 'unavailable', message: 'Not available in client mode' }
+            aisstream: { status: 'unavailable', message: 'Not tested' }
         };
         
-        // Test Marinesia
+        // Test Marinesia via our API
         try {
-            const url = this.buildMarinesiaUrl('/vessel/profile?limit=1');
-            const response = await fetch(url);
+            const response = await fetch('/api/marinesia/vessel/profile?limit=1');
             if (response.ok) {
-                results.marinesia = { status: 'connected', message: 'API is working' };
+                results.marinesia = { status: 'connected', message: 'API working' };
             } else {
                 results.marinesia = { status: 'error', message: `HTTP ${response.status}` };
             }
@@ -458,31 +359,29 @@ const VesselApiService = {
             results.marinesia = { status: 'error', message: error.message };
         }
         
-        // Test AISStream (only if local)
-        if (this.isLocalDev) {
-            try {
-                const status = await this.getAISStreamStatus();
-                if (status.connectionStatus === 'connected') {
-                    results.aisstream = { 
-                        status: 'connected', 
-                        message: `${status.totalVessels} vessels cached` 
-                    };
-                } else {
-                    results.aisstream = { 
-                        status: status.connectionStatus, 
-                        message: status.reason || 'Disconnected' 
-                    };
-                }
-            } catch (error) {
-                results.aisstream = { status: 'error', message: error.message };
+        // Test AISStream
+        try {
+            const status = await this.getAISStreamStatus();
+            if (status.connectionStatus === 'connected') {
+                results.aisstream = { 
+                    status: 'connected', 
+                    message: `${status.totalVessels} vessels cached` 
+                };
+            } else {
+                results.aisstream = { 
+                    status: status.connectionStatus, 
+                    message: status.connectionStatus 
+                };
             }
+        } catch (error) {
+            results.aisstream = { status: 'error', message: error.message };
         }
         
         return results;
     },
 
     /**
-     * Get mock results for demo/offline mode
+     * Demo/mock vessel data
      */
     getMockResults(query) {
         const mockVessels = [
@@ -495,9 +394,7 @@ const VesselApiService = {
             { vesselName: 'HMAS CANBERRA', imoNumber: '', mmsi: '503800004', vesselType: 'Landing Helicopter Dock', vesselLOA: 230.8, vesselBeam: 32, vesselFlag: 'Australia', grossTonnage: 27500 },
             { vesselName: 'SVITZER FALCON', imoNumber: '9704819', mmsi: '503123000', vesselType: 'Tug', vesselLOA: 32, vesselBeam: 12, vesselFlag: 'Australia', callsign: 'VHF2', grossTonnage: 500 },
             { vesselName: 'SVITZER EAGLE', imoNumber: '9704821', mmsi: '503124000', vesselType: 'Tug', vesselLOA: 32, vesselBeam: 12, vesselFlag: 'Australia', callsign: 'VHF3', grossTonnage: 500 },
-            { vesselName: 'FREMANTLE PILOT', imoNumber: '', mmsi: '503126000', vesselType: 'Pilot Vessel', vesselLOA: 20, vesselBeam: 6, vesselFlag: 'Australia', grossTonnage: 50 },
-            { vesselName: 'RV INVESTIGATOR', imoNumber: '9616888', mmsi: '503000000', vesselType: 'Research Vessel', vesselLOA: 94, vesselBeam: 18.5, vesselFlag: 'Australia', callsign: 'VNAC', grossTonnage: 6000 },
-            { vesselName: 'BOURBON RAINBOW', imoNumber: '9412345', mmsi: '226123000', vesselType: 'Platform Supply Ship', vesselLOA: 78, vesselBeam: 17, vesselFlag: 'France', grossTonnage: 3200 }
+            { vesselName: 'RV INVESTIGATOR', imoNumber: '9616888', mmsi: '503000000', vesselType: 'Research Vessel', vesselLOA: 94, vesselBeam: 18.5, vesselFlag: 'Australia', callsign: 'VNAC', grossTonnage: 6000 }
         ];
 
         const q = query.toLowerCase();
@@ -507,32 +404,15 @@ const VesselApiService = {
             const type = (v.vesselType || '').toLowerCase();
             
             if (name.includes(q) || type.includes(q)) return true;
-            
-            const queryWords = q.split(/\s+/).filter(w => w.length >= 2);
-            const nameWords = name.split(/\s+/);
-            
-            for (const qw of queryWords) {
-                for (const nw of nameWords) {
-                    if (nw.includes(qw) || qw.includes(nw)) return true;
-                }
-            }
-            
             if (v.imoNumber && v.imoNumber.includes(query)) return true;
             if (v.mmsi && v.mmsi.includes(query)) return true;
             
             return false;
         }).map(v => ({ ...v, source: 'demo' }));
-    },
-
-    /**
-     * Check if API is configured
-     */
-    isConfigured() {
-        return !!this.getMarinesiaKey();
     }
 };
 
-// Export for use in browser
+// Export for browser
 if (typeof window !== 'undefined') {
     window.VesselApiService = VesselApiService;
 }

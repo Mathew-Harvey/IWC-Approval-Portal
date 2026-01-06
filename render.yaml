@@ -1,0 +1,19 @@
+# Render Blueprint
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: iwc-approval-portal
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MARINESIA_API_KEY
+        sync: false  # Set manually in Render dashboard
+      - key: AISSTREAM_API_KEY
+        sync: false  # Set manually in Render dashboard
+    healthCheckPath: /health
+    autoDeploy: true
+

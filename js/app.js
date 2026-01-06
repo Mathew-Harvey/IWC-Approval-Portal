@@ -34,19 +34,21 @@ const App = {
     },
     
     /**
-     * Initialize API service and detect deployment mode
+     * Initialize API service
      */
     async initApiService() {
         const status = await VesselApiService.init();
         console.log('API Service initialized:', status);
         
-        // Update the help text based on mode
+        // Update the help text based on API status
         const helpText = document.querySelector('.vessel-lookup .help-text');
         if (helpText) {
-            if (status.mode === 'local') {
-                helpText.innerHTML = 'Powered by Marinesia + AISStream APIs <span style="color: #10b981;">● Live</span>';
+            if (status.mode === 'server' && status.aisstream) {
+                helpText.innerHTML = 'Powered by Marinesia + AISStream <span style="color: #10b981;">● Live</span>';
+            } else if (status.mode === 'server') {
+                helpText.innerHTML = 'Powered by Marinesia API <span style="color: #3b82f6;">● Connected</span>';
             } else {
-                helpText.innerHTML = 'Powered by Marinesia API <span style="color: #3b82f6;">● Client Mode</span>';
+                helpText.innerHTML = 'Powered by Demo Data <span style="color: #f59e0b;">● Offline</span>';
             }
         }
     },

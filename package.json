@@ -1,0 +1,25 @@
+{
+  "name": "iwc-approval-portal",
+  "version": "1.0.0",
+  "description": "IWC Notification Package Generator for Franmarine Underwater Services",
+  "main": "proxy-server.js",
+  "scripts": {
+    "start": "node proxy-server.js",
+    "proxy": "node proxy-server.js"
+  },
+  "keywords": [
+    "iwc",
+    "in-water-cleaning",
+    "biofouling",
+    "marinesia",
+    "franmarine"
+  ],
+  "author": "Franmarine Underwater Services",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
+    "ws": "^8.19.0"
+  }
+}

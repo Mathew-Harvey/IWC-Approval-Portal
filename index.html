@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IWC Notification Package Generator | Franmarine</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header no-print">
+            <div class="logo">
+                <h1>IWC Notification Package Generator</h1>
+                <span class="subtitle">Franmarine Underwater Services</span>
+            </div>
+            <div class="header-actions">
+                <button id="btnNewJob" class="btn btn-secondary">New Job</button>
+                <button id="btnLoadJob" class="btn btn-secondary">Load Saved</button>
+                <button id="btnSettings" class="btn btn-icon" title="API Settings">⚙️</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Form Panel -->
+            <section class="form-panel no-print" id="formPanel">
+                <form id="jobForm">
+                    <!-- Job Details -->
+                    <fieldset class="form-section">
+                        <legend>Job Details</legend>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="jobNumber">Job Number</label>
+                                <input type="text" id="jobNumber" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="clientName">Client Name</label>
+                                <input type="text" id="clientName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="proposedStartDate">Proposed Start Date</label>
+                                <input type="date" id="proposedStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estimatedDuration">Estimated Duration (days)</label>
+                                <input type="number" id="estimatedDuration" min="1" value="1">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Vessel Details -->
+                    <fieldset class="form-section">
+                        <legend>Vessel Details</legend>
+                        <div class="vessel-lookup">
+                            <div class="form-group">
+                                <label for="vesselSearch">Search by MMSI, IMO, or Name</label>
+                                <div class="search-input">
+                                    <input type="text" id="vesselSearch" placeholder="Enter MMSI (9 digits), IMO (7 digits), or vessel name">
+                                    <button type="button" id="btnSearchVessel" class="btn btn-primary">Search</button>
+                                </div>
+                                <small class="help-text">Powered by Marinesia API</small>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="vesselName">Vessel Name</label>
+                                <input type="text" id="vesselName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="imoNumber">IMO Number</label>
+                                <input type="text" id="imoNumber" placeholder="7 digits">
+                            </div>
+                            <div class="form-group">
+                                <label for="mmsiNumber">MMSI</label>
+                                <input type="text" id="mmsiNumber" placeholder="9 digits">
+                            </div>
+                            <div class="form-group">
+                                <label for="vesselType">Vessel Type</label>
+                                <input type="text" id="vesselType">
+                            </div>
+                            <div class="form-group">
+                                <label for="vesselLOA">LOA (m)</label>
+                                <input type="number" id="vesselLOA" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="vesselBeam">Beam (m)</label>
+                                <input type="number" id="vesselBeam" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="vesselFlag">Flag</label>
+                                <input type="text" id="vesselFlag">
+                            </div>
+                            <div class="form-group">
+                                <label for="grossTonnage">Gross Tonnage</label>
+                                <input type="number" id="grossTonnage">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- AFC Details -->
+                    <fieldset class="form-section">
+                        <legend>Anti-Fouling Coating (AFC)</legend>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="afcType">AFC Type</label>
+                                <select id="afcType" required>
+                                    <option value="">Select AFC Type</option>
+                                    <option value="biocidal">Biocidal (copper-based, etc.)</option>
+                                    <option value="non-biocidal">Non-biocidal (fouling release, silicone, etc.)</option>
+                                    <option value="unknown">Unknown / Not documented</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="afcProductName">Product Name</label>
+                                <input type="text" id="afcProductName" placeholder="e.g., ECOFLEX SPEC 600 HYB">
+                            </div>
+                            <div class="form-group">
+                                <label for="afcApplicationDate">Application Date</label>
+                                <input type="date" id="afcApplicationDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="afcServiceLife">Service Life (months)</label>
+                                <input type="number" id="afcServiceLife" min="1" value="60">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Prohibited Biocides Check</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="noProhibitedBiocides" checked>
+                                        AFC does not contain diuron, cybutryne, ziram, tributyltin or chlorathonil
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>AFC Condition</label>
+                                <select id="afcCondition" required>
+                                    <option value="sound">Sound condition - within service life</option>
+                                    <option value="worn">Worn but functional</option>
+                                    <option value="damaged">Damaged / compromised</option>
+                                    <option value="unknown">Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Vessel History -->
+                    <fieldset class="form-section">
+                        <legend>Vessel History & Operating Profile</legend>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="recentPortCalls">Recent Port Calls</label>
+                                <textarea id="recentPortCalls" rows="3" placeholder="List recent ports visited..."></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="stationaryPeriods">Stationary Periods</label>
+                                <textarea id="stationaryPeriods" rows="2" placeholder="Note any extended stationary periods..."></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="operatingProfile">Operating Profile Summary</label>
+                                <textarea id="operatingProfile" rows="3" placeholder="e.g., Vessel primarily operating in the North West Shelf oil fields with visits to Victoria and Northern Territory..."></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="imsTrackingDoc">IMS Compliance Tracking Document</label>
+                                <input type="text" id="imsTrackingDoc" placeholder="Document reference...">
+                            </div>
+                            <div class="form-group">
+                                <label>Biofouling Origin</label>
+                                <select id="biofoulingOrigin" required>
+                                    <option value="regional">Regional (WA waters only)</option>
+                                    <option value="domestic">Domestic (Australian waters)</option>
+                                    <option value="international">International</option>
+                                    <option value="unknown">Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Scope of Work -->
+                    <fieldset class="form-section">
+                        <legend>Scope of Work</legend>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>Areas to be Cleaned</label>
+                                <div class="checkbox-group horizontal">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="scopeHull" checked>
+                                        Hull
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="scopeNicheAreas">
+                                        Niche Areas
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="scopePropeller">
+                                        Propeller
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cleaningLocation">Cleaning Location</label>
+                                <select id="cleaningLocation" required>
+                                    <option value="">Select Location</option>
+                                    <option value="Fremantle Inner Harbour">Fremantle Inner Harbour</option>
+                                    <option value="Rous Head Harbour">Rous Head Harbour</option>
+                                    <option value="Australian Marine Complex (AMC), Henderson">Australian Marine Complex (AMC), Henderson</option>
+                                    <option value="other">Other (specify)</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="otherLocationGroup" style="display:none;">
+                                <label for="otherLocation">Specify Location</label>
+                                <input type="text" id="otherLocation">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Biofouling Assessment -->
+                    <fieldset class="form-section">
+                        <legend>Preliminary Biofouling Assessment</legend>
+                        <div class="info-box">
+                            <p>This is the preliminary assessment. Formal pre-clean inspection by DPIRD-recognised inspector follows at Step 3.</p>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="foulingRating">Fouling Rating (FR)</label>
+                                <select id="foulingRating" required>
+                                    <option value="">Select FR</option>
+                                    <option value="0">FR 0 - No microfouling (clean)</option>
+                                    <option value="10">FR 10 - Light microfouling</option>
+                                    <option value="20">FR 20 - Full microfouling (slime)</option>
+                                    <option value="30">FR 30 - Moderate soft macrofouling</option>
+                                    <option value="40">FR 40 - Moderate hard macrofouling (light)</option>
+                                    <option value="50">FR 50 - Moderate hard macrofouling</option>
+                                    <option value="60">FR 60 - Moderate hard macrofouling (tubeworms + barnacles)</option>
+                                    <option value="70">FR 70 - Moderate hard macrofouling (>6.4mm)</option>
+                                    <option value="80">FR 80 - Heavy hard macrofouling</option>
+                                    <option value="90">FR 90 - Heavy hard macrofouling (dense)</option>
+                                    <option value="100">FR 100 - Composite fouling (all forms)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="foulingCover">Fouling Cover (%)</label>
+                                <select id="foulingCover" required>
+                                    <option value="">Select Cover</option>
+                                    <option value="0">0% - Absent</option>
+                                    <option value="1-5">1-5% - Light</option>
+                                    <option value="6-15">6-15% - Considerable</option>
+                                    <option value="16-40">16-40% - Extensive</option>
+                                    <option value="41-100">41-100% - Very heavy</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="foulingDescription">Fouling Description</label>
+                                <textarea id="foulingDescription" rows="3" placeholder="Describe observed biofouling..."></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Auto-calculated Section -->
+                    <fieldset class="form-section calculated-section">
+                        <legend>Determined Requirements (Auto-calculated)</legend>
+                        <div class="requirement-cards">
+                            <div class="requirement-card" id="scenarioCard">
+                                <h4>Cleaning Scenario</h4>
+                                <p id="scenarioText">-</p>
+                            </div>
+                            <div class="requirement-card" id="captureCard">
+                                <h4>Capture Required</h4>
+                                <p id="captureText">-</p>
+                            </div>
+                            <div class="requirement-card" id="sapCard">
+                                <h4>SAP Required</h4>
+                                <p id="sapText">-</p>
+                            </div>
+                            <div class="requirement-card" id="riskCard">
+                                <h4>Risk Level</h4>
+                                <p id="riskText">-</p>
+                            </div>
+                        </div>
+                        <div id="warningMessages" class="warning-messages"></div>
+                    </fieldset>
+
+                    <!-- Document Author -->
+                    <fieldset class="form-section">
+                        <legend>Document Author</legend>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="authorName">Prepared By</label>
+                                <input type="text" id="authorName" value="Sam Diamond">
+                            </div>
+                            <div class="form-group">
+                                <label for="revisionDate">Revision Date</label>
+                                <input type="date" id="revisionDate">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Actions -->
+                    <div class="form-actions">
+                        <button type="button" id="btnSaveJob" class="btn btn-secondary">Save Draft</button>
+                        <button type="button" id="btnGenerateEmail" class="btn btn-secondary">Generate Email</button>
+                        <button type="button" id="btnGenerateWMS" class="btn btn-primary">Generate WMS</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Output Panel -->
+            <section class="output-panel" id="outputPanel">
+                <div class="output-tabs no-print">
+                    <button class="tab-btn active" data-tab="wms">Work Method Statement</button>
+                    <button class="tab-btn" data-tab="email">Email Text</button>
+                </div>
+                <div class="output-actions no-print">
+                    <button id="btnPrint" class="btn btn-secondary">Print / Save PDF</button>
+                    <button id="btnCopyEmail" class="btn btn-secondary" style="display:none;">Copy to Clipboard</button>
+                </div>
+                <div class="output-content" id="outputContent">
+                    <div class="placeholder-message">
+                        <p>Complete the form and click "Generate WMS" to preview the document.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Email Modal -->
+        <div class="modal" id="emailModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Notification Email</h2>
+                    <button class="modal-close" id="closeEmailModal">&times;</button>
+                </div>
+                <div class="modal-body" id="emailContent">
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCopyEmailModal" class="btn btn-primary">Copy to Clipboard</button>
+                    <button id="btnCloseEmailModal" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Jobs Modal -->
+        <div class="modal" id="savedJobsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Saved Jobs</h2>
+                    <button class="modal-close" id="closeSavedJobsModal">&times;</button>
+                </div>
+                <div class="modal-body" id="savedJobsList">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates -->
+    <script id="wms-template" type="text/x-handlebars-template">
+        <div class="wms-document">
+            <!-- Cover Page -->
+            <div class="wms-cover page-break-after">
+                <div class="cover-header">
+                    <p class="doc-number">OPS-DOC-001</p>
+                    <p class="revision-date">Revision Date: {{revisionDate}}</p>
+                </div>
+                <div class="cover-title">
+                    <h1>In Water Hull Cleaning</h1>
+                    <h2>WORK METHOD STATEMENT</h2>
+                    <h3>IN WATER HULL CLEAN</h3>
+                    <h3>'{{vesselName}}'</h3>
+                    <p class="job-number">{{jobNumber}}</p>
+                </div>
+                <div class="cover-footer">
+                    <p class="confidential">CONFIDENTIAL</p>
+                    <p class="website">www.franmarine.com.au</p>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="wms-toc page-break-after">
+                <h2>TABLE OF CONTENTS</h2>
+                <ol class="toc-list">
+                    <li><a href="#purpose">PURPOSE OF DOCUMENT</a></li>
+                    <li><a href="#acronyms">ACRONYMS</a></li>
+                    <li><a href="#definitions">STATUTORY DEFINITIONS</a></li>
+                    <li><a href="#legislation">LEGISLATION AND STANDARDS</a></li>
+                    <li><a href="#scope">SCOPE OF WORK</a></li>
+                    <li><a href="#activity">ACTIVITY PLAN</a></li>
+                    <li><a href="#methodology">TASK SPECIFIC METHODOLOGY</a></li>
+                    <li><a href="#framework">AUSTRALIAN IN-WATER CLEANING DECISION FRAMEWORK</a></li>
+                    <li><a href="#roles">ROLES AND RESPONSIBILITIES</a></li>
+                    <li><a href="#appendices">APPENDICES</a></li>
+                </ol>
+            </div>
+
+            <!-- 1. Purpose -->
+            <section id="purpose" class="wms-section">
+                <h2>1 PURPOSE OF DOCUMENT</h2>
+                <p>This Work Method Statement (WMS) outlines the scope, methodology, safety controls, and compliance procedures associated with the deployment and operation of In-Water Hull Cleaning (IWHC) systems. It incorporates regulatory compliance frameworks, environmental protection protocols, hardware integration, and operational workflows applicable to a wide range of IWHC scenarios.</p>
+                <p>This WMS serves as the cover document for the In Water Hull Cleaning (IWHC) operations, defined as the entire package of documents that control all aspects of the operation, listed below.</p>
+                <ol>
+                    <li>The Work Method Statement (WMS),</li>
+                    <li>Safe Work Method Statement (SWMS) or Job Hazard and Environmental Analysis (JHEA),</li>
+                    <li>Work Health and Safety Management Plan (WHSMP),</li>
+                    <li>Emergency Response Plan (ERP).</li>
+                </ol>
+            </section>
+
+            <!-- 2. Acronyms -->
+            <section id="acronyms" class="wms-section">
+                <h2>2 ACRONYMS</h2>
+                <p>Table 1, below defines the acronyms that may be used in the WMS.</p>
+                <table class="wms-table">
+                    <caption>Table 1: Table of Acronyms</caption>
+                    <tbody>
+                        <tr><td>ADAS</td><td>Australian Diver Accreditation Scheme</td></tr>
+                        <tr><td>AFC</td><td>Anti-Fouling Coating</td></tr>
+                        <tr><td>ALARP</td><td>As Low As Reasonably Possible</td></tr>
+                        <tr><td>DAFF</td><td>Department of Agriculture, Forestry and Fisheries</td></tr>
+                        <tr><td>DPIRD</td><td>Department of Primary Industries and Regional Development</td></tr>
+                        <tr><td>ERP</td><td>Emergency Response Plan</td></tr>
+                        <tr><td>FPA</td><td>Fremantle Port Authority</td></tr>
+                        <tr><td>FR</td><td>Fouling Rating</td></tr>
+                        <tr><td>FUS</td><td>Franmarine Underwater Services</td></tr>
+                        <tr><td>IMS</td><td>Invasive Marine Species</td></tr>
+                        <tr><td>IWHC</td><td>In Water Hull Cleaning</td></tr>
+                        <tr><td>JHEA</td><td>Job Hazard and Environmental Analysis</td></tr>
+                        <tr><td>LOA</td><td>Length Overall</td></tr>
+                        <tr><td>OEMP</td><td>Operations Environmental Management Plan</td></tr>
+                        <tr><td>PIC</td><td>Person in Charge</td></tr>
+                        <tr><td>PPE</td><td>Personal Protective Equipment</td></tr>
+                        <tr><td>SAP</td><td>Sampling and Analysis Plan</td></tr>
+                        <tr><td>SWMS</td><td>Safe Work Method Statement</td></tr>
+                        <tr><td>WHSMP</td><td>Work Health and Safety Management Plan</td></tr>
+                        <tr><td>WMS</td><td>Work Method Statement</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 3. Statutory Definitions -->
+            <section id="definitions" class="wms-section">
+                <h2>3 STATUTORY DEFINITIONS</h2>
+                <p>Table 2, below, contains the statutory definitions used within the WMS.</p>
+                <table class="wms-table">
+                    <caption>Table 2: Statutory Definitions</caption>
+                    <tbody>
+                        <tr><td>CLIENT</td><td>{{clientName}}</td></tr>
+                        <tr><td>DESIGNATED AUTHORITY</td><td>WorkSafe (WA)</td></tr>
+                        <tr><td>SHALL</td><td>A mandatory instruction</td></tr>
+                        <tr><td>SHOULD</td><td>A recommended instruction</td></tr>
+                        <tr><td>SIMOPS</td><td>A work process where diving and other work activities are undertaken concurrently at the same location</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 4. Legislation and Standards -->
+            <section id="legislation" class="wms-section">
+                <h2>4 LEGISLATION AND STANDARDS</h2>
+                <p>The Franmarine Health, Safety, Environmental and Quality (HSEQ) manual forms the basis for the WMS. Our HSEQ Management System is certified by DNV to ISO 9001, ISO 14001 and ISO 45001. FUS are certified under the Scope of Management of diving, integrated underwater and general services provided to the defence, infrastructure, shipping and oil and gas industries.</p>
+                <p>All FUS diving operations will conform to all relevant Australian and International Standards and legislation, with Diving Operations specifically controlled by AS/NZS 2299.1:2015.</p>
+                <p>Internal management documents referenced by this WMS are listed in Table 3, below.</p>
+                <table class="wms-table">
+                    <caption>Table 3: Franmarine Project Management Procedures</caption>
+                    <thead>
+                        <tr><th>Document</th><th>Document Number</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Diving Operations Manual</td><td>OPS-PRO-001</td></tr>
+                        <tr><td>Hazard Awareness & Risk Management</td><td>HSE-PRO-001</td></tr>
+                        <tr><td>Franmarine Vessel Safety Management System</td><td>VSL-SMS-001</td></tr>
+                        <tr><td>HSEQ Management Manual</td><td>HSE-MAN-001</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 5. Scope of Work -->
+            <section id="scope" class="wms-section page-break-before">
+                <h2>5 SCOPE OF WORK</h2>
+                <p>As part of the vessels regular biofouling management practices, Franmarine have been engaged by {{clientName}} to make an application to undertake a {{cleaningTypeText}} to remove all biofouling from underwater surfaces on the vessel '{{vesselName}}'. The scope is scheduled to be completed over {{estimatedDuration}} days, commencing {{proposedStartDate}}.</p>
+                <p>The scope of work and methodology below outlines the proposed treatment plan.</p>
+                <ul>
+                    <li>Remove all macrofouling from {{scopeAreasText}} using MarineStream clean with capture filtration system.</li>
+                    <li>All cleaning activities shall be conducted from the hardstand with '{{vesselName}}' alongside at the {{cleaningLocation}}.</li>
+                    <li>All diving equipment shall be in accordance with AS/NZS 2299.1:2015 at a minimum.</li>
+                    <li>Risk assessment using the Decision Support Tool for In-Water Cleaning from the Australian anti-fouling and in-water cleaning guidelines - Exposure draft (2025) Department of Agriculture, Fisheries and Forestry, Canberra (hereafter "2025 IWHC draft guidelines") has determined the cleaning method to be used as non-abrasive hand cleaning, in accordance with the updated environmental risk classification framework.</li>
+                </ul>
+
+                <h3>Decision Support Tool Checklist</h3>
+                <p>The following checklist from the Decision Support Tool (refer chapter 8) has been completed to demonstrate compliance with the {{cleaningPathway}} pathway:</p>
+                <table class="wms-table checklist-table">
+                    <caption>Table 4: Checklist for {{cleaningPathway}} Cleaning Pathway</caption>
+                    <thead>
+                        <tr><th>Timing</th><th>Criteria</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        {{#each checklistItems}}
+                        <tr>
+                            <td>{{timing}}</td>
+                            <td>{{criteria}}</td>
+                            <td class="status-{{statusClass}}">{{status}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <h3>Compliance Basis</h3>
+                <p>This has been met due to the following:</p>
+                <ul>
+                    <li>Antifoul coating present and in its planned in-service period.
+                        <ul><li>{{afcProductName}} applied {{afcApplicationDate}}.</li></ul>
+                    </li>
+                    <li>Biofouling type – {{foulingTypeText}} of {{biofoulingOrigin}} origin;
+                        <ul><li>{{operatingProfile}}</li></ul>
+                        {{#if imsTrackingDoc}}<ul><li>See document {{imsTrackingDoc}} for full operating profile since last dry docking.</li></ul>{{/if}}
+                    </li>
+                    <li>Cleaning methodology complies with the conditions for removal and/or treatment of biofouling as laid out in the Decision Support Tool for in-water cleaning.
+                        <ul>
+                            <li>Diver operated hand tools with non-abrasive cleaning heads to be used in conjunction with high-pressure water.</li>
+                            {{#if sapRequired}}
+                            <li>O2 Marine will be engaged as an independent scientific organization to assess our cleaning methods through implementing the Sampling Analysis Plan (SAP). This assessment will demonstrate that the proposed cleaning method meets the required outcomes for capture, biosecurity, and chemical contamination standards as specified in the 2025 guidelines.</li>
+                            <li>{{sapDocument}} to be used.</li>
+                            {{/if}}
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 6. Activity Plan -->
+            <section id="activity" class="wms-section">
+                <h2>6 ACTIVITY PLAN</h2>
+                
+                <h3>PREMOBILISATION</h3>
+                <ul>
+                    <li>Project kick-off meeting and confirmation of scope and client's expectations.</li>
+                    <li>Project documentation reviewed and approved by client.</li>
+                    <li>Franmarine will prepare all project plant & equipment and function test systems in house prior to mobilisation.</li>
+                    <li>All diving specific equipment to be compliant with AS/NZS 2299.1.2015</li>
+                </ul>
+
+                <h3>MOBILISATION</h3>
+                <ul>
+                    <li>Franmarine will mobilise all plant & equipment out of Franmarine base; 13 Possner Way, Henderson WA on the mutually agreed upon start date.</li>
+                    <li>Relevant inductions, SWMS review, project familiarisation and daily toolbox meetings will be conducted as and when required.</li>
+                </ul>
+
+                <h3>CLEAN</h3>
+                <ul>
+                    <li>Cleaning will be conducted using diver-operated tools suitable for the hull's coating type and fouling condition.</li>
+                    <li>Biofouling will be removed systematically from all accessible areas, following a top-to-bottom, bow-to-stern sequence.</li>
+                    {{#if captureRequired}}
+                    <li>Wastewater and debris will be continuously captured via suction and processed through filtration and UV treatment systems.</li>
+                    {{/if}}
+                    <li>Cleaning activities will be monitored in real time via surface control, with adjustments made as needed to ensure effective and compliant removal.</li>
+                </ul>
+
+                <h3>POST-CLEAN INSPECTION</h3>
+                <ul>
+                    <li>A diver will complete a visual inspection of all cleaned areas to verify cleaning quality and confirm biofouling removal.</li>
+                    <li>CCTV footage and photos will be used to document surface condition, waste containment effectiveness, and any residual fouling.</li>
+                    <li>Inspection findings will be logged and included in the final job report, with results reviewed alongside the client.</li>
+                </ul>
+
+                <h3>DEMOBILISATION</h3>
+                <ul>
+                    <li>Demobilisation will occur on completion of the above scope to the satisfaction of {{clientName}}. All project associated plant, and equipment will be removed from site and the site confirmed as clean, as to return the site to the same condition that it was prior to the project.</li>
+                    <li>Final vehicle demobilisation and wash up will be at Franmarine Base; 13 Possner Way, Henderson WA, where all project associated equipment will be washed, inspected and replenished for future works.</li>
+                    <li>Biofouling waste will be treated as controlled waste and disposed of by a waste contractor (Clean-Away)</li>
+                </ul>
+            </section>
+
+            <!-- 7. Task Specific Methodology -->
+            <section id="methodology" class="wms-section page-break-before">
+                <h2>7 TASK SPECIFIC METHODOLOGY</h2>
+
+                <h3>BIOFOULING REMOVAL</h3>
+                <p>All biofouling on the {{scopeAreasText}} will be removed using dive hand tools {{#if captureRequired}}with capture and filtration{{else}}appropriate to the fouling level{{/if}}. The treatment process must avoid damaging anti-fouling coatings wherever possible and comply with containment and waste capture protocols outlined in the 2025 IWHC Exposure Draft.</p>
+                <p>Helmet-mounted CCTV will be used to record all cleaning activities, with footage retained as part of job documentation. This video will serve two primary purposes: to measure the capture standard and to verify visual compliance by showing whether any visible debris escapes the system.</p>
+                {{#if captureRequired}}
+                <p>Cleaning methods will utilise vacuum heads with removable scraper blades, with waste filtered through a 10-micron unit. The Dive Supervisor will assess each method's effectiveness in real-time and consult Franmarine Operations Management before implementing alternative methods. If switching cleaning heads, each head type must be tested individually, and the changeover documented as per IWHC assessment protocols. This approach supports reactive management strategies for unacceptable discharge.</p>
+                {{/if}}
+                <p>Should IMS be detected during operations, DPIRD will be notified immediately, and further works will be conducted under their discretion and authority.</p>
+
+                <h3>REGULATORY COMPLIANCE</h3>
+                <p>The cleaning methodology aligns with the Decision Support Tool outlined in Chapter 8 of the 2025 IWHC draft guidelines and supports the operational standards proposed by regulatory bodies. Real-time video chat (via MarineStream) ensures regulatory oversight during operations is available, satisfying the compliance verification requirements introduced in the latest Exposure Draft.</p>
+                <p>{{operatingProfileCompliance}}</p>
+                <p>Franmarines in-water cleaning process is agnostic to vessel type and aligns with the standards proposed in the WA regulatory environment. DPIRD is a key stakeholder in marine pest management. As such, all IMS risks must be addressed through inspection, sampling, and reporting.</p>
+                <p>All planned operations will conform with Fremantle Port Authority requirements, and approvals are expected to follow formal permit-to-operate processes. Any methodology adjustments or contingency measures implemented during the project must be documented in SAP and made available to regulators for review.</p>
+
+                {{#if sapRequired}}
+                <h3>CHEMICAL CONTAMINATION MANAGEMENT</h3>
+                <p>To ensure compliance with the chemical contamination standards set by the 2025 IWHC draft guidelines, a comprehensive Sampling Analysis Plan (SAP) has been developed. This SAP governs all sampling and monitoring of discharge during cleaning operations and ensures that effluent does not contain toxicants in concentrations exceeding limits listed in the ANZG 2018 guidelines for marine water quality.</p>
+                <p>Sampling will occur at three spatially distinct sites (e.g. above, below, and downstream of the cleaning head), with testing repeated over three occasions during cleaning operations. A control site and an ambient location will also be included to provide baseline comparisons. The SAP includes analyte testing for TSS, biocides, copper, and zinc, as well as QA/QC procedures. All sample rationale must be documented and traceable.</p>
+                <p>Sampling containers will be prepared and deployed by trained personnel in line with pre-approved procedures. Data will be assessed for statistical variation using appropriate methods (e.g. ANOVA), ensuring sufficient replication and compliance with exposure thresholds.</p>
+                <p>Franmarine will provide vessel-specific operational information to FPA and other regulators to support pre-approval processes. The SAP includes reactive measures if live fauna or unacceptable chemical levels are detected and outlines the steps to notify regulators and repeat viability testing where applicable.</p>
+                {{/if}}
+            </section>
+
+            <!-- 8. Decision Framework -->
+            <section id="framework" class="wms-section page-break-before">
+                <h2>8 AUSTRALIAN IN-WATER CLEANING DECISION FRAMEWORK</h2>
+                <p>This framework provides guidance for assessing in-water cleaning activities based on the 2025 IWHC draft guidelines. The decision process follows these key checkpoints:</p>
+
+                <div class="decision-framework">
+                    <div class="framework-box">
+                        <h4>1. DOCUMENT CHECK</h4>
+                        <ul class="check-list">
+                            <li class="{{#if afsCertValid}}check-pass{{else}}check-fail{{/if}}">Valid AFS Certificate</li>
+                            <li class="{{#if noProhibitedBiocides}}check-pass{{else}}check-fail{{/if}}">No prohibited biocides</li>
+                            <li class="{{#if afcWithinServiceLife}}check-pass{{else}}check-fail{{/if}}">AFC within service life</li>
+                            <li class="check-pending">Biofouling assessed and documented</li>
+                        </ul>
+                    </div>
+
+                    <div class="framework-arrow">▼</div>
+
+                    <div class="framework-box">
+                        <h4>2. SCENARIO DETERMINATION</h4>
+                        <p><strong>Determined Scenario:</strong> {{cleaningScenario}}</p>
+                        <ul>
+                            <li>Fouling Rating: FR {{foulingRating}}</li>
+                            <li>Biofouling Origin: {{biofoulingOrigin}}</li>
+                            <li>AFC Type: {{afcTypeText}}</li>
+                        </ul>
+                    </div>
+
+                    <div class="framework-arrow">▼</div>
+
+                    <div class="framework-box">
+                        <h4>3. PATHWAY REQUIREMENTS</h4>
+                        <table class="requirements-table">
+                            <tr>
+                                <td>Capture Standard</td>
+                                <td class="{{#if captureRequired}}required{{else}}not-required{{/if}}">{{#if captureRequired}}Required{{else}}Not Required{{/if}}</td>
+                            </tr>
+                            <tr>
+                                <td>Biosecurity Standard</td>
+                                <td class="{{#if captureRequired}}required{{else}}not-required{{/if}}">{{#if captureRequired}}Required{{else}}Not Required{{/if}}</td>
+                            </tr>
+                            <tr>
+                                <td>Chemical Contamination Standard</td>
+                                <td class="{{#if sapRequired}}required{{else}}not-required{{/if}}">{{#if sapRequired}}Required (SAP){{else}}Not Required{{/if}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="framework-arrow">▼</div>
+
+                    <div class="framework-box">
+                        <h4>4. APPROVAL PROCESS</h4>
+                        <ol>
+                            <li>Submit notification package to FPA and DPIRD</li>
+                            <li>DPIRD reviews vessel history, confirms acceptable risk</li>
+                            <li>Pre-clean inspection by DPIRD-recognised inspector (≥48hrs before clean)</li>
+                            <li>DPIRD clearance to proceed</li>
+                            <li>If IMS detected → site to DPIRD custody</li>
+                            <li>If no IMS → proceed with clean</li>
+                            <li>Post-clean inspection</li>
+                            <li>Final Report to FPA and DPIRD (≤20 business days)</li>
+                        </ol>
+                    </div>
+                </div>
+
+                {{#if highRisk}}
+                <div class="warning-box">
+                    <h4>⚠️ HIGH RISK VESSEL</h4>
+                    <p>This vessel has been determined to be high risk. High risk vessels (FR≥90, non-regional biofouling, IMS suspected, AFC damaged/unknown/expired) are assessed case-by-case under DPIRD direction (OEMP 6.1.2). DPIRD leads the assessment process.</p>
+                </div>
+                {{/if}}
+            </section>
+
+            <!-- 9. Roles and Responsibilities -->
+            <section id="roles" class="wms-section">
+                <h2>9 ROLES AND RESPONSIBILITIES</h2>
+
+                <h3>FRANMARINE</h3>
+                <p>Franmarine is the authority in control of the workplace defined in Section 5 Scope of Work, and as such, has an overall authority in making emergency response decisions within the workplace.</p>
+
+                <h3>PERSONNEL</h3>
+                <p>Franmarine shall provide personnel and equipment to carry out the proposed scope of works in accordance with AS/NZS 2299.1:2015 at a minimum.</p>
+                <p>Full responsibilities of employees are listed in Work Health and Safety Management Plan. Steps that must be taken by both FUS and its personnel to identify and mitigate workplace hazards are listed in the Safe Work Method Statement.</p>
+
+                <h3>DIVING AND NON-DIVING EMERGENCIES</h3>
+                <p>Franmarine has developed an Emergency Response Plan specifically for this project. A copy of this document will be held in the project file with the Supervisor on site.</p>
+                <p>The ERP will be discussed with all personnel involved in the operation prior to commencement of diving operations. This discussion will be led by the Dive Supervisor and the Client Representative.</p>
+            </section>
+
+            <!-- 10. Appendices -->
+            <section id="appendices" class="wms-section">
+                <h2>10 APPENDICES</h2>
+                <p>The following documents are appended to this WMS:</p>
+                <ul class="appendix-list">
+                    <li><strong>Appendix No. 1</strong> – Safe Work Method Statement (SWMS)</li>
+                    <li><strong>Appendix No. 2</strong> – Health and Safety Management Plan (WHSMP)</li>
+                    <li><strong>Appendix No. 3</strong> – Emergency Response Plan (ERP)</li>
+                    <li><strong>Appendix No. 4</strong> – IWC-PRO-010 IWCT In Water Cleaning Technology Manual</li>
+                    {{#if sapRequired}}
+                    <li><strong>Appendix No. 5</strong> – {{sapDocument}}</li>
+                    {{/if}}
+                </ul>
+            </section>
+
+            <!-- Document Control -->
+            <section class="wms-section document-control">
+                <table class="control-table">
+                    <tr>
+                        <th>Document</th>
+                        <th>Revision Number</th>
+                        <th>Date</th>
+                        <th>Notes</th>
+                        <th>Changes Approved by</th>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">{{jobNumber}}-Work Method Statement</td>
+                        <td>01</td>
+                        <td>{{revisionDate}}</td>
+                        <td>Document Created</td>
+                        <td>{{authorName}}</td>
+                    </tr>
+                </table>
+
+                <table class="control-table">
+                    <tr>
+                        <th>Job Number</th>
+                        <td>{{jobNumber}}</td>
+                    </tr>
+                    <tr>
+                        <th>Distribution List</th>
+                        <td>{{clientName}}, FPA, DPIRD</td>
+                    </tr>
+                </table>
+
+                <div class="copyright-notice">
+                    <h4>Copyright Notice</h4>
+                    <p>Franmarine is the sole owner of the intellectual property contained in any documentation bearing its name. All materials, including internet pages, document and online graphics, audio and video, are protected by copyright law.</p>
+                    <p>The contents are intended only for the named recipient. If you are not the intended recipient you are hereby notified that any unauthorised use, reproduction, disclosure or distribution the information contained in this document.</p>
+                    <p>Apart from any fair dealing for the purpose of private study, research, criticism or review as permitted under the provisions of the Copyright Act 1968, no part of this document may be reproduced, transmitted in any form or re-used for any commercial purposes whatsoever without the prior written permission of Franmarine.</p>
+                    <p>This document represents the status of the topic at the date shown, and is subject to change without notice. The latest version of this document is available from Document Control.</p>
+                    <p class="copyright-year">©{{currentYear}} Franmarine. All Rights Reserved.</p>
+                </div>
+            </section>
+        </div>
+    </script>
+
+    <script id="email-template" type="text/x-handlebars-template">
+        <div class="email-content">
+            <p><strong>Subject:</strong> IWC Notification - {{vesselName}} - {{jobNumber}} - {{cleaningLocation}}</p>
+            <hr>
+            <p>Hi Bec, Sam,</p>
+
+            <p>Please find below our notification for the proposed in-water clean of '{{vesselName}}'.</p>
+
+            <h3>NOTIFICATION PACKAGE</h3>
+            <table class="email-table">
+                <tr><th>Item</th><th>Detail</th></tr>
+                <tr><td>Vessel Name</td><td>{{vesselName}}</td></tr>
+                <tr><td>IMO Number</td><td>{{imoNumber}}</td></tr>
+                {{#if mmsiNumber}}<tr><td>MMSI</td><td>{{mmsiNumber}}</td></tr>{{/if}}
+                <tr><td>Vessel Type</td><td>{{vesselType}}</td></tr>
+                <tr><td>LOA</td><td>{{vesselLOA}} m{{#if vesselBeam}} × {{vesselBeam}} m beam{{/if}}</td></tr>
+                <tr><td>AFC Type</td><td>{{afcProductName}} ({{afcTypeText}})</td></tr>
+                <tr><td>AFC Applied</td><td>{{afcApplicationDate}}</td></tr>
+                <tr><td>AFC Service Life</td><td>{{afcServiceLife}} months</td></tr>
+                <tr><td>Prohibited Biocides</td><td>{{#if noProhibitedBiocides}}Confirmed none present{{else}}Not confirmed{{/if}}</td></tr>
+                <tr><td>Recent Port Calls</td><td>{{recentPortCalls}}</td></tr>
+                <tr><td>Operating Profile</td><td>{{operatingProfile}}</td></tr>
+                <tr><td>Proposed Scope</td><td>{{scopeAreasText}}</td></tr>
+                <tr><td>Proposed Location</td><td>{{cleaningLocation}}</td></tr>
+                <tr><td>Proposed Date</td><td>{{proposedStartDate}} ({{estimatedDuration}} days)</td></tr>
+                <tr><td>Preliminary Biofouling</td><td>FR {{foulingRating}}, {{foulingCover}} cover</td></tr>
+            </table>
+
+            <h3>DETERMINED REQUIREMENTS</h3>
+            <table class="email-table">
+                <tr><th>Operation</th><th>Capture</th><th>SAP</th></tr>
+                <tr>
+                    <td>{{cleaningScenario}}</td>
+                    <td>{{#if captureRequired}}Yes{{else}}No{{/if}}</td>
+                    <td>{{#if sapRequired}}Yes{{else}}No{{/if}}</td>
+                </tr>
+            </table>
+
+            {{#if highRisk}}
+            <p><strong>⚠️ Note:</strong> This vessel has been flagged as high risk and requires case-by-case assessment under DPIRD direction (OEMP 6.1.2).</p>
+            {{/if}}
+
+            <p>The full Work Method Statement is attached.</p>
+
+            <p>Please confirm:</p>
+            <ol>
+                <li>Acceptable biosecurity risk based on vessel history</li>
+                <li>Lead time required for clearance beyond the 48hr inspection report submission</li>
+            </ol>
+
+            <p>Happy to call if easier to discuss.</p>
+
+            <p>Kind regards,</p>
+            <p>
+                <strong>{{authorName}}</strong><br>
+                Franmarine Underwater Services<br>
+                13 Possner Way, Henderson WA 6166
+            </p>
+        </div>
+    </script>
+
+    <!-- Vessel Search Modal -->
+    <div id="vesselSearchModal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content vessel-search-modal">
+            <div class="modal-header">
+                <h2>🚢 Vessel Search Results</h2>
+                <button class="modal-close" id="closeVesselModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="vesselSearchStatus" class="search-status">
+                    <div class="search-spinner"></div>
+                    <span>Searching...</span>
+                </div>
+                <div id="vesselSearchResults" class="vessel-results-grid">
+                    <!-- Results will be populated here -->
+                </div>
+                <div id="noVesselResults" class="no-results" style="display: none;">
+                    <p>🔍 No vessels found matching your search.</p>
+                    <p>You can enter the vessel details manually below.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnEnterManually">
+                    ✏️ Enter Details Manually
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnCancelSearch">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" style="display: none;">
+        <div class="modal-overlay" id="settingsModalOverlay"></div>
+        <div class="modal-content settings-modal">
+            <div class="modal-header">
+                <h2>⚙️ API Settings</h2>
+                <button class="modal-close" id="closeSettingsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-info">
+                    <p>Configure your API keys to enable vessel search. Keys are stored locally in your browser and never sent to our servers.</p>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>🌐 Marinesia API</h3>
+                    <p class="settings-description">Primary vessel database for detailed vessel profiles.</p>
+                    <div class="form-group">
+                        <label for="marinesiaApiKey">API Key</label>
+                        <div class="api-key-input">
+                            <input type="password" id="marinesiaApiKey" placeholder="Enter your Marinesia API key">
+                            <button type="button" class="btn btn-icon toggle-visibility" data-target="marinesiaApiKey">👁️</button>
+                        </div>
+                        <small class="help-text">
+                            <a href="https://marinesia.com" target="_blank" rel="noopener">Get a free API key →</a>
+                        </small>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>📡 AISStream API</h3>
+                    <p class="settings-description">Real-time AIS data for vessels worldwide. <strong>Note:</strong> Requires a backend server due to WebSocket restrictions.</p>
+                    <div class="form-group">
+                        <label for="aisstreamApiKey">API Key</label>
+                        <div class="api-key-input">
+                            <input type="password" id="aisstreamApiKey" placeholder="Enter your AISStream API key">
+                            <button type="button" class="btn btn-icon toggle-visibility" data-target="aisstreamApiKey">👁️</button>
+                        </div>
+                        <small class="help-text">
+                            <a href="https://aisstream.io" target="_blank" rel="noopener">Get a free API key →</a>
+                        </small>
+                    </div>
+                    <div class="settings-note">
+                        <span class="note-icon">ℹ️</span>
+                        <span>AISStream only works when running with the proxy server (<code>npm start</code>). On GitHub Pages, only Marinesia and demo data are available.</span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🔗 Deployment Mode</h3>
+                    <div class="deployment-status" id="deploymentStatus">
+                        <div class="status-item">
+                            <span class="status-label">Mode:</span>
+                            <span class="status-value" id="deploymentMode">Checking...</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Marinesia:</span>
+                            <span class="status-value" id="marinesiaStatus">-</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">AISStream:</span>
+                            <span class="status-value" id="aisstreamStatus">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnTestConnection">Test Connection</button>
+                <button type="button" class="btn btn-primary" id="btnSaveSettings">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils/scenarioLogic.js"></script>
+    <script src="js/services/storage.js"></script>
+    <script src="js/services/jobNumber.js"></script>
+    <script src="js/services/vesselApi.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+

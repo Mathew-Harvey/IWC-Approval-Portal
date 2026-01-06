@@ -385,16 +385,89 @@ const VesselApiService = {
      */
     getMockResults(query) {
         const mockVessels = [
+            // Commercial Vessels
             { vesselName: 'GINGKO', imoNumber: '9389112', mmsi: '352002084', vesselType: 'Cargo Ship', vesselLOA: 190, vesselBeam: 32, vesselFlag: 'Panama', callsign: '3E3768' },
             { vesselName: 'FUGRO ETIVE', imoNumber: '9665210', mmsi: '235095000', vesselType: 'Offshore Supply Ship', vesselLOA: 82, vesselBeam: 18, vesselFlag: 'United Kingdom', callsign: 'MHFQ8', grossTonnage: 3500 },
             { vesselName: 'FUGRO SALTIRE', imoNumber: '9665222', mmsi: '235096000', vesselType: 'Offshore Supply Ship', vesselLOA: 82, vesselBeam: 18, vesselFlag: 'United Kingdom', callsign: 'MHFR2', grossTonnage: 3500 },
             { vesselName: 'MAERSK HIGHLANDER', imoNumber: '9398056', mmsi: '219633000', vesselType: 'Offshore Tug/Supply Ship', vesselLOA: 91, vesselBeam: 22, vesselFlag: 'Denmark', callsign: 'OWHD2', grossTonnage: 4893 },
-            { vesselName: 'HMAS ANZAC', imoNumber: '', mmsi: '503800000', vesselType: 'Naval Ship', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
-            { vesselName: 'HMAS HOBART', imoNumber: '', mmsi: '503800002', vesselType: 'Naval Ship', vesselLOA: 147, vesselBeam: 18.6, vesselFlag: 'Australia', grossTonnage: 6250 },
-            { vesselName: 'HMAS CANBERRA', imoNumber: '', mmsi: '503800004', vesselType: 'Landing Helicopter Dock', vesselLOA: 230.8, vesselBeam: 32, vesselFlag: 'Australia', grossTonnage: 27500 },
+            // ============================================
+            // SVITZER AUSTRALIA FLEET
+            // ============================================
+            { vesselName: 'SVITZER ABROLHOS', imoNumber: '', mmsi: '503200001', vesselType: 'Tug', vesselLOA: 28.4, vesselBeam: 11, vesselFlag: 'Australia', grossTonnage: 350 },
+            { vesselName: 'SVITZER ALBATROSS', imoNumber: '', mmsi: '503200002', vesselType: 'Tug', vesselLOA: 31.5, vesselBeam: 12, vesselFlag: 'Australia', grossTonnage: 450 },
+            { vesselName: 'SVITZER BASS', imoNumber: '', mmsi: '503200003', vesselType: 'Tug', vesselLOA: 24.74, vesselBeam: 10, vesselFlag: 'Australia', grossTonnage: 250 },
+            { vesselName: 'SVITZER BILBY', imoNumber: '', mmsi: '503200004', vesselType: 'Tug', vesselLOA: 28.4, vesselBeam: 11, vesselFlag: 'Australia', grossTonnage: 350 },
+            { vesselName: 'SVITZER BONDI', imoNumber: '', mmsi: '503200005', vesselType: 'Tug', vesselLOA: 22.73, vesselBeam: 9.5, vesselFlag: 'Australia', grossTonnage: 200 },
+            { vesselName: 'SVITZER BOODIE', imoNumber: '', mmsi: '503200006', vesselType: 'Tug', vesselLOA: 33.3, vesselBeam: 12.5, vesselFlag: 'Australia', grossTonnage: 550 },
+            { vesselName: 'SVITZER COLMSLIE', imoNumber: '', mmsi: '503200007', vesselType: 'Tug', vesselLOA: 24.47, vesselBeam: 10, vesselFlag: 'Australia', grossTonnage: 250 },
+            { vesselName: 'SVITZER DORADO', imoNumber: '', mmsi: '503200008', vesselType: 'Tug', vesselLOA: 28.4, vesselBeam: 11, vesselFlag: 'Australia', grossTonnage: 350 },
+            { vesselName: 'SVITZER DRAGON', imoNumber: '', mmsi: '503200009', vesselType: 'Tug', vesselLOA: 28.4, vesselBeam: 11, vesselFlag: 'Australia', grossTonnage: 350 },
+            { vesselName: 'SVITZER DUGITE', imoNumber: '', mmsi: '503200010', vesselType: 'Tug', vesselLOA: 32.6, vesselBeam: 12.5, vesselFlag: 'Australia', grossTonnage: 500 },
+            { vesselName: 'SVITZER DUGONG', imoNumber: '', mmsi: '503200011', vesselType: 'Tug', vesselLOA: 33.3, vesselBeam: 12.5, vesselFlag: 'Australia', grossTonnage: 550 },
+            { vesselName: 'SVITZER EAGLE', imoNumber: '9704821', mmsi: '503124000', vesselType: 'Tug', vesselLOA: 29.09, vesselBeam: 12, vesselFlag: 'Australia', callsign: 'VHF3', grossTonnage: 500 },
+            { vesselName: 'SVITZER EDWINA', imoNumber: '', mmsi: '503200012', vesselType: 'Tug', vesselLOA: 33.92, vesselBeam: 12.8, vesselFlag: 'Australia', grossTonnage: 600 },
+            { vesselName: 'SVITZER EUREKA', imoNumber: '', mmsi: '503200013', vesselType: 'Tug', vesselLOA: 24.74, vesselBeam: 10, vesselFlag: 'Australia', grossTonnage: 250 },
             { vesselName: 'SVITZER FALCON', imoNumber: '9704819', mmsi: '503123000', vesselType: 'Tug', vesselLOA: 32, vesselBeam: 12, vesselFlag: 'Australia', callsign: 'VHF2', grossTonnage: 500 },
-            { vesselName: 'SVITZER EAGLE', imoNumber: '9704821', mmsi: '503124000', vesselType: 'Tug', vesselLOA: 32, vesselBeam: 12, vesselFlag: 'Australia', callsign: 'VHF3', grossTonnage: 500 },
-            { vesselName: 'RV INVESTIGATOR', imoNumber: '9616888', mmsi: '503000000', vesselType: 'Research Vessel', vesselLOA: 94, vesselBeam: 18.5, vesselFlag: 'Australia', callsign: 'VNAC', grossTonnage: 6000 }
+            { vesselName: 'SVITZER WARATAH', imoNumber: '', mmsi: '503200014', vesselType: 'Tug', vesselLOA: 28.67, vesselBeam: 11.2, vesselFlag: 'Australia', grossTonnage: 380 },
+            { vesselName: 'SVITZER WARRAWEE', imoNumber: '', mmsi: '503200015', vesselType: 'Tug', vesselLOA: 28.67, vesselBeam: 11.2, vesselFlag: 'Australia', grossTonnage: 380 },
+            { vesselName: 'SVITZER WILU', imoNumber: '', mmsi: '503200016', vesselType: 'Tug', vesselLOA: 28.4, vesselBeam: 11, vesselFlag: 'Australia', grossTonnage: 350 },
+            { vesselName: 'RV INVESTIGATOR', imoNumber: '9616888', mmsi: '503000000', vesselType: 'Research Vessel', vesselLOA: 94, vesselBeam: 18.5, vesselFlag: 'Australia', callsign: 'VNAC', grossTonnage: 6000 },
+            
+            // ============================================
+            // ROYAL AUSTRALIAN NAVY FLEET
+            // ============================================
+            
+            // Landing Helicopter Docks (LHD)
+            { vesselName: 'HMAS CANBERRA', imoNumber: '', mmsi: '503800001', vesselType: 'Landing Helicopter Dock', vesselLOA: 230.8, vesselBeam: 32, vesselFlag: 'Australia', grossTonnage: 27500 },
+            { vesselName: 'HMAS ADELAIDE', imoNumber: '', mmsi: '503800002', vesselType: 'Landing Helicopter Dock', vesselLOA: 230.8, vesselBeam: 32, vesselFlag: 'Australia', grossTonnage: 27500 },
+            
+            // Hobart-class Guided Missile Destroyers (DDG)
+            { vesselName: 'HMAS HOBART', imoNumber: '', mmsi: '503800010', vesselType: 'Guided Missile Destroyer', vesselLOA: 147.2, vesselBeam: 18.6, vesselFlag: 'Australia', grossTonnage: 7000 },
+            { vesselName: 'HMAS BRISBANE', imoNumber: '', mmsi: '503800011', vesselType: 'Guided Missile Destroyer', vesselLOA: 147.2, vesselBeam: 18.6, vesselFlag: 'Australia', grossTonnage: 7000 },
+            { vesselName: 'HMAS SYDNEY', imoNumber: '', mmsi: '503800012', vesselType: 'Guided Missile Destroyer', vesselLOA: 147.2, vesselBeam: 18.6, vesselFlag: 'Australia', grossTonnage: 7000 },
+            
+            // Anzac-class Frigates (FFH)
+            { vesselName: 'HMAS ANZAC', imoNumber: '', mmsi: '503800020', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            { vesselName: 'HMAS ARUNTA', imoNumber: '', mmsi: '503800021', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            { vesselName: 'HMAS WARRAMUNGA', imoNumber: '', mmsi: '503800022', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            { vesselName: 'HMAS STUART', imoNumber: '', mmsi: '503800023', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            { vesselName: 'HMAS PARRAMATTA', imoNumber: '', mmsi: '503800024', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            { vesselName: 'HMAS BALLARAT', imoNumber: '', mmsi: '503800025', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            { vesselName: 'HMAS TOOWOOMBA', imoNumber: '', mmsi: '503800026', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            { vesselName: 'HMAS PERTH', imoNumber: '', mmsi: '503800027', vesselType: 'Frigate', vesselLOA: 118, vesselBeam: 14.8, vesselFlag: 'Australia', grossTonnage: 3600 },
+            
+            // Collins-class Submarines (SSG)
+            { vesselName: 'HMAS COLLINS', imoNumber: '', mmsi: '503800030', vesselType: 'Submarine', vesselLOA: 77.8, vesselBeam: 7.8, vesselFlag: 'Australia', grossTonnage: 3051 },
+            { vesselName: 'HMAS FARNCOMB', imoNumber: '', mmsi: '503800031', vesselType: 'Submarine', vesselLOA: 77.8, vesselBeam: 7.8, vesselFlag: 'Australia', grossTonnage: 3051 },
+            { vesselName: 'HMAS WALLER', imoNumber: '', mmsi: '503800032', vesselType: 'Submarine', vesselLOA: 77.8, vesselBeam: 7.8, vesselFlag: 'Australia', grossTonnage: 3051 },
+            { vesselName: 'HMAS DECHAINEUX', imoNumber: '', mmsi: '503800033', vesselType: 'Submarine', vesselLOA: 77.8, vesselBeam: 7.8, vesselFlag: 'Australia', grossTonnage: 3051 },
+            { vesselName: 'HMAS SHEEAN', imoNumber: '', mmsi: '503800034', vesselType: 'Submarine', vesselLOA: 77.8, vesselBeam: 7.8, vesselFlag: 'Australia', grossTonnage: 3051 },
+            { vesselName: 'HMAS RANKIN', imoNumber: '', mmsi: '503800035', vesselType: 'Submarine', vesselLOA: 77.8, vesselBeam: 7.8, vesselFlag: 'Australia', grossTonnage: 3051 },
+            
+            // Arafura-class Offshore Patrol Vessels (OPV)
+            { vesselName: 'HMAS ARAFURA', imoNumber: '', mmsi: '503800040', vesselType: 'Offshore Patrol Vessel', vesselLOA: 80, vesselBeam: 13, vesselFlag: 'Australia', grossTonnage: 1640 },
+            
+            // Cape-class Patrol Boats (P)
+            { vesselName: 'HMAS CAPE CAPRICORN', imoNumber: '', mmsi: '503800050', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            { vesselName: 'HMAS CAPE NATURALISTE', imoNumber: '', mmsi: '503800051', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            { vesselName: 'HMAS CAPE PILLAR', imoNumber: '', mmsi: '503800052', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            { vesselName: 'HMAS CAPE SCHANCK', imoNumber: '', mmsi: '503800053', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            { vesselName: 'HMAS CAPE SOLANDER', imoNumber: '', mmsi: '503800054', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            { vesselName: 'HMAS CAPE WOOLAMAI', imoNumber: '', mmsi: '503800055', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            { vesselName: 'HMAS CAPE LEVEQUE', imoNumber: '', mmsi: '503800056', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            { vesselName: 'HMAS CAPE INSCRIPTION', imoNumber: '', mmsi: '503800057', vesselType: 'Patrol Boat', vesselLOA: 58, vesselBeam: 10.6, vesselFlag: 'Australia', grossTonnage: 335 },
+            
+            // Huon-class Minehunters (M)
+            { vesselName: 'HMAS HUON', imoNumber: '', mmsi: '503800060', vesselType: 'Minehunter', vesselLOA: 52.5, vesselBeam: 9.9, vesselFlag: 'Australia', grossTonnage: 720 },
+            { vesselName: 'HMAS GASCOYNE', imoNumber: '', mmsi: '503800061', vesselType: 'Minehunter', vesselLOA: 52.5, vesselBeam: 9.9, vesselFlag: 'Australia', grossTonnage: 720 },
+            { vesselName: 'HMAS DIAMANTINA', imoNumber: '', mmsi: '503800062', vesselType: 'Minehunter', vesselLOA: 52.5, vesselBeam: 9.9, vesselFlag: 'Australia', grossTonnage: 720 },
+            
+            // Supply-class Replenishment Oilers (A)
+            { vesselName: 'HMAS SUPPLY', imoNumber: '', mmsi: '503800070', vesselType: 'Replenishment Oiler', vesselLOA: 173.9, vesselBeam: 24, vesselFlag: 'Australia', grossTonnage: 19500 },
+            { vesselName: 'HMAS STALWART', imoNumber: '', mmsi: '503800071', vesselType: 'Replenishment Oiler', vesselLOA: 173.9, vesselBeam: 24, vesselFlag: 'Australia', grossTonnage: 19500 },
+            
+            // Leeuwin-class Survey Vessel (A)
+            { vesselName: 'HMAS MELVILLE', imoNumber: '', mmsi: '503800080', vesselType: 'Survey Vessel', vesselLOA: 71.2, vesselBeam: 15.2, vesselFlag: 'Australia', grossTonnage: 2200 }
         ];
 
         const q = query.toLowerCase();

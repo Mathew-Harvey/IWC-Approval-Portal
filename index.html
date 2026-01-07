@@ -212,6 +212,57 @@
                                 <label for="otherLocation">Specify Location</label>
                                 <input type="text" id="otherLocation">
                             </div>
+                            <div class="form-group full-width">
+                                <label for="customScopeOfWork">Custom Scope of Work</label>
+                                <textarea id="customScopeOfWork" rows="4" placeholder="If the standard scope doesn't apply, describe the custom scope here. This will override the default scope description in all generated documents."></textarea>
+                                <small class="help-text">Leave blank to use the default scope based on selected areas above.</small>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Additional Activities -->
+                    <fieldset class="form-section">
+                        <legend>Additional Activities & Hazards</legend>
+                        <div class="info-box">
+                            <p>Select any additional activities that apply. These will add relevant hazards to the SWMS and considerations to other safety documents.</p>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <div class="checkbox-group vertical">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityConfinedSpace">
+                                        Confined Space Entry (tanks, cofferdams, chain lockers)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityHotWork">
+                                        Hot Work (welding, cutting, grinding)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityWorkingAtHeights">
+                                        Working at Heights (>2m above water/deck)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityCraneOps">
+                                        Crane/Lifting Operations
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityHazmat">
+                                        Hazardous Materials Handling
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityNightWork">
+                                        Night Work Operations
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityUnderwaterInspection">
+                                        Underwater Inspection/Survey (beyond cleaning)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="activityPropPolishing">
+                                        Propeller Polishing (powered tools)
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </fieldset>
 
@@ -508,13 +559,30 @@
             <section id="scope" class="wms-section page-break-before">
                 <h2>5 SCOPE OF WORK</h2>
                 <p>As part of the vessels regular biofouling management practices, Franmarine have been engaged by {{clientName}} to make an application to undertake a {{cleaningTypeText}} to remove all biofouling from underwater surfaces on the vessel '{{vesselName}}'. The scope is scheduled to be completed over {{estimatedDuration}} days, commencing {{proposedStartDate}}.</p>
+                {{#if hasCustomScope}}
+                <h3>Custom Scope Description</h3>
+                <p>{{scopeAreasText}}</p>
+                <p>The methodology below outlines the proposed treatment plan.</p>
+                {{else}}
                 <p>The scope of work and methodology below outlines the proposed treatment plan.</p>
+                {{/if}}
                 <ul>
+                    {{#unless hasCustomScope}}
                     <li>Remove all macrofouling from {{scopeAreasText}} using MarineStream clean with capture filtration system.</li>
+                    {{/unless}}
                     <li>All cleaning activities shall be conducted from the hardstand with '{{vesselName}}' alongside at the {{cleaningLocation}}.</li>
                     <li>All diving equipment shall be in accordance with AS/NZS 2299.1:2015 at a minimum.</li>
                     <li>Risk assessment using the Decision Support Tool for In-Water Cleaning from the Australian anti-fouling and in-water cleaning guidelines - Exposure draft (2025) Department of Agriculture, Fisheries and Forestry, Canberra (hereafter "2025 IWHC draft guidelines") has determined the cleaning method to be used as non-abrasive hand cleaning, in accordance with the updated environmental risk classification framework.</li>
                 </ul>
+                {{#if hasAdditionalActivities}}
+                <h3>Additional Activities</h3>
+                <p>The following additional activities are included in this scope:</p>
+                <ul>
+                    {{#each additionalActivities}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                {{/if}}
 
                 <h3>Decision Support Tool Checklist</h3>
                 <p>The following checklist from the Decision Support Tool (refer chapter 8) has been completed to demonstrate compliance with the {{cleaningPathway}} pathway:</p>
@@ -875,6 +943,9 @@
                     <li><a href="#erp-diving">DIVING EMERGENCIES</a></li>
                     <li><a href="#erp-medical">MEDICAL EMERGENCIES</a></li>
                     <li><a href="#erp-environmental">ENVIRONMENTAL EMERGENCIES</a></li>
+                    {{#if hasAdditionalActivities}}
+                    <li><a href="#erp-additional">ADDITIONAL ACTIVITY EMERGENCIES</a></li>
+                    {{/if}}
                     <li><a href="#erp-evacuation">EVACUATION PROCEDURES</a></li>
                 </ol>
             </div>
@@ -904,8 +975,21 @@
                         <tr><td>Client</td><td>{{clientName}}</td></tr>
                         <tr><td>Location</td><td>{{cleaningLocation}}</td></tr>
                         <tr><td>Proposed Dates</td><td>{{proposedStartDate}} ({{estimatedDuration}} days)</td></tr>
+                        {{#if hasCustomScope}}
+                        <tr><td>Scope of Work</td><td>{{scopeAreasText}}</td></tr>
+                        {{else}}
+                        <tr><td>Scope of Work</td><td>In-water cleaning of {{scopeAreasText}}</td></tr>
+                        {{/if}}
                     </tbody>
                 </table>
+                {{#if hasAdditionalActivities}}
+                <p><strong>Additional Activities:</strong></p>
+                <ul>
+                    {{#each additionalActivities}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                {{/if}}
             </section>
 
             <!-- 3. Emergency Contacts -->
@@ -1102,9 +1186,76 @@
                 </div>
             </section>
 
-            <!-- 8. Evacuation -->
+            {{#if hasAdditionalActivities}}
+            <!-- Additional Activity Emergency Procedures -->
+            <section id="erp-additional" class="wms-section page-break-before">
+                <h2>8 ADDITIONAL ACTIVITY EMERGENCIES</h2>
+                <p>The following emergency procedures apply to the additional activities included in this project scope.</p>
+
+                {{#if activityConfinedSpace}}
+                <h3>CONFINED SPACE EMERGENCY</h3>
+                <div class="procedure-box warning">
+                    <ol>
+                        <li>Raise the alarm - do NOT enter to attempt rescue without appropriate equipment</li>
+                        <li>Call for trained rescue team</li>
+                        <li>If safe, provide fresh air by increasing ventilation</li>
+                        <li>Prepare rescue equipment (SCBA, harness, retrieval system)</li>
+                        <li>Only trained rescue personnel to enter wearing SCBA</li>
+                        <li>Recover casualty and commence first aid/CPR as required</li>
+                        <li>Call 000 and arrange transport to hospital</li>
+                    </ol>
+                </div>
+                {{/if}}
+
+                {{#if activityHotWork}}
+                <h3>FIRE EMERGENCY (HOT WORK)</h3>
+                <div class="procedure-box warning">
+                    <ol>
+                        <li>Cease hot work immediately</li>
+                        <li>Raise the fire alarm</li>
+                        <li>If safe and trained, attempt to extinguish using appropriate extinguisher</li>
+                        <li>If fire cannot be controlled, evacuate immediately</li>
+                        <li>Call 000</li>
+                        <li>Account for all personnel at muster point</li>
+                        <li>Do not re-enter area until cleared by emergency services</li>
+                    </ol>
+                </div>
+                {{/if}}
+
+                {{#if activityWorkingAtHeights}}
+                <h3>FALL FROM HEIGHT</h3>
+                <div class="procedure-box warning">
+                    <ol>
+                        <li>Do not move the casualty unless in immediate danger</li>
+                        <li>Call 000 immediately - advise of fall from height</li>
+                        <li>If suspended in harness, rescue immediately to prevent suspension trauma</li>
+                        <li>Keep casualty warm and monitor for shock</li>
+                        <li>Do not remove helmet if worn</li>
+                        <li>Commence CPR if required</li>
+                        <li>Await ambulance and provide handover</li>
+                    </ol>
+                </div>
+                {{/if}}
+
+                {{#if activityCraneOps}}
+                <h3>CRANE/LIFTING INCIDENT</h3>
+                <div class="procedure-box warning">
+                    <ol>
+                        <li>Clear the area immediately - do not approach fallen loads</li>
+                        <li>Secure crane/lifting equipment in current position if safe</li>
+                        <li>Check for casualties without approaching unstable loads</li>
+                        <li>Call 000 if casualties or structural damage</li>
+                        <li>Establish exclusion zone until load is stabilised</li>
+                        <li>Do not attempt to move or re-rig fallen loads without assessment</li>
+                    </ol>
+                </div>
+                {{/if}}
+            </section>
+            {{/if}}
+
+            <!-- Evacuation -->
             <section id="erp-evacuation" class="wms-section">
-                <h2>8 EVACUATION PROCEDURES</h2>
+                <h2>{{#if hasAdditionalActivities}}9{{else}}8{{/if}} EVACUATION PROCEDURES</h2>
 
                 <h3>MUSTER POINT</h3>
                 <p>The designated muster point for this project is: <strong>{{cleaningLocation}} - Main Gate/Entry Point</strong></p>
@@ -1329,6 +1480,17 @@
                     <li><strong>Administrative</strong> - Establish policies, procedures and work practices</li>
                     <li><strong>PPE</strong> - Use equipment that provides protection to individuals</li>
                 </ol>
+
+                {{#if hasAdditionalActivities}}
+                <h3>ADDITIONAL HIGH RISK ACTIVITIES</h3>
+                <p>This project includes the following additional high risk work activities that require specific hazard controls:</p>
+                <ul>
+                    {{#each additionalActivities}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                <p>Refer to the Safe Work Method Statement (SWMS) for detailed hazard analysis and control measures for these activities.</p>
+                {{/if}}
             </section>
 
             <!-- 5. Personnel & Training -->
@@ -1479,7 +1641,19 @@
             <!-- Scope of Work -->
             <section class="swms-section">
                 <h3>SCOPE OF WORK</h3>
+                {{#if hasCustomScope}}
+                <p>{{scopeAreasText}}</p>
+                {{else}}
                 <p>In-water hull cleaning of '{{vesselName}}' to remove all biofouling from {{scopeAreasText}} using diver-operated cleaning equipment {{#if captureRequired}}with capture and filtration systems{{/if}}.</p>
+                {{/if}}
+                {{#if hasAdditionalActivities}}
+                <p><strong>Additional Activities:</strong></p>
+                <ul>
+                    {{#each additionalActivities}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                {{/if}}
             </section>
 
             <!-- High Risk Work Activities -->
@@ -1489,9 +1663,12 @@
                     <tbody>
                         <tr><td>☑</td><td>Diving work (any depth)</td></tr>
                         <tr><td>☑</td><td>Work in or near water where there is risk of drowning</td></tr>
-                        <tr><td>☐</td><td>Work at heights greater than 2 metres</td></tr>
-                        <tr><td>☐</td><td>Work involving powered mobile plant</td></tr>
-                        <tr><td>☐</td><td>Work in confined spaces</td></tr>
+                        <tr><td>{{#if activityWorkingAtHeights}}☑{{else}}☐{{/if}}</td><td>Work at heights greater than 2 metres</td></tr>
+                        <tr><td>{{#if activityCraneOps}}☑{{else}}☐{{/if}}</td><td>Work involving powered mobile plant</td></tr>
+                        <tr><td>{{#if activityConfinedSpace}}☑{{else}}☐{{/if}}</td><td>Work in confined spaces</td></tr>
+                        {{#if activityHotWork}}
+                        <tr><td>☑</td><td>Hot work (welding, cutting, grinding)</td></tr>
+                        {{/if}}
                     </tbody>
                 </table>
             </section>
@@ -1619,6 +1796,15 @@
                             <td>Gloves worn, contained waste disposal, hand washing facilities</td>
                             <td class="risk-low">LOW</td>
                         </tr>
+                        {{#each additionalHazards}}
+                        <tr>
+                            <td>{{step}}</td>
+                            <td>{{hazard}}</td>
+                            <td class="{{riskClass}}">{{riskRating}}</td>
+                            <td>{{controls}}</td>
+                            <td class="{{residualClass}}">{{residualRating}}</td>
+                        </tr>
+                        {{/each}}
                     </tbody>
                 </table>
             </section>

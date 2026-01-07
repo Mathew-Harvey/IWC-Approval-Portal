@@ -731,9 +731,20 @@ const App = {
             scopeHull: document.getElementById('scopeHull').checked,
             scopeNicheAreas: document.getElementById('scopeNicheAreas').checked,
             scopePropeller: document.getElementById('scopePropeller').checked,
+            customScopeOfWork: document.getElementById('customScopeOfWork').value.trim(),
             cleaningLocation: document.getElementById('cleaningLocation').value === 'other' 
                 ? document.getElementById('otherLocation').value 
                 : document.getElementById('cleaningLocation').value,
+            
+            // Additional activities
+            activityConfinedSpace: document.getElementById('activityConfinedSpace').checked,
+            activityHotWork: document.getElementById('activityHotWork').checked,
+            activityWorkingAtHeights: document.getElementById('activityWorkingAtHeights').checked,
+            activityCraneOps: document.getElementById('activityCraneOps').checked,
+            activityHazmat: document.getElementById('activityHazmat').checked,
+            activityNightWork: document.getElementById('activityNightWork').checked,
+            activityUnderwaterInspection: document.getElementById('activityUnderwaterInspection').checked,
+            activityPropPolishing: document.getElementById('activityPropPolishing').checked,
             
             foulingRating: document.getElementById('foulingRating').value,
             foulingCover: document.getElementById('foulingCover').value,
@@ -751,12 +762,24 @@ const App = {
         const determination = ScenarioLogic.determine(formData);
         const checklist = ScenarioLogic.getChecklist(formData, determination);
 
-        // Build scope areas text
-        const scopeAreas = [];
-        if (formData.scopeHull) scopeAreas.push('hull plating and underwater surfaces');
-        if (formData.scopeNicheAreas) scopeAreas.push('niche areas');
-        if (formData.scopePropeller) scopeAreas.push('propeller');
-        const scopeAreasText = scopeAreas.join(', ') || 'hull plating and underwater surfaces';
+        // Build scope areas text - use custom scope if provided
+        let scopeAreasText;
+        let hasCustomScope = false;
+        
+        if (formData.customScopeOfWork) {
+            scopeAreasText = formData.customScopeOfWork;
+            hasCustomScope = true;
+        } else {
+            const scopeAreas = [];
+            if (formData.scopeHull) scopeAreas.push('hull plating and underwater surfaces');
+            if (formData.scopeNicheAreas) scopeAreas.push('niche areas');
+            if (formData.scopePropeller) scopeAreas.push('propeller');
+            scopeAreasText = scopeAreas.join(', ') || 'hull plating and underwater surfaces';
+        }
+
+        // Get additional hazards based on selected activities
+        const additionalHazards = this.getAdditionalHazards(formData);
+        const additionalActivities = this.getAdditionalActivitiesList(formData);
 
         // Determine cleaning type text
         let cleaningTypeText = 'full in-water hull clean with capture';
@@ -787,6 +810,7 @@ const App = {
             ...formData,
             ...determination,
             scopeAreasText,
+            hasCustomScope,
             cleaningTypeText,
             afcTypeText,
             cleaningScenario: determination.scenario,
@@ -809,8 +833,215 @@ const App = {
             // Format dates for display
             proposedStartDate: this.formatDateDisplay(formData.proposedStartDate),
             afcApplicationDate: this.formatDateDisplay(formData.afcApplicationDate),
-            revisionDate: this.formatDateDisplay(formData.revisionDate)
+            revisionDate: this.formatDateDisplay(formData.revisionDate),
+            
+            // Additional activities and hazards
+            additionalHazards,
+            additionalActivities,
+            hasAdditionalActivities: additionalActivities.length > 0
         };
+    },
+
+    /**
+     * Get list of additional activities selected
+     */
+    getAdditionalActivitiesList(formData) {
+        const activities = [];
+        if (formData.activityConfinedSpace) activities.push('Confined Space Entry');
+        if (formData.activityHotWork) activities.push('Hot Work');
+        if (formData.activityWorkingAtHeights) activities.push('Working at Heights');
+        if (formData.activityCraneOps) activities.push('Crane/Lifting Operations');
+        if (formData.activityHazmat) activities.push('Hazardous Materials Handling');
+        if (formData.activityNightWork) activities.push('Night Work Operations');
+        if (formData.activityUnderwaterInspection) activities.push('Underwater Inspection/Survey');
+        if (formData.activityPropPolishing) activities.push('Propeller Polishing');
+        return activities;
+    },
+
+    /**
+     * Get additional hazards based on selected activities
+     */
+    getAdditionalHazards(formData) {
+        const hazards = [];
+
+        if (formData.activityConfinedSpace) {
+            hazards.push({
+                step: 'Confined Space Entry',
+                hazard: 'Oxygen deficiency / toxic atmosphere',
+                riskClass: 'risk-extreme',
+                riskRating: 'EXTREME',
+                controls: 'Atmospheric testing before entry, continuous monitoring, ventilation, rescue team on standby, confined space entry permit',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Confined Space Entry',
+                hazard: 'Entrapment / difficult egress',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Entry/exit plan, rescue equipment readily available, communication maintained, trained personnel only',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        if (formData.activityHotWork) {
+            hazards.push({
+                step: 'Hot Work',
+                hazard: 'Fire / explosion',
+                riskClass: 'risk-extreme',
+                riskRating: 'EXTREME',
+                controls: 'Hot work permit, fire watch, extinguisher on standby, combustibles cleared 11m radius, gas-free certification if near tanks',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Hot Work',
+                hazard: 'Burns / UV exposure',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Welding PPE (helmet, gloves, apron), screens to protect others, appropriate clothing',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Hot Work',
+                hazard: 'Fume inhalation',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Adequate ventilation, respiratory protection if required, fume extraction where possible',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        if (formData.activityWorkingAtHeights) {
+            hazards.push({
+                step: 'Working at Heights',
+                hazard: 'Fall from height',
+                riskClass: 'risk-extreme',
+                riskRating: 'EXTREME',
+                controls: 'Fall arrest systems, guardrails, safety nets where applicable, 100% tie-off when exposed, pre-use harness inspection',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Working at Heights',
+                hazard: 'Dropped objects',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Tool lanyards, barricade areas below, hard hat zones, housekeeping',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        if (formData.activityCraneOps) {
+            hazards.push({
+                step: 'Crane/Lifting Operations',
+                hazard: 'Struck by falling load',
+                riskClass: 'risk-extreme',
+                riskRating: 'EXTREME',
+                controls: 'Certified crane operator, dogman/rigger, exclusion zones, lift plan for critical lifts, pre-lift inspection',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Crane/Lifting Operations',
+                hazard: 'Crushing between load and structure',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Never stand under suspended loads, tag lines for load control, clear communication signals',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        if (formData.activityHazmat) {
+            hazards.push({
+                step: 'Hazardous Materials Handling',
+                hazard: 'Chemical exposure / burns',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'SDS reviewed, appropriate PPE (gloves, goggles, suit), spill kit available, proper storage, trained personnel',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Hazardous Materials Handling',
+                hazard: 'Environmental contamination',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Secondary containment, spill response procedures, proper disposal methods, environmental monitoring',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        if (formData.activityNightWork) {
+            hazards.push({
+                step: 'Night Work Operations',
+                hazard: 'Poor visibility / inadequate lighting',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Adequate task lighting, head torches for divers, reflective vests, well-lit access routes',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Night Work Operations',
+                hazard: 'Fatigue / reduced alertness',
+                riskClass: 'risk-medium',
+                riskRating: 'MEDIUM',
+                controls: 'Fatigue management plan, adequate rest periods, buddy system, shift rotation, caffeine availability',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        if (formData.activityUnderwaterInspection) {
+            hazards.push({
+                step: 'Underwater Inspection',
+                hazard: 'Reduced visibility / disorientation',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Adequate underwater lighting, lifeline/umbilical, surface monitoring, abort dive if visibility unsafe',
+                residualClass: 'risk-medium',
+                residualRating: 'MEDIUM'
+            });
+            hazards.push({
+                step: 'Underwater Inspection',
+                hazard: 'Contact with vessel machinery/hazards',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Vessel systems isolated and locked out, clear communication with vessel crew, dive plan briefing',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        if (formData.activityPropPolishing) {
+            hazards.push({
+                step: 'Propeller Polishing',
+                hazard: 'Rotating tool injury',
+                riskClass: 'risk-high',
+                riskRating: 'HIGH',
+                controls: 'Training in powered tool use, two-hand operation, guards in place, emergency stop accessible',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+            hazards.push({
+                step: 'Propeller Polishing',
+                hazard: 'Propeller movement during work',
+                riskClass: 'risk-extreme',
+                riskRating: 'EXTREME',
+                controls: 'Propulsion system locked out/tagged out, bridge confirmation, shaft brake engaged if available',
+                residualClass: 'risk-low',
+                residualRating: 'LOW'
+            });
+        }
+
+        return hazards;
     },
 
     /**

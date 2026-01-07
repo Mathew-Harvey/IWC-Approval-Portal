@@ -226,6 +226,23 @@ body {
     flex-wrap: wrap;
 }
 
+.checkbox-group.vertical {
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.checkbox-group.vertical .checkbox-label {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+    transition: background 0.2s ease;
+}
+
+.checkbox-group.vertical .checkbox-label:hover {
+    background: var(--gray-100);
+}
+
 .checkbox-label {
     display: flex;
     align-items: center;

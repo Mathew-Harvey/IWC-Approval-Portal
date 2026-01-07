@@ -273,6 +273,90 @@ body {
     margin: 0;
 }
 
+/* Jurisdiction Selector Section */
+.jurisdiction-section {
+    background: linear-gradient(135deg, rgba(10, 61, 98, 0.03) 0%, rgba(10, 61, 98, 0.08) 100%);
+    border: 2px solid var(--primary-light);
+}
+
+.jurisdiction-section legend {
+    background: var(--primary);
+    color: var(--white);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+}
+
+.jurisdiction-select {
+    font-size: 1.1rem;
+    padding: var(--space-md) !important;
+    background: var(--white);
+    border: 2px solid var(--primary-light) !important;
+    cursor: pointer;
+}
+
+.jurisdiction-select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(10, 61, 98, 0.15) !important;
+}
+
+.jurisdiction-select option {
+    padding: var(--space-sm);
+}
+
+.jurisdiction-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--primary);
+    color: var(--white);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.jurisdiction-info-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.875rem;
+}
+
+.jurisdiction-info-banner .flag {
+    font-size: 1.25rem;
+}
+
+.jurisdiction-info-banner .regulator {
+    opacity: 0.9;
+}
+
+/* Jurisdiction-specific accent colors (optional) */
+[data-jurisdiction="AU-WA"] .jurisdiction-section {
+    border-color: #00843D; /* Australian green */
+}
+
+[data-jurisdiction="NZ"] .jurisdiction-section {
+    border-color: #00247D; /* NZ blue */
+}
+
+[data-jurisdiction="SG"] .jurisdiction-section {
+    border-color: #EF3340; /* Singapore red */
+}
+
+[data-jurisdiction="US-CA"] .jurisdiction-section {
+    border-color: #3C3B6E; /* US blue */
+}
+
+[data-jurisdiction="JP"] .jurisdiction-section {
+    border-color: #BC002D; /* Japan red */
+}
+
 /* Calculated Section */
 .calculated-section {
     background: var(--gray-50);

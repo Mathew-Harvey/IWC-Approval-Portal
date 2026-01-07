@@ -18,6 +18,9 @@ const App = {
         // Initialize templates
         Templates.init();
 
+        // Initialize jurisdiction system
+        this.initJurisdiction();
+
         // Initialize API service and detect deployment mode
         await this.initApiService();
 
@@ -35,6 +38,197 @@ const App = {
         
         // Load saved API keys into settings form
         this.loadApiSettings();
+    },
+
+    /**
+     * Initialize jurisdiction configuration system
+     */
+    initJurisdiction() {
+        if (typeof JurisdictionConfig === 'undefined') {
+            console.warn('⚠️ Jurisdiction system not loaded');
+            return;
+        }
+
+        // Initialize with default (AU-WA)
+        const config = JurisdictionConfig.init('AU-WA');
+        console.log(`🌍 Jurisdiction: ${config.name}`);
+
+        // Populate jurisdiction selector
+        this.populateJurisdictionSelector();
+
+        // Populate port dropdown based on jurisdiction
+        this.updatePortDropdown();
+
+        // Update jurisdiction-dependent text
+        this.updateJurisdictionText();
+
+        // Listen for jurisdiction changes
+        window.addEventListener('jurisdictionChange', (e) => {
+            console.log(`📍 Jurisdiction changed to: ${e.detail.config.name}`);
+            this.onJurisdictionChange(e.detail.config);
+        });
+    },
+
+    /**
+     * Populate the jurisdiction selector dropdown
+     */
+    populateJurisdictionSelector() {
+        const select = document.getElementById('jurisdictionSelect');
+        if (!select || typeof JurisdictionConfig === 'undefined') return;
+
+        const jurisdictions = JurisdictionConfig.getAvailable();
+        const currentId = JurisdictionConfig.getId();
+
+        select.innerHTML = jurisdictions.map(j => `
+            <option value="${j.id}" ${j.id === currentId ? 'selected' : ''}>
+                ${j.flag} ${j.name}
+            </option>
+        `).join('');
+
+        // Bind change event
+        select.addEventListener('change', (e) => {
+            JurisdictionConfig.set(e.target.value);
+        });
+    },
+
+    /**
+     * Update port dropdown based on current jurisdiction
+     */
+    updatePortDropdown() {
+        if (typeof JurisdictionConfig === 'undefined') return;
+        
+        const config = JurisdictionConfig.get();
+        const portSelect = document.getElementById('cleaningLocation');
+        if (!portSelect || !config) return;
+
+        // Save current selection
+        const currentValue = portSelect.value;
+
+        // Rebuild options
+        portSelect.innerHTML = '<option value="">Select Location</option>';
+        
+        config.ports.forEach(port => {
+            const option = document.createElement('option');
+            option.value = port.name;
+            option.textContent = port.name;
+            portSelect.appendChild(option);
+        });
+
+        // Add "Other" option
+        const otherOption = document.createElement('option');
+        otherOption.value = 'other';
+        otherOption.textContent = 'Other (specify)';
+        portSelect.appendChild(otherOption);
+
+        // Restore selection if still valid
+        const validValues = [...portSelect.options].map(o => o.value);
+        if (validValues.includes(currentValue)) {
+            portSelect.value = currentValue;
+        }
+    },
+
+    /**
+     * Update jurisdiction-dependent text elements
+     */
+    updateJurisdictionText() {
+        if (typeof JurisdictionConfig === 'undefined') return;
+        
+        const config = JurisdictionConfig.get();
+        if (!config) return;
+
+        // Update biofouling info text
+        const infoText = document.getElementById('biofoulingInfoText');
+        if (infoText) {
+            const regulator = config.regulatoryBodies?.primary?.name || 'regulatory authority';
+            const hours = config.features?.preCleanInspectionHours || 48;
+            infoText.textContent = `This is the preliminary assessment. Formal pre-clean inspection by ${regulator}-recognised inspector follows (≥${hours}hrs before clean).`;
+        }
+
+        // Update help text
+        const helpText = document.getElementById('jurisdictionHelpText');
+        if (helpText && config.regulatoryBodies?.primary) {
+            helpText.innerHTML = `
+                <strong>${config.flag} ${config.shortName}</strong> - 
+                Primary regulator: ${config.regulatoryBodies.primary.fullName}
+            `;
+        }
+
+        // Set data attribute on body for CSS styling
+        document.body.setAttribute('data-jurisdiction', config.id);
+    },
+
+    /**
+     * Handle jurisdiction change
+     */
+    onJurisdictionChange(config) {
+        // Update port dropdown
+        this.updatePortDropdown();
+
+        // Update text elements
+        this.updateJurisdictionText();
+
+        // Update calculations (in case thresholds differ)
+        this.updateCalculations();
+
+        // Clear generated documents (they need to be regenerated)
+        this.generatedDocs = null;
+        
+        // Show notification
+        this.showJurisdictionChangeNotification(config);
+    },
+
+    /**
+     * Show notification when jurisdiction changes
+     */
+    showJurisdictionChangeNotification(config) {
+        // Create a temporary notification
+        const notification = document.createElement('div');
+        notification.className = 'jurisdiction-change-notification';
+        notification.innerHTML = `
+            <span class="flag">${config.flag}</span>
+            <span>Switched to <strong>${config.shortName}</strong></span>
+            <span class="regulator">${config.regulatoryBodies?.primary?.name || ''}</span>
+        `;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #0a3d62 0%, #062743 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        `;
+
+        // Add animation keyframes
+        if (!document.getElementById('jurisdiction-notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'jurisdiction-notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100px); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(notification);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     },
     
     /**
@@ -804,14 +998,31 @@ const App = {
         const afcTypeText = formData.afcType === 'biocidal' ? 'Biocidal' : 
                            formData.afcType === 'non-biocidal' ? 'Non-biocidal' : 'Unknown';
 
-        // Operating profile compliance text
+        // Get jurisdiction config for template data
+        const jurisdiction = typeof JurisdictionConfig !== 'undefined' ? JurisdictionConfig.get() : null;
+        
+        // Operating profile compliance text - use jurisdiction-specific text if available
         let operatingProfileCompliance = '';
-        if (formData.biofoulingOrigin === 'regional') {
-            operatingProfileCompliance = "The vessel's operational history is confined to regional waters, supporting alignment with WA state practices regarding biosecurity risk and AFC cleanliness assessments.";
-        } else if (formData.biofoulingOrigin === 'domestic') {
-            operatingProfileCompliance = "While the vessel's operational history is largely confined to domestic waters, visits to other states require elevated biosecurity controls as outlined in this WMS.";
+        if (jurisdiction && jurisdiction.complianceText) {
+            if (formData.biofoulingOrigin === 'regional') {
+                operatingProfileCompliance = jurisdiction.complianceText.regionalBiofouling || 
+                    "The vessel's operational history is confined to regional waters.";
+            } else if (formData.biofoulingOrigin === 'domestic') {
+                operatingProfileCompliance = jurisdiction.complianceText.domesticBiofouling || 
+                    "The vessel's operational history is largely confined to domestic waters.";
+            } else {
+                operatingProfileCompliance = jurisdiction.complianceText.internationalBiofouling || 
+                    "The vessel has operated in international waters, requiring full biosecurity assessment.";
+            }
         } else {
-            operatingProfileCompliance = "The vessel has operated in international waters, requiring full biosecurity assessment and elevated controls as outlined in this WMS.";
+            // Fallback for when jurisdiction system is not loaded
+            if (formData.biofoulingOrigin === 'regional') {
+                operatingProfileCompliance = "The vessel's operational history is confined to regional waters, supporting alignment with WA state practices regarding biosecurity risk and AFC cleanliness assessments.";
+            } else if (formData.biofoulingOrigin === 'domestic') {
+                operatingProfileCompliance = "While the vessel's operational history is largely confined to domestic waters, visits to other states require elevated biosecurity controls as outlined in this WMS.";
+            } else {
+                operatingProfileCompliance = "The vessel has operated in international waters, requiring full biosecurity assessment and elevated controls as outlined in this WMS.";
+            }
         }
 
         // Get month and year for document headers
@@ -852,7 +1063,35 @@ const App = {
             // Additional activities and hazards
             additionalHazards,
             additionalActivities,
-            hasAdditionalActivities: additionalActivities.length > 0
+            hasAdditionalActivities: additionalActivities.length > 0,
+
+            // Jurisdiction data for templates
+            jurisdiction: jurisdiction,
+            jurisdictionId: jurisdiction?.id || 'AU-WA',
+            jurisdictionName: jurisdiction?.shortName || 'Western Australia',
+            jurisdictionFlag: jurisdiction?.flag || '🇦🇺',
+            
+            // Regulatory bodies (for easy access in templates)
+            primaryRegulator: jurisdiction?.regulatoryBodies?.primary?.name || 'DPIRD',
+            primaryRegulatorFull: jurisdiction?.regulatoryBodies?.primary?.fullName || 'Department of Primary Industries and Regional Development',
+            portAuthority: jurisdiction?.regulatoryBodies?.port?.name || 'FPA',
+            portAuthorityFull: jurisdiction?.regulatoryBodies?.port?.fullName || 'Fremantle Port Authority',
+            
+            // Emergency contacts
+            imsHotline: jurisdiction?.emergencyContacts?.imsHotline?.phone || '(08) 9368 3657',
+            imsHotlineName: jurisdiction?.emergencyContacts?.imsHotline?.name || 'DPIRD Marine Pest Hotline',
+            divingEmergencyPhone: jurisdiction?.emergencyContacts?.divingEmergency?.phone || '1800 088 200',
+            divingEmergencyName: jurisdiction?.emergencyContacts?.divingEmergency?.name || 'Diving Emergency Service (DES)',
+            portEmergencyPhone: jurisdiction?.emergencyContacts?.portEmergency?.phone || jurisdiction?.regulatoryBodies?.port?.emergencyPhone || '(08) 9430 3555',
+            
+            // Compliance text snippets
+            regulatoryAlignmentText: jurisdiction?.complianceText?.regulatoryAlignment || '',
+            highRiskNoteText: jurisdiction?.complianceText?.highRiskNote || '',
+            imsProtocolText: jurisdiction?.complianceText?.imsProtocol || '',
+            
+            // Features
+            preCleanInspectionHours: jurisdiction?.features?.preCleanInspectionHours || 48,
+            postCleanReportDays: jurisdiction?.features?.postCleanReportDays || 20
         };
     },
 

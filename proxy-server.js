@@ -29,11 +29,10 @@ const MARINESIA_API_KEY = process.env.MARINESIA_API_KEY;
 const AISSTREAM_API_KEY = process.env.AISSTREAM_API_KEY;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// Validate required environment variables
+// Validate required environment variables (allow demo mode without key)
 if (!MARINESIA_API_KEY) {
-    console.error('❌ ERROR: MARINESIA_API_KEY is not set in environment variables');
-    console.error('   Please set it in your .env file or as an environment variable');
-    process.exit(1);
+    console.warn('⚠️  WARNING: MARINESIA_API_KEY is not set. Running in demo mode.');
+    console.warn('   Marinesia API features will be disabled. Set key in .env file for full functionality.');
 }
 
 // Log API key status (masked for security)

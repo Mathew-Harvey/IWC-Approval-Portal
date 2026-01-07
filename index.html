@@ -27,6 +27,22 @@
             <!-- Form Panel -->
             <section class="form-panel no-print" id="formPanel">
                 <form id="jobForm">
+                    <!-- Jurisdiction Selector -->
+                    <fieldset class="form-section jurisdiction-section">
+                        <legend>🌍 Operating Jurisdiction</legend>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="jurisdictionSelect">Select the jurisdiction where this work will be performed</label>
+                                <select id="jurisdictionSelect" class="jurisdiction-select">
+                                    <!-- Populated dynamically by jurisdiction system -->
+                                </select>
+                                <small class="help-text" id="jurisdictionHelpText">
+                                    This determines applicable regulations, approval processes, and emergency contacts.
+                                </small>
+                            </div>
+                        </div>
+                    </fieldset>
+
                     <!-- Job Details -->
                     <fieldset class="form-section">
                         <legend>Job Details</legend>
@@ -202,9 +218,7 @@
                                 <label for="cleaningLocation">Cleaning Location</label>
                                 <select id="cleaningLocation" required>
                                     <option value="">Select Location</option>
-                                    <option value="Fremantle Inner Harbour">Fremantle Inner Harbour</option>
-                                    <option value="Rous Head Harbour">Rous Head Harbour</option>
-                                    <option value="Australian Marine Complex (AMC), Henderson">Australian Marine Complex (AMC), Henderson</option>
+                                    <!-- Populated dynamically based on jurisdiction -->
                                     <option value="other">Other (specify)</option>
                                 </select>
                             </div>
@@ -270,7 +284,7 @@
                     <fieldset class="form-section">
                         <legend>Preliminary Biofouling Assessment</legend>
                         <div class="info-box">
-                            <p>This is the preliminary assessment. Formal pre-clean inspection by DPIRD-recognised inspector follows at Step 3.</p>
+                            <p id="biofoulingInfoText">This is the preliminary assessment. Formal pre-clean inspection follows per regulatory requirements.</p>
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
@@ -2040,6 +2054,16 @@
     <script src="js/services/jobNumber.js"></script>
     <script src="js/services/vesselApi.js"></script>
     <script src="js/templates.js"></script>
+    
+    <!-- Jurisdiction Configuration -->
+    <script src="js/jurisdictions/config.js"></script>
+    <script src="js/jurisdictions/au-wa.js"></script>
+    <script src="js/jurisdictions/nz.js"></script>
+    <script src="js/jurisdictions/sg.js"></script>
+    <script src="js/jurisdictions/us-ca.js"></script>
+    <script src="js/jurisdictions/jp.js"></script>
+    <script src="js/jurisdictions/index.js"></script>
+    
     <script src="js/app.js"></script>
 </body>
 </html>

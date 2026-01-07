@@ -36,9 +36,14 @@
                                 <select id="jurisdictionSelect" class="jurisdiction-select">
                                     <!-- Populated dynamically by jurisdiction system -->
                                 </select>
-                                <small class="help-text" id="jurisdictionHelpText">
-                                    This determines applicable regulations, approval processes, and emergency contacts.
-                                </small>
+                                <div class="jurisdiction-help-row">
+                                    <small class="help-text" id="jurisdictionHelpText">
+                                        This determines applicable regulations, approval processes, and emergency contacts.
+                                    </small>
+                                    <button type="button" id="btnApprovalProcess" class="link-button">
+                                        <span class="link-icon">📋</span> View approval process
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </fieldset>
@@ -2044,6 +2049,25 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btnTestConnection">Test Connection</button>
                 <button type="button" class="btn btn-primary" id="btnSaveSettings">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approval Process Modal -->
+    <div id="approvalProcessModal" class="modal" style="display: none;">
+        <div class="modal-overlay" id="approvalProcessModalOverlay"></div>
+        <div class="modal-content approval-process-modal">
+            <div class="modal-header">
+                <h2 id="approvalProcessTitle">📋 Approval Process</h2>
+                <button class="modal-close" id="closeApprovalProcessModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="approvalProcessContent" class="approval-process-content">
+                    <!-- Dynamically populated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnCloseApprovalProcess">Close</button>
             </div>
         </div>
     </div>

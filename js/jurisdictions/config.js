@@ -218,6 +218,136 @@ const JurisdictionConfig = {
      */
     getComplianceText(section) {
         return this.getValue(`complianceText.${section}`, '');
+    },
+
+    /**
+     * Get approval process steps for current jurisdiction
+     * @returns {Array} Array of step objects
+     */
+    getApprovalProcess() {
+        return this.getValue('approvalProcess', []);
+    },
+
+    /**
+     * Show the approval process modal for current jurisdiction
+     */
+    showApprovalProcessModal() {
+        const modal = document.getElementById('approvalProcessModal');
+        const content = document.getElementById('approvalProcessContent');
+        const title = document.getElementById('approvalProcessTitle');
+        
+        if (!modal || !content) {
+            console.error('Approval process modal not found');
+            return;
+        }
+
+        const config = this.get();
+        if (!config) {
+            console.error('No jurisdiction config loaded');
+            return;
+        }
+
+        // Update modal title
+        if (title) {
+            title.textContent = `📋 ${config.name} - Approval Process`;
+        }
+
+        // Build the content
+        const steps = config.approvalProcess || [];
+        const primaryReg = config.regulatoryBodies?.primary || {};
+        const regulations = config.regulations?.primary || {};
+
+        let html = `
+            <div class="approval-process-header">
+                <span class="flag">${config.flag}</span>
+                <div>
+                    <h3 class="jurisdiction-name">${config.name}</h3>
+                    <p class="regulator-name">Primary Regulator: ${primaryReg.fullName || primaryReg.name || 'N/A'}</p>
+                </div>
+            </div>
+
+            <ol class="approval-steps">
+                ${steps.map(step => `
+                    <li class="approval-step">
+                        <span class="step-number">${step.step}</span>
+                        <div class="step-content">
+                            <p class="step-action">${step.action}</p>
+                            <span class="step-timing">${step.timing}</span>
+                        </div>
+                    </li>
+                `).join('')}
+            </ol>
+
+            <div class="regulatory-info">
+                <h4>📚 Key Regulation</h4>
+                <p><strong>${regulations.name || 'Local regulations apply'}</strong>
+                ${regulations.version ? ` (${regulations.version})` : ''}</p>
+                ${primaryReg.website ? `
+                    <p style="margin-top: 8px;">
+                        <a href="${primaryReg.website}" target="_blank" class="contact-link">
+                            Visit ${primaryReg.name} website →
+                        </a>
+                    </p>
+                ` : ''}
+            </div>
+        `;
+
+        content.innerHTML = html;
+
+        // Show modal
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Setup close handlers
+        this._setupModalCloseHandlers(modal);
+    },
+
+    /**
+     * Hide the approval process modal
+     */
+    hideApprovalProcessModal() {
+        const modal = document.getElementById('approvalProcessModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    },
+
+    /**
+     * Setup modal close handlers
+     * @private
+     */
+    _setupModalCloseHandlers(modal) {
+        // Close button
+        const closeBtn = document.getElementById('closeApprovalProcessModal');
+        const closeFooterBtn = document.getElementById('btnCloseApprovalProcess');
+        const overlay = document.getElementById('approvalProcessModalOverlay');
+
+        const closeHandler = () => this.hideApprovalProcessModal();
+
+        if (closeBtn) closeBtn.onclick = closeHandler;
+        if (closeFooterBtn) closeFooterBtn.onclick = closeHandler;
+        if (overlay) overlay.onclick = closeHandler;
+
+        // Escape key
+        const escHandler = (e) => {
+            if (e.key === 'Escape' && modal.style.display !== 'none') {
+                this.hideApprovalProcessModal();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    },
+
+    /**
+     * Initialize approval process button handler
+     * Call this after DOM is ready
+     */
+    initApprovalProcessButton() {
+        const btn = document.getElementById('btnApprovalProcess');
+        if (btn) {
+            btn.addEventListener('click', () => this.showApprovalProcessModal());
+        }
     }
 };
 

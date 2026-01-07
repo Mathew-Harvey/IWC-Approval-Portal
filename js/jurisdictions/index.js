@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const config = JurisdictionConfig.init('AU-WA');
         console.log(`🌍 Jurisdiction system initialized: ${config.name}`);
         console.log(`📍 Available jurisdictions: ${JurisdictionConfig.getAvailable().map(j => j.id).join(', ')}`);
+        
+        // Initialize the approval process modal button
+        JurisdictionConfig.initApprovalProcessButton();
     }
 });
 

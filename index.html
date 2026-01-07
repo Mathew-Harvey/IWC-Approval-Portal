@@ -356,7 +356,18 @@
                                     </div>
                                     <button type="button" class="btn btn-small btn-secondary" id="btnClearVesselImage" style="display:none;">Clear</button>
                                 </div>
-                                <small class="help-text">Optional: Photo of the vessel for documentation</small>
+                                <small class="help-text">Vessel photo for report covers</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="generalArrangement">General Arrangement</label>
+                                <div class="image-upload-container">
+                                    <input type="file" id="generalArrangement" accept="image/*" class="image-upload-input">
+                                    <div class="image-preview ga-preview" id="generalArrangementPreview">
+                                        <span class="placeholder-text">📐 Click or drag to upload GA drawing</span>
+                                    </div>
+                                    <button type="button" class="btn btn-small btn-secondary" id="btnClearGeneralArrangement" style="display:none;">Clear</button>
+                                </div>
+                                <small class="help-text">GA drawing for Work Method Statement</small>
                             </div>
                         </div>
                     </fieldset>
@@ -441,6 +452,11 @@
         <div class="wms-document">
             <!-- Cover Page -->
             <div class="wms-cover page-break-after">
+                {{#if companyLogo}}
+                <div class="cover-logo">
+                    <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+                </div>
+                {{/if}}
                 <div class="cover-header">
                     <p class="doc-number">OPS-DOC-001</p>
                     <p class="revision-date">Revision Date: {{revisionDate}}</p>
@@ -452,6 +468,11 @@
                     <h3>'{{vesselName}}'</h3>
                     <p class="job-number">{{jobNumber}}</p>
                 </div>
+                {{#if vesselImage}}
+                <div class="vessel-image-container">
+                    <img src="{{vesselImage}}" alt="{{vesselName}}" class="vessel-image">
+                </div>
+                {{/if}}
                 <div class="cover-footer">
                     <p class="confidential">CONFIDENTIAL</p>
                     <p class="website">www.franmarine.com.au</p>
@@ -582,6 +603,14 @@
                     <li>{{this}}</li>
                     {{/each}}
                 </ul>
+                {{/if}}
+
+                {{#if generalArrangement}}
+                <h3>General Arrangement</h3>
+                <p>The following General Arrangement drawing provides an overview of the vessel layout:</p>
+                <div class="ga-image-container">
+                    <img src="{{generalArrangement}}" alt="General Arrangement - {{vesselName}}" class="ga-image">
+                </div>
                 {{/if}}
 
                 <h3>Decision Support Tool Checklist</h3>
@@ -1597,7 +1626,35 @@
     <!-- Safe Work Method Statement Template -->
     <script id="swms-template" type="text/x-handlebars-template">
         <div class="wms-document swms-document">
-            <!-- Cover/Header -->
+            <!-- Cover Page -->
+            <div class="wms-cover page-break-after">
+                {{#if companyLogo}}
+                <div class="cover-logo">
+                    <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+                </div>
+                {{/if}}
+                <div class="cover-header">
+                    <p class="doc-type">PROJECT MANAGEMENT PLAN</p>
+                </div>
+                <div class="cover-title">
+                    <h1>SAFE WORK METHOD STATEMENT</h1>
+                    <h3>In Water Hull Clean – '{{vesselName}}'</h3>
+                    <h4>{{clientName}}</h4>
+                    <p class="location">{{cleaningLocation}}</p>
+                    <p class="job-number">{{jobNumber}}</p>
+                    <p class="date">{{proposedMonth}} {{proposedYear}}</p>
+                </div>
+                {{#if vesselImage}}
+                <div class="vessel-image-container">
+                    <img src="{{vesselImage}}" alt="{{vesselName}}" class="vessel-image">
+                </div>
+                {{/if}}
+                <div class="cover-footer">
+                    <p class="confidential">CONFIDENTIAL</p>
+                </div>
+            </div>
+
+            <!-- Content Header -->
             <div class="swms-header">
                 {{#if companyLogo}}
                 <div class="swms-logo">

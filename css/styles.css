@@ -1539,6 +1539,11 @@ body {
     max-height: 200px;
 }
 
+.image-preview.ga-preview {
+    min-height: 150px;
+    max-height: 200px;
+}
+
 .btn-small {
     padding: var(--space-xs) var(--space-sm);
     font-size: 0.8rem;
@@ -1572,6 +1577,23 @@ body {
     object-fit: contain;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
+}
+
+/* General Arrangement Image */
+.ga-image-container {
+    text-align: center;
+    margin: var(--space-lg) auto;
+    padding: var(--space-md);
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+}
+
+.ga-image {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
 }
 
 .wms-cover .doc-type {

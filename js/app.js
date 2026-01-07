@@ -6,9 +6,10 @@
 const App = {
     currentJob: null,
     activeTab: 'wms',
-    companyLogo: null,    // Base64 encoded company logo
-    vesselImage: null,    // Base64 encoded vessel image
-    generatedDocs: null,  // Store generated documents
+    companyLogo: null,           // Base64 encoded company logo
+    vesselImage: null,           // Base64 encoded vessel image
+    generalArrangement: null,    // Base64 encoded general arrangement drawing
+    generatedDocs: null,         // Store generated documents
 
     /**
      * Initialize the application
@@ -125,6 +126,7 @@ const App = {
         // Image uploads
         this.bindImageUpload('companyLogo', 'companyLogoPreview', 'btnClearCompanyLogo');
         this.bindImageUpload('vesselImage', 'vesselImagePreview', 'btnClearVesselImage');
+        this.bindImageUpload('generalArrangement', 'generalArrangementPreview', 'btnClearGeneralArrangement');
 
         // Action buttons
         document.getElementById('btnNewJob').addEventListener('click', () => this.newJob());
@@ -260,6 +262,8 @@ const App = {
                 this.companyLogo = base64;
             } else if (inputId === 'vesselImage') {
                 this.vesselImage = base64;
+            } else if (inputId === 'generalArrangement') {
+                this.generalArrangement = base64;
             }
             
             // Update preview
@@ -285,6 +289,8 @@ const App = {
             this.companyLogo = null;
         } else if (inputId === 'vesselImage') {
             this.vesselImage = null;
+        } else if (inputId === 'generalArrangement') {
+            this.generalArrangement = null;
         }
         
         // Reset input
@@ -294,9 +300,16 @@ const App = {
         // Reset preview
         const preview = document.getElementById(previewId);
         if (preview) {
-            const placeholderText = inputId === 'companyLogo' 
-                ? '📷 Click or drag to upload logo'
-                : '📷 Click or drag to upload vessel photo';
+            let placeholderText;
+            if (inputId === 'companyLogo') {
+                placeholderText = '📷 Click or drag to upload logo';
+            } else if (inputId === 'vesselImage') {
+                placeholderText = '📷 Click or drag to upload vessel photo';
+            } else if (inputId === 'generalArrangement') {
+                placeholderText = '📐 Click or drag to upload GA drawing';
+            } else {
+                placeholderText = '📷 Click or drag to upload image';
+            }
             preview.innerHTML = `<span class="placeholder-text">${placeholderText}</span>`;
             preview.classList.remove('has-image');
         }
@@ -825,6 +838,7 @@ const App = {
             // Images
             companyLogo: this.companyLogo,
             vesselImage: this.vesselImage,
+            generalArrangement: this.generalArrangement,
             
             // Date formatting for headers
             proposedMonth: months[proposedDate.getMonth()],
@@ -1283,6 +1297,7 @@ const App = {
             // Clear images
             this.clearImage('companyLogo', 'companyLogoPreview', 'btnClearCompanyLogo');
             this.clearImage('vesselImage', 'vesselImagePreview', 'btnClearVesselImage');
+            this.clearImage('generalArrangement', 'generalArrangementPreview', 'btnClearGeneralArrangement');
             
             // Clear generated docs
             this.generatedDocs = null;

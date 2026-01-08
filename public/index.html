@@ -3320,21 +3320,32 @@
     
     <!-- Login button handler - separate to ensure it works immediately -->
     <script>
-        // Bind login button as soon as DOM is ready (synchronous)
+        // Bind login button as soon as DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             const loginBtn = document.getElementById('loginBtn');
             if (loginBtn) {
-                loginBtn.addEventListener('click', function() {
+                loginBtn.addEventListener('click', async function() {
                     console.log('Sign In button clicked');
-                    // Try Clerk first, then fallback to login page
+                    
+                    // Check if Clerk is available
                     if (typeof Clerk !== 'undefined') {
                         try {
-                            Clerk.openSignIn();
+                            // Make sure Clerk is loaded first
+                            if (!Clerk.loaded) {
+                                console.log('Loading Clerk...');
+                                await Clerk.load();
+                            }
+                            console.log('Opening Clerk sign in...');
+                            Clerk.openSignIn({
+                                redirectUrl: window.location.href
+                            });
                         } catch (e) {
-                            console.error('Clerk.openSignIn failed:', e);
+                            console.error('Clerk error:', e);
+                            // Fallback to login page
                             window.location.href = '/login.html';
                         }
                     } else {
+                        console.log('Clerk not available, redirecting to login page');
                         window.location.href = '/login.html';
                     }
                 });

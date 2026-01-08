@@ -1241,18 +1241,31 @@ body {
     }
 
     .form-panel {
-        display: none;
+        display: none !important;
     }
 
+    /* CRITICAL: Override mobile styles that hide output panel */
     .output-panel {
+        position: static !important;
+        transform: none !important;
         box-shadow: none;
         border-radius: 0;
-        max-height: none;
+        max-height: none !important;
+        height: auto !important;
+        width: 100% !important;
+        display: block !important;
+        overflow: visible !important;
     }
 
     .output-content {
         padding: 0;
-        overflow: visible;
+        overflow: visible !important;
+        height: auto !important;
+    }
+    
+    .output-tabs,
+    .output-actions {
+        display: none !important;
     }
 
     .wms-document {

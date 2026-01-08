@@ -2714,3 +2714,767 @@ body {
     }
 }
 
+/* ============================================
+   Form Enhancements - Progress & Autosave
+   ============================================ */
+
+/* Progress Container */
+.progress-container {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.progress-label span:last-child {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-sections {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-sm);
+    padding: 0 var(--space-xs);
+}
+
+.progress-section {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    cursor: default;
+}
+
+.progress-section.partial {
+    color: var(--warning);
+}
+
+.progress-section.complete {
+    color: var(--success);
+}
+
+/* Autosave Indicator */
+.autosave-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--gray-800);
+    color: var(--white);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+}
+
+.autosave-indicator.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.autosave-icon {
+    animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Validation Styles */
+.required-star {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.field-error {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.field-valid {
+    border-color: var(--success) !important;
+}
+
+.field-error-message {
+    display: block;
+    color: var(--danger);
+    font-size: 0.75rem;
+    margin-top: var(--space-xs);
+}
+
+/* Notifications */
+.form-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    box-shadow: var(--shadow-lg);
+    z-index: 1100;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.notification-success {
+    background: var(--success);
+    color: var(--white);
+}
+
+.notification-warning {
+    background: var(--warning);
+    color: var(--gray-900);
+}
+
+.notification-error {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.notification-info {
+    background: var(--info);
+    color: var(--white);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.25rem;
+    cursor: pointer;
+    margin-left: var(--space-sm);
+    opacity: 0.7;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+/* ============================================
+   Fouling Rating Slider
+   ============================================ */
+
+.fouling-slider-container {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-top: var(--space-sm);
+}
+
+.fouling-display {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-lg);
+}
+
+.fouling-hull {
+    position: relative;
+    width: 200px;
+    height: 60px;
+    --fouling-color: #22c55e;
+}
+
+.fouling-hull svg {
+    width: 100%;
+    height: 100%;
+    color: var(--gray-300);
+    transition: color 0.3s ease;
+}
+
+.fouling-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.3s ease;
+    mix-blend-mode: multiply;
+}
+
+.hull-shape {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.fouling-info {
+    flex: 1;
+}
+
+.fouling-rating {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.fouling-desc {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin-top: var(--space-xs);
+}
+
+.fouling-slider-track {
+    position: relative;
+    padding: 0 8px;
+}
+
+.fouling-slider-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 12px;
+    background: linear-gradient(90deg, 
+        #22c55e 0%, 
+        #84cc16 10%, 
+        #a3e635 20%, 
+        #facc15 35%, 
+        #f59e0b 50%, 
+        #ea580c 65%, 
+        #dc2626 80%, 
+        #7f1d1d 100%
+    );
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+}
+
+.fouling-slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--white);
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s ease;
+}
+
+.fouling-slider-input::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.fouling-slider-input::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+.fouling-slider-input::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--white);
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: var(--shadow-md);
+}
+
+.fouling-ticks {
+    position: relative;
+    height: 30px;
+    margin-top: var(--space-sm);
+}
+
+.fouling-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tick-mark {
+    width: 4px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.tick-label {
+    font-size: 0.625rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+}
+
+.fouling-legend {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--gray-200);
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+/* ============================================
+   Crew Database Modal
+   ============================================ */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: none;
+}
+
+.modal.active {
+    display: block;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.crew-modal .modal-content {
+    width: 600px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-50);
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-500);
+    cursor: pointer;
+    padding: var(--space-xs);
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--gray-800);
+}
+
+.modal-body {
+    padding: var(--space-lg);
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border-top: 1px solid var(--gray-200);
+    background: var(--gray-50);
+}
+
+/* Crew Tabs */
+.crew-tabs {
+    display: flex;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.crew-tab {
+    background: none;
+    border: none;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.crew-tab:hover {
+    color: var(--gray-700);
+}
+
+.crew-tab.active {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.crew-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary);
+}
+
+.crew-tab-content {
+    display: none;
+}
+
+.crew-tab-content.active {
+    display: block;
+}
+
+.crew-help {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-bottom: var(--space-md);
+}
+
+/* Crew List */
+.crew-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+}
+
+.crew-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.crew-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+.crew-card-name {
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--space-xs);
+}
+
+.crew-card-position {
+    font-size: 0.875rem;
+    color: var(--primary);
+}
+
+.crew-card-adas {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-top: var(--space-xs);
+}
+
+.crew-card-manage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default;
+}
+
+.crew-card-manage:hover {
+    transform: none;
+}
+
+.crew-empty {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--gray-500);
+}
+
+/* Crew Add Form */
+.crew-add-form {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.crew-add-form h4 {
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    margin-bottom: var(--space-md);
+}
+
+.crew-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: var(--space-sm);
+}
+
+.crew-form-grid input,
+.crew-form-grid select {
+    padding: var(--space-sm);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+}
+
+/* Crew Input Wrapper (for inline select button) */
+.crew-input-wrapper {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: stretch;
+}
+
+.crew-input-wrapper input {
+    flex: 1;
+}
+
+.crew-select-btn {
+    padding: 0 var(--space-sm);
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.crew-select-btn:hover {
+    background: var(--gray-200);
+    border-color: var(--primary);
+}
+
+/* ============================================
+   Print Preview Modal
+   ============================================ */
+
+.print-preview-modal .modal-content {
+    width: 90vw;
+    height: 90vh;
+}
+
+.print-preview-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.preview-title {
+    flex: 1;
+}
+
+.preview-doc-name {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-left: var(--space-sm);
+}
+
+.preview-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+}
+
+.print-preview-body {
+    flex: 1;
+    padding: 0;
+    background: var(--gray-300);
+    overflow: hidden;
+}
+
+.preview-scroll-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: var(--space-lg);
+}
+
+.preview-page-container {
+    background: var(--white);
+    box-shadow: var(--shadow-lg);
+    margin: 0 auto;
+    min-width: 210mm;
+}
+
+.preview-frame {
+    width: 100%;
+    min-height: 297mm;
+    border: none;
+    background: var(--white);
+    transform-origin: top center;
+}
+
+.print-preview-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-info {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.preview-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+/* ============================================
+   Button Variants
+   ============================================ */
+
+.btn-delete {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.btn-delete:hover {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.btn-small {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   Collapsible Sections (Enhanced)
+   ============================================ */
+
+.form-section legend {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.form-section legend:hover {
+    color: var(--primary);
+}
+
+.form-section legend::after {
+    content: '▼';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    transition: transform 0.3s ease;
+}
+
+.form-section.collapsed legend::after {
+    transform: translateY(-50%) rotate(-90deg);
+}
+
+.section-content {
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.form-section.collapsed .section-content {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* ============================================
+   Print Overrides for Enhancements
+   ============================================ */
+
+@media print {
+    .progress-container,
+    .autosave-indicator,
+    .form-notification,
+    .crew-select-btn,
+    .modal {
+        display: none !important;
+    }
+}
+

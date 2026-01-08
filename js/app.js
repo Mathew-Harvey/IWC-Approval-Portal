@@ -38,6 +38,41 @@ const App = {
         
         // Load saved API keys into settings form
         this.loadApiSettings();
+        
+        // Initialize form enhancements (autosave, progress, validation)
+        this.initFormEnhancements();
+    },
+    
+    /**
+     * Initialize all form enhancement modules
+     */
+    initFormEnhancements() {
+        // Form autosave, progress tracking, and validation
+        if (typeof FormEnhancements !== 'undefined') {
+            FormEnhancements.init({
+                formId: 'jobForm',
+                storageKey: 'iwc_form_autosave',
+                autosaveInterval: 30000,
+                debounceDelay: 1000
+            });
+        }
+        
+        // Crew database for saving/loading team members
+        if (typeof CrewDatabase !== 'undefined') {
+            CrewDatabase.init();
+        }
+        
+        // Visual fouling rating slider
+        if (typeof FoulingSlider !== 'undefined') {
+            FoulingSlider.init('foulingRating');
+        }
+        
+        // Print preview modal
+        if (typeof PrintPreview !== 'undefined') {
+            PrintPreview.init();
+        }
+        
+        console.log('✅ All form enhancements initialized');
     },
 
     /**

@@ -41,6 +41,46 @@ const App = {
     },
 
     /**
+     * Initialize collapsible form sections
+     */
+    initCollapsibleSections() {
+        const sections = document.querySelectorAll('.form-section');
+        
+        sections.forEach(section => {
+            const legend = section.querySelector('legend');
+            if (!legend) return;
+            
+            // Wrap content in a div for animation
+            const content = document.createElement('div');
+            content.className = 'section-content';
+            
+            // Move all children except legend into content wrapper
+            while (section.children.length > 1) {
+                content.appendChild(section.children[1]);
+            }
+            section.appendChild(content);
+            
+            // Add click handler to toggle collapse
+            legend.addEventListener('click', () => {
+                section.classList.toggle('collapsed');
+            });
+        });
+        
+        // Keep certain sections expanded by default, collapse others
+        const sectionsToCollapse = [
+            'Vessel History & Operating Profile',
+            'Additional Activities & Hazards'
+        ];
+        
+        sections.forEach(section => {
+            const legend = section.querySelector('legend');
+            if (legend && sectionsToCollapse.some(name => legend.textContent.includes(name))) {
+                // section.classList.add('collapsed');
+            }
+        });
+    },
+
+    /**
      * Initialize jurisdiction configuration system
      */
     initJurisdiction() {
@@ -277,6 +317,9 @@ const App = {
      * Bind all event listeners
      */
     bindEvents() {
+        // Initialize collapsible form sections
+        this.initCollapsibleSections();
+        
         // Form inputs that affect calculations
         const calcInputs = [
             'afcType', 'foulingRating', 'foulingCover', 'biofoulingOrigin',
@@ -943,6 +986,56 @@ const App = {
                 ? document.getElementById('otherLocation').value 
                 : document.getElementById('cleaningLocation').value,
             
+            // Personnel & Dive Team
+            diveSupervisor: document.getElementById('diveSupervisor').value,
+            diveSupervisorADAS: document.getElementById('diveSupervisorADAS').value,
+            diver1: document.getElementById('diver1').value,
+            diver1ADAS: document.getElementById('diver1ADAS').value,
+            diver2: document.getElementById('diver2').value,
+            diver2ADAS: document.getElementById('diver2ADAS').value,
+            diveTender: document.getElementById('diveTender').value,
+            diveTenderADAS: document.getElementById('diveTenderADAS').value,
+            
+            // Dive Parameters
+            maxDepth: document.getElementById('maxDepth').value,
+            bottomTime: document.getElementById('bottomTime').value,
+            decoProfile: document.getElementById('decoProfile').value,
+            gasType: document.getElementById('gasType').value,
+            
+            // Equipment
+            equipDivePanel: document.getElementById('equipDivePanel').checked,
+            equipUmbilicals: document.getElementById('equipUmbilicals').checked,
+            equipDiveHats: document.getElementById('equipDiveHats').checked,
+            equipComms: document.getElementById('equipComms').checked,
+            equipBailout: document.getElementById('equipBailout').checked,
+            equipRecovery: document.getElementById('equipRecovery').checked,
+            equipCompressor: document.getElementById('equipCompressor').checked,
+            equipFirstAid: document.getElementById('equipFirstAid').checked,
+            equipOxyviva: document.getElementById('equipOxyviva').checked,
+            equipStretcher: document.getElementById('equipStretcher').checked,
+            equipDiveFlag: document.getElementById('equipDiveFlag').checked,
+            equipHPWasher: document.getElementById('equipHPWasher').checked,
+            equipBigBoy: document.getElementById('equipBigBoy').checked,
+            equipROV: document.getElementById('equipROV').checked,
+            equipBrushCart: document.getElementById('equipBrushCart').checked,
+            equipFilterUnit: document.getElementById('equipFilterUnit').checked,
+            otherEquipment: document.getElementById('otherEquipment').value,
+            
+            // Client & Site Contacts
+            clientContact: document.getElementById('clientContact').value,
+            clientPhone: document.getElementById('clientPhone').value,
+            simopsContact: document.getElementById('simopsContact').value,
+            simopsPhone: document.getElementById('simopsPhone').value,
+            emergencyAssembly: document.getElementById('emergencyAssembly').value,
+            onSiteMedic: document.getElementById('onSiteMedic').value,
+            
+            // Site-Specific
+            siteType: document.getElementById('siteType').value,
+            requiresPTW: document.getElementById('requiresPTW').checked,
+            requiresIsolation: document.getElementById('requiresIsolation').checked,
+            requiresSiteInduction: document.getElementById('requiresSiteInduction').checked,
+            requiresSecurityClearance: document.getElementById('requiresSecurityClearance').checked,
+            
             // Additional activities
             activityConfinedSpace: document.getElementById('activityConfinedSpace').checked,
             activityHotWork: document.getElementById('activityHotWork').checked,
@@ -1064,6 +1157,37 @@ const App = {
             additionalHazards,
             additionalActivities,
             hasAdditionalActivities: additionalActivities.length > 0,
+
+            // Personnel data for SWMS
+            personnel: this.buildPersonnelList(formData),
+            hasPersonnel: !!(formData.diveSupervisor || formData.diver1 || formData.diver2),
+            
+            // Dive parameters
+            maxDepth: formData.maxDepth || '12',
+            bottomTime: formData.bottomTime || 'Unlimited',
+            decoProfile: formData.decoProfile || 'No Deco',
+            gasType: formData.gasType || 'Air',
+            
+            // Equipment selections for SWMS
+            equipment: this.buildEquipmentList(formData),
+            
+            // Client & Site contacts
+            clientContact: formData.clientContact,
+            clientPhone: formData.clientPhone,
+            simopsContact: formData.simopsContact,
+            simopsPhone: formData.simopsPhone,
+            emergencyAssembly: formData.emergencyAssembly,
+            onSiteMedic: formData.onSiteMedic === 'yes',
+            
+            // Site-specific data
+            siteType: formData.siteType,
+            siteTypeName: this.getSiteTypeName(formData.siteType),
+            isDefenceSite: formData.siteType === 'defence' || formData.siteType === 'anzac' || formData.siteType === 'navy',
+            isFPASite: formData.siteType === 'fpa',
+            requiresPTW: formData.requiresPTW,
+            requiresIsolation: formData.requiresIsolation,
+            requiresSiteInduction: formData.requiresSiteInduction,
+            requiresSecurityClearance: formData.requiresSecurityClearance,
 
             // Jurisdiction data for templates
             jurisdiction: jurisdiction,
@@ -1308,6 +1432,91 @@ const App = {
             month: '2-digit',
             year: 'numeric'
         });
+    },
+
+    /**
+     * Build personnel list for SWMS
+     */
+    buildPersonnelList(formData) {
+        const personnel = [];
+        
+        if (formData.diveSupervisor) {
+            personnel.push({
+                name: formData.diveSupervisor,
+                position: 'Dive Supervisor',
+                company: 'Franmarine',
+                adasCert: formData.diveSupervisorADAS || ''
+            });
+        }
+        
+        if (formData.diver1) {
+            personnel.push({
+                name: formData.diver1,
+                position: 'Diver 1',
+                company: 'Franmarine',
+                adasCert: formData.diver1ADAS || ''
+            });
+        }
+        
+        if (formData.diver2) {
+            personnel.push({
+                name: formData.diver2,
+                position: 'Diver 2',
+                company: 'Franmarine',
+                adasCert: formData.diver2ADAS || ''
+            });
+        }
+        
+        if (formData.diveTender) {
+            personnel.push({
+                name: formData.diveTender,
+                position: 'Dive Tender',
+                company: 'Franmarine',
+                adasCert: formData.diveTenderADAS || ''
+            });
+        }
+        
+        return personnel;
+    },
+
+    /**
+     * Build equipment list for SWMS
+     */
+    buildEquipmentList(formData) {
+        return {
+            divePanel: formData.equipDivePanel,
+            umbilicals: formData.equipUmbilicals,
+            diveHats: formData.equipDiveHats,
+            comms: formData.equipComms,
+            bailout: formData.equipBailout,
+            recovery: formData.equipRecovery,
+            compressor: formData.equipCompressor,
+            firstAid: formData.equipFirstAid,
+            oxyviva: formData.equipOxyviva,
+            stretcher: formData.equipStretcher,
+            diveFlag: formData.equipDiveFlag,
+            hpWasher: formData.equipHPWasher,
+            bigBoy: formData.equipBigBoy,
+            rov: formData.equipROV,
+            brushCart: formData.equipBrushCart,
+            filterUnit: formData.equipFilterUnit,
+            other: formData.otherEquipment
+        };
+    },
+
+    /**
+     * Get site type display name
+     */
+    getSiteTypeName(siteType) {
+        const names = {
+            'standard': 'Standard Commercial Port',
+            'defence': 'Defence / Babcock (FBW/FBE/AMC)',
+            'anzac': 'ANZAC Class Frigates',
+            'fpa': 'Fremantle Ports Authority',
+            'dpworld': 'DP World / Svitzer',
+            'navy': 'Navy Primes'
+        };
+        return names[siteType] || 'Standard Commercial Port';
     },
 
     /**

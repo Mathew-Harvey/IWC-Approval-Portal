@@ -133,19 +133,59 @@ body {
     overflow-y: auto;
 }
 
-/* Form Sections */
+/* Form Sections - Collapsible */
 .form-section {
     border: 1px solid var(--gray-200);
     border-radius: var(--radius-md);
-    padding: var(--space-lg);
+    padding: 0;
     margin-bottom: var(--space-lg);
+    overflow: hidden;
 }
 
 .form-section legend {
     font-weight: 600;
     color: var(--primary);
-    padding: 0 var(--space-sm);
-    font-size: 1.1rem;
+    padding: var(--space-md) var(--space-lg);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    width: 100%;
+    margin: 0;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.form-section legend:hover {
+    background: var(--gray-100);
+}
+
+.form-section legend::after {
+    content: '▼';
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+    color: var(--gray-400);
+}
+
+.form-section.collapsed legend::after {
+    transform: rotate(-90deg);
+}
+
+.form-section .section-content {
+    padding: var(--space-lg);
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.form-section.collapsed .section-content {
+    max-height: 0;
+    padding: 0 var(--space-lg);
+    opacity: 0;
+    overflow: hidden;
 }
 
 .form-grid {
@@ -2146,6 +2186,502 @@ body {
 
 .swms-document .swms-signoff-table td {
     height: 40px;
+}
+
+/* ============================================
+   Enhanced SWMS Styles (Comprehensive)
+   ============================================ */
+
+/* SWMS Header Info Grid */
+.swms-document .swms-header-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.swms-document .swms-info-block {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.swms-document .swms-info-block h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    margin-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: var(--space-xs);
+}
+
+/* Equipment Checkboxes Grid */
+.swms-document .equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-xs);
+    font-size: 0.75rem;
+}
+
+.swms-document .equipment-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 4px 6px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 3px;
+}
+
+.swms-document .equipment-item.checked {
+    background: #d1fae5;
+    border-color: #10b981;
+}
+
+/* Dive Parameters */
+.swms-document .dive-params {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--gray-200);
+}
+
+.swms-document .dive-param {
+    text-align: center;
+}
+
+.swms-document .dive-param label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+}
+
+.swms-document .dive-param .value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Documentation Checklist Grid */
+.swms-document .documentation-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.swms-document .doc-column {
+    font-size: 0.7rem;
+}
+
+.swms-document .doc-column h5 {
+    font-size: 0.7rem;
+    color: var(--primary);
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--primary);
+}
+
+.swms-document .doc-column .check-item {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 2px;
+    line-height: 1.3;
+}
+
+/* Hazard Category Grids */
+.swms-document .hazard-category-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    font-size: 0.7rem;
+}
+
+.swms-document .hazard-category {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+}
+
+.swms-document .hazard-category h5 {
+    font-size: 0.7rem;
+    color: var(--primary-dark);
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+}
+
+.swms-document .hazard-category .check-item {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 2px;
+}
+
+/* Contacts Grid */
+.swms-document .contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.swms-document .contact-block {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+}
+
+.swms-document .contact-block h5 {
+    font-size: 0.75rem;
+    color: var(--primary);
+    margin-bottom: var(--space-sm);
+}
+
+.swms-document .contact-block table {
+    width: 100%;
+    font-size: 0.7rem;
+}
+
+.swms-document .contact-block td {
+    padding: 2px 0;
+}
+
+.swms-document .contact-block .phone {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Risk Assessment Matrix */
+.swms-document .risk-matrix-section {
+    background: var(--gray-50);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+}
+
+.swms-document .risk-matrix-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-lg);
+}
+
+.swms-document .consequence-table,
+.swms-document .probability-table,
+.swms-document .risk-matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.7rem;
+}
+
+.swms-document .consequence-table th,
+.swms-document .consequence-table td,
+.swms-document .probability-table th,
+.swms-document .probability-table td,
+.swms-document .risk-matrix-table th,
+.swms-document .risk-matrix-table td {
+    border: 1px solid var(--gray-300);
+    padding: 4px 6px;
+    text-align: center;
+}
+
+.swms-document .consequence-table th,
+.swms-document .probability-table th {
+    background: var(--primary);
+    color: white;
+}
+
+.swms-document .risk-matrix-table th {
+    background: var(--gray-700);
+    color: white;
+}
+
+/* Risk Level Colors in Matrix */
+.swms-document .risk-E { background: #991b1b; color: white; font-weight: 700; }
+.swms-document .risk-H { background: #ea580c; color: white; font-weight: 600; }
+.swms-document .risk-M { background: #f59e0b; color: #000; font-weight: 600; }
+.swms-document .risk-L { background: #22c55e; color: white; font-weight: 500; }
+
+/* Risk Legend */
+.swms-document .risk-legend {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.swms-document .legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    font-size: 0.7rem;
+}
+
+.swms-document .legend-badge {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.swms-document .legend-badge.E { background: #991b1b; color: white; }
+.swms-document .legend-badge.H { background: #ea580c; color: white; }
+.swms-document .legend-badge.M { background: #f59e0b; color: #000; }
+.swms-document .legend-badge.L { background: #22c55e; color: white; }
+
+/* Hazard Section Part Headers */
+.swms-document .part-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-xl) 0 var(--space-lg) 0;
+    border-radius: var(--radius-md);
+}
+
+.swms-document .part-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    border: none;
+    padding: 0;
+    color: white;
+}
+
+/* Comprehensive Hazard Table */
+.swms-document .hazard-table-comprehensive {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.65rem;
+    margin-bottom: var(--space-lg);
+}
+
+.swms-document .hazard-table-comprehensive th {
+    background: var(--primary);
+    color: white;
+    padding: 6px 4px;
+    text-align: center;
+    font-size: 0.6rem;
+    border: 1px solid var(--primary-dark);
+}
+
+.swms-document .hazard-table-comprehensive td {
+    padding: 4px;
+    border: 1px solid var(--gray-300);
+    vertical-align: top;
+}
+
+.swms-document .hazard-table-comprehensive tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+.swms-document .hazard-table-comprehensive .section-header {
+    background: var(--gray-700);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.swms-document .hazard-table-comprehensive .section-header td {
+    padding: 8px;
+    border-color: var(--gray-800);
+}
+
+/* Risk columns in hazard table */
+.swms-document .hazard-table-comprehensive .col-c,
+.swms-document .hazard-table-comprehensive .col-p,
+.swms-document .hazard-table-comprehensive .col-risk {
+    text-align: center;
+    width: 30px;
+}
+
+.swms-document .hazard-table-comprehensive .col-controls {
+    width: 30%;
+}
+
+/* Table of Contents */
+.swms-document .toc-section {
+    background: var(--gray-50);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+}
+
+.swms-document .toc-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+}
+
+.swms-document .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.swms-document .toc-list li {
+    padding: 4px 0;
+    border-bottom: 1px dotted var(--gray-300);
+}
+
+.swms-document .toc-list li a {
+    color: var(--gray-700);
+    text-decoration: none;
+}
+
+.swms-document .toc-list li.toc-part {
+    font-weight: 600;
+    color: var(--primary);
+    margin-top: var(--space-sm);
+}
+
+/* Worker Sign-off Table Enhanced */
+.swms-document .worker-signoff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+}
+
+.swms-document .worker-signoff-table th {
+    background: var(--primary);
+    color: white;
+    padding: var(--space-sm);
+    text-align: left;
+}
+
+.swms-document .worker-signoff-table td {
+    padding: var(--space-sm);
+    border: 1px solid var(--gray-300);
+    height: 28px;
+}
+
+.swms-document .worker-signoff-table tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+/* Legislative References Table */
+.swms-document .legislation-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+}
+
+.swms-document .legislation-table th {
+    background: var(--gray-700);
+    color: white;
+    padding: var(--space-sm);
+    text-align: left;
+}
+
+.swms-document .legislation-table td {
+    padding: var(--space-sm);
+    border: 1px solid var(--gray-300);
+}
+
+.swms-document .legislation-table tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+/* Document Approval Section */
+.swms-document .approval-section {
+    background: var(--gray-50);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-xl);
+}
+
+.swms-document .approval-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.swms-document .approval-table th {
+    background: var(--primary);
+    color: white;
+    padding: var(--space-md);
+    text-align: left;
+}
+
+.swms-document .approval-table td {
+    padding: var(--space-md);
+    border: 1px solid var(--gray-300);
+    min-width: 120px;
+}
+
+/* Emergency Contacts Enhanced */
+.swms-document .emergency-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.swms-document .emergency-box {
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.swms-document .emergency-box.primary {
+    border-color: var(--danger);
+    background: #fff5f5;
+}
+
+.swms-document .emergency-box h5 {
+    font-size: 0.8rem;
+    color: var(--primary-dark);
+    margin-bottom: var(--space-sm);
+}
+
+.swms-document .emergency-box .phone-big {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--danger);
+}
+
+/* Print adjustments for comprehensive SWMS */
+@media print {
+    .swms-document .equipment-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .swms-document .hazard-category-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+    
+    .swms-document .documentation-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .swms-document .risk-matrix-grid {
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+    
+    .swms-document .hazard-table-comprehensive {
+        font-size: 6pt;
+    }
+    
+    .swms-document .part-header {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .swms-document .risk-E,
+    .swms-document .risk-H,
+    .swms-document .risk-M,
+    .swms-document .risk-L {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 }
 
 /* Print styles for all documents */

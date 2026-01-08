@@ -239,9 +239,209 @@
                         </div>
                     </fieldset>
 
+                    <!-- Personnel & Dive Team -->
+                    <fieldset class="form-section">
+                        <legend>👥 Dive Team & Personnel</legend>
+                        <div class="info-box">
+                            <p>Enter the dive team members for this job. Personnel details will appear on the SWMS.</p>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="diveSupervisor">Dive Supervisor *</label>
+                                <input type="text" id="diveSupervisor" placeholder="Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="diveSupervisorADAS">ADAS Cert #</label>
+                                <input type="text" id="diveSupervisorADAS" placeholder="e.g., 12345">
+                            </div>
+                            <div class="form-group">
+                                <label for="diver1">Diver 1</label>
+                                <input type="text" id="diver1" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="diver1ADAS">ADAS Cert #</label>
+                                <input type="text" id="diver1ADAS" placeholder="e.g., 12345">
+                            </div>
+                            <div class="form-group">
+                                <label for="diver2">Diver 2</label>
+                                <input type="text" id="diver2" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="diver2ADAS">ADAS Cert #</label>
+                                <input type="text" id="diver2ADAS" placeholder="e.g., 12345">
+                            </div>
+                            <div class="form-group">
+                                <label for="diveTender">Dive Tender</label>
+                                <input type="text" id="diveTender" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="diveTenderADAS">ADAS Cert #</label>
+                                <input type="text" id="diveTenderADAS" placeholder="e.g., 12345">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Dive Parameters -->
+                    <fieldset class="form-section">
+                        <legend>🤿 Dive Parameters</legend>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="maxDepth">Expected Max Depth (m)</label>
+                                <input type="number" id="maxDepth" min="1" max="50" value="12" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="bottomTime">Expected Bottom Time (min)</label>
+                                <select id="bottomTime">
+                                    <option value="Unlimited" selected>Unlimited (No Deco)</option>
+                                    <option value="60">60 minutes</option>
+                                    <option value="90">90 minutes</option>
+                                    <option value="120">120 minutes</option>
+                                    <option value="Custom">Custom (specify in notes)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="decoProfile">Decompression Profile</label>
+                                <select id="decoProfile">
+                                    <option value="No Deco" selected>No Decompression Required</option>
+                                    <option value="In-Water Stops">In-Water Stops</option>
+                                    <option value="Surface Deco">Surface Decompression</option>
+                                    <option value="DCIEM Tables">DCIEM Tables</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gasType">Breathing Gas</label>
+                                <select id="gasType">
+                                    <option value="Air" selected>Compressed Air</option>
+                                    <option value="Nitrox">Nitrox (EAN)</option>
+                                    <option value="Mixed Gas">Mixed Gas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Equipment Selection -->
+                    <fieldset class="form-section">
+                        <legend>🔧 Equipment Selection</legend>
+                        <div class="info-box">
+                            <p>Select all equipment that will be used on this job. This populates the SWMS equipment checklist.</p>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>Dive Equipment</label>
+                                <div class="checkbox-group horizontal">
+                                    <label class="checkbox-label"><input type="checkbox" id="equipDivePanel" checked> Dive Panel</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipUmbilicals" checked> Umbilicals</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipDiveHats" checked> Dive Hats/Masks</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipComms" checked> Comms System</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipBailout" checked> Bailout Cylinders</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipRecovery" checked> Recovery System</label>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Support Equipment</label>
+                                <div class="checkbox-group horizontal">
+                                    <label class="checkbox-label"><input type="checkbox" id="equipCompressor" checked> LP Compressor</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipFirstAid" checked> First Aid Kit</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipOxyviva" checked> Oxy-Viva</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipStretcher" checked> Stretcher</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipDiveFlag" checked> Dive Flag</label>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Cleaning Equipment</label>
+                                <div class="checkbox-group horizontal">
+                                    <label class="checkbox-label"><input type="checkbox" id="equipHPWasher"> HP Washer</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipBigBoy"> Big Boy System</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipROV"> ROV System</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipBrushCart"> Brush Cart</label>
+                                    <label class="checkbox-label"><input type="checkbox" id="equipFilterUnit"> Filter Unit</label>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="otherEquipment">Other Equipment</label>
+                                <input type="text" id="otherEquipment" placeholder="Specify any additional equipment...">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Client & Site Contacts -->
+                    <fieldset class="form-section">
+                        <legend>📞 Client & Site Contacts</legend>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="clientContact">Client Contact Name</label>
+                                <input type="text" id="clientContact" placeholder="Site representative name">
+                            </div>
+                            <div class="form-group">
+                                <label for="clientPhone">Client Phone</label>
+                                <input type="tel" id="clientPhone" placeholder="e.g., 0412 345 678">
+                            </div>
+                            <div class="form-group">
+                                <label for="simopsContact">SimOps Contact Name</label>
+                                <input type="text" id="simopsContact" placeholder="If applicable">
+                            </div>
+                            <div class="form-group">
+                                <label for="simopsPhone">SimOps Phone</label>
+                                <input type="tel" id="simopsPhone" placeholder="e.g., 0412 345 678">
+                            </div>
+                            <div class="form-group">
+                                <label for="emergencyAssembly">Emergency Assembly Point</label>
+                                <input type="text" id="emergencyAssembly" placeholder="Muster location on site">
+                            </div>
+                            <div class="form-group">
+                                <label for="onSiteMedic">On-Site Dive Medic?</label>
+                                <select id="onSiteMedic">
+                                    <option value="no" selected>No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Site-Specific Selection -->
+                    <fieldset class="form-section">
+                        <legend>🏭 Site-Specific Requirements</legend>
+                        <div class="info-box">
+                            <p>Select if working at a specific client site. This will include relevant site-specific hazards in the SWMS.</p>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="siteType">Site Type</label>
+                                <select id="siteType">
+                                    <option value="standard" selected>Standard Commercial Port</option>
+                                    <option value="defence">Defence / Babcock (FBW/FBE/AMC)</option>
+                                    <option value="anzac">ANZAC Class Frigates - Propeller Operations</option>
+                                    <option value="fpa">Fremantle Ports Authority</option>
+                                    <option value="dpworld">DP World / Svitzer Operations</option>
+                                    <option value="navy">Other Navy Primes</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <div class="checkbox-group vertical">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="requiresPTW" checked>
+                                        Permit to Work (PTW) Required
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="requiresIsolation" checked>
+                                        Isolation/LOTO Required
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="requiresSiteInduction">
+                                        Site-Specific Induction Required
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="requiresSecurityClearance">
+                                        Security Clearance Required
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
                     <!-- Additional Activities -->
                     <fieldset class="form-section">
-                        <legend>Additional Activities & Hazards</legend>
+                        <legend>⚠️ Additional Activities & Hazards</legend>
                         <div class="info-box">
                             <p>Select any additional activities that apply. These will add relevant hazards to the SWMS and considerations to other safety documents.</p>
                         </div>
@@ -1642,7 +1842,7 @@
         </div>
     </script>
 
-    <!-- Safe Work Method Statement Template -->
+    <!-- Safe Work Method Statement Template - Comprehensive Version -->
     <script id="swms-template" type="text/x-handlebars-template">
         <div class="wms-document swms-document">
             <!-- Cover Page -->
@@ -1657,6 +1857,7 @@
                 </div>
                 <div class="cover-title">
                     <h1>SAFE WORK METHOD STATEMENT</h1>
+                    <p style="font-size: 0.9rem; color: #666;">FRANMARINE UNDERWATER SERVICES - ROV HULL CLEANING & COMMERCIAL DIVING OPERATIONS</p>
                     <h3>In Water Hull Clean – '{{vesselName}}'</h3>
                     <h4>{{clientName}}</h4>
                     <p class="location">{{cleaningLocation}}</p>
@@ -1673,7 +1874,7 @@
                 </div>
             </div>
 
-            <!-- Content Header -->
+            <!-- Header Info Section -->
             <div class="swms-header">
                 {{#if companyLogo}}
                 <div class="swms-logo">
@@ -1682,202 +1883,997 @@
                 {{/if}}
                 <div class="swms-title-block">
                     <h1>SAFE WORK METHOD STATEMENT (SWMS)</h1>
-                    <h2>HIGH RISK CONSTRUCTION WORK</h2>
+                    <h2>FRANMARINE UNDERWATER SERVICES - ROV HULL CLEANING & COMMERCIAL DIVING OPERATIONS</h2>
                 </div>
             </div>
 
-            <!-- Project Details -->
+            <!-- Project Details Grid -->
             <section class="swms-section">
-                <table class="swms-info-table">
-                    <tr>
-                        <td><strong>Job Number:</strong></td>
-                        <td>{{jobNumber}}</td>
-                        <td><strong>Date:</strong></td>
-                        <td>{{revisionDate}}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Work Activity:</strong></td>
-                        <td colspan="3">In Water Hull Clean – '{{vesselName}}'</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Client:</strong></td>
-                        <td>{{clientName}}</td>
-                        <td><strong>Location:</strong></td>
-                        <td>{{cleaningLocation}}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Prepared By:</strong></td>
-                        <td>{{authorName}}</td>
-                        <td><strong>Duration:</strong></td>
-                        <td>{{estimatedDuration}} days</td>
-                    </tr>
-                </table>
-            </section>
+                <div class="swms-header-grid">
+                    <div class="swms-info-block">
+                        <h4>Job Information</h4>
+                        <table class="swms-info-table">
+                            <tr><td><strong>Job Number:</strong></td><td>{{jobNumber}}</td></tr>
+                            <tr><td><strong>Date of Job:</strong></td><td>{{revisionDate}}</td></tr>
+                            <tr><td><strong>SWMS Number:</strong></td><td>{{jobNumber}}-SWMS</td></tr>
+                            <tr><td><strong>Created By:</strong></td><td>{{authorName}}</td></tr>
+                        </table>
+                    </div>
+                    <div class="swms-info-block">
+                        <h4>Client & Location</h4>
+                        <table class="swms-info-table">
+                            <tr><td><strong>Principal Contractor:</strong></td><td>{{clientName}}</td></tr>
+                            <tr><td><strong>Project/Work Activity:</strong></td><td>In Water Hull Clean</td></tr>
+                            <tr><td><strong>Workplace Location:</strong></td><td>{{cleaningLocation}}</td></tr>
+                            <tr><td><strong>Client Reviewed:</strong></td><td>☐ Yes  ☐ No</td></tr>
+                        </table>
+                    </div>
+                </div>
 
-            <!-- Scope of Work -->
-            <section class="swms-section">
-                <h3>SCOPE OF WORK</h3>
-                {{#if hasCustomScope}}
-                <p>{{scopeAreasText}}</p>
-                {{else}}
-                <p>In-water hull cleaning of '{{vesselName}}' to remove all biofouling from {{scopeAreasText}} using diver-operated cleaning equipment {{#if captureRequired}}with capture and filtration systems{{/if}}.</p>
-                {{/if}}
-                {{#if hasAdditionalActivities}}
-                <p><strong>Additional Activities:</strong></p>
-                <ul>
-                    {{#each additionalActivities}}
-                    <li>{{this}}</li>
-                    {{/each}}
-                </ul>
-                {{/if}}
-            </section>
-
-            <!-- High Risk Work Activities -->
-            <section class="swms-section">
-                <h3>HIGH RISK WORK ACTIVITIES (WHS Regulations)</h3>
-                <table class="swms-check-table">
-                    <tbody>
-                        <tr><td>☑</td><td>Diving work (any depth)</td></tr>
-                        <tr><td>☑</td><td>Work in or near water where there is risk of drowning</td></tr>
-                        <tr><td>{{#if activityWorkingAtHeights}}☑{{else}}☐{{/if}}</td><td>Work at heights greater than 2 metres</td></tr>
-                        <tr><td>{{#if activityCraneOps}}☑{{else}}☐{{/if}}</td><td>Work involving powered mobile plant</td></tr>
-                        <tr><td>{{#if activityConfinedSpace}}☑{{else}}☐{{/if}}</td><td>Work in confined spaces</td></tr>
-                        {{#if activityHotWork}}
-                        <tr><td>☑</td><td>Hot work (welding, cutting, grinding)</td></tr>
-                        {{/if}}
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- Required Licences/Competencies -->
-            <section class="swms-section">
-                <h3>REQUIRED LICENCES & COMPETENCIES</h3>
-                <table class="swms-table">
-                    <thead>
-                        <tr><th>Licence/Competency</th><th>Required For</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>ADAS Part 3 Diving Supervisor</td><td>Dive Supervisor</td></tr>
-                        <tr><td>ADAS Part 2 Occupational Diver</td><td>All Divers</td></tr>
-                        <tr><td>Current Diving Medical Certificate</td><td>All Diving Personnel</td></tr>
-                        <tr><td>First Aid & Oxygen Administration</td><td>All Personnel</td></tr>
-                        <tr><td>Site-specific Inductions</td><td>All Personnel</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- PPE Requirements -->
-            <section class="swms-section">
-                <h3>PERSONAL PROTECTIVE EQUIPMENT</h3>
-                <div class="ppe-grid">
-                    <div class="ppe-item">☑ Hard Hat</div>
-                    <div class="ppe-item">☑ Safety Glasses</div>
-                    <div class="ppe-item">☑ Steel Cap Boots</div>
-                    <div class="ppe-item">☑ Hi-Vis Clothing</div>
-                    <div class="ppe-item">☑ Gloves</div>
-                    <div class="ppe-item">☑ Hearing Protection</div>
-                    <div class="ppe-item">☑ Diving Equipment (SSBA)</div>
-                    <div class="ppe-item">☑ Dive Knife</div>
+                <!-- Personnel Section -->
+                <div class="swms-info-block" style="margin-bottom: var(--space-lg);">
+                    <h4>PERSONNEL: NAME, POSITION & COMPANY</h4>
+                    <table class="swms-table" style="font-size: 0.8rem;">
+                        <thead>
+                            <tr><th>Name</th><th>Position</th><th>Company</th><th>ADAS Cert</th></tr>
+                        </thead>
+                        <tbody>
+                            {{#each personnel}}
+                            <tr>
+                                <td>{{name}}</td>
+                                <td>{{position}}</td>
+                                <td>{{company}}</td>
+                                <td>{{adasCert}}</td>
+                            </tr>
+                            {{/each}}
+                            {{#unless hasPersonnel}}
+                            <tr><td colspan="4" style="text-align: center; color: #666; font-style: italic;">Personnel to be assigned</td></tr>
+                            {{/unless}}
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
-            <!-- Hazard Analysis Table -->
+            <!-- Equipment & Dive Parameters -->
+            <section class="swms-section">
+                <h3>EQUIPMENT & DIVE PARAMETERS</h3>
+                <div class="equipment-grid">
+                    <div class="equipment-item {{#if equipment.divePanel}}checked{{/if}}">{{#if equipment.divePanel}}☑{{else}}☐{{/if}} Dive Panel</div>
+                    <div class="equipment-item checked">☑ Gas Mix ({{gasType}})</div>
+                    <div class="equipment-item {{#if equipment.recovery}}checked{{/if}}">{{#if equipment.recovery}}☑{{else}}☐{{/if}} Recovery System</div>
+                    <div class="equipment-item {{#if equipment.diveHats}}checked{{/if}}">{{#if equipment.diveHats}}☑{{else}}☐{{/if}} Dive Hats</div>
+                    <div class="equipment-item {{#if equipment.comms}}checked{{/if}}">{{#if equipment.comms}}☑{{else}}☐{{/if}} Comms</div>
+                    <div class="equipment-item {{#if equipment.firstAid}}checked{{/if}}">{{#if equipment.firstAid}}☑{{else}}☐{{/if}} First Aid Kit</div>
+                    <div class="equipment-item {{#if equipment.umbilicals}}checked{{/if}}">{{#if equipment.umbilicals}}☑{{else}}☐{{/if}} Umbilicals</div>
+                    <div class="equipment-item {{#if equipment.compressor}}checked{{/if}}">{{#if equipment.compressor}}☑{{else}}☐{{/if}} LP Compressor</div>
+                    <div class="equipment-item {{#if equipment.diveFlag}}checked{{/if}}">{{#if equipment.diveFlag}}☑{{else}}☐{{/if}} Dive Flag</div>
+                    <div class="equipment-item {{#if equipment.bailout}}checked{{/if}}">{{#if equipment.bailout}}☑{{else}}☐{{/if}} Bailout Cylinders</div>
+                    <div class="equipment-item {{#if equipment.stretcher}}checked{{/if}}">{{#if equipment.stretcher}}☑{{else}}☐{{/if}} Stretcher</div>
+                    <div class="equipment-item {{#if equipment.oxyviva}}checked{{/if}}">{{#if equipment.oxyviva}}☑{{else}}☐{{/if}} Oxy-Viva</div>
+                    <div class="equipment-item {{#if equipment.hpWasher}}checked{{/if}}">{{#if equipment.hpWasher}}☑{{else}}☐{{/if}} HP Washer</div>
+                    <div class="equipment-item {{#if equipment.rov}}checked{{/if}}">{{#if equipment.rov}}☑{{else}}☐{{/if}} ROV System</div>
+                    <div class="equipment-item {{#if equipment.bigBoy}}checked{{/if}}">{{#if equipment.bigBoy}}☑{{else}}☐{{/if}} Big Boy</div>
+                    <div class="equipment-item {{#if equipment.filterUnit}}checked{{/if}}">{{#if equipment.filterUnit}}☑{{else}}☐{{/if}} Filter Unit</div>
+                </div>
+                <div class="dive-params">
+                    <div class="dive-param">
+                        <label>Expected Max Depth (m)</label>
+                        <div class="value">{{maxDepth}}m</div>
+                    </div>
+                    <div class="dive-param">
+                        <label>Expected Bottom Time (min)</label>
+                        <div class="value">{{bottomTime}}</div>
+                    </div>
+                    <div class="dive-param">
+                        <label>Decompression Profile</label>
+                        <div class="value">{{decoProfile}}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documentation Checklists -->
             <section class="swms-section page-break-before">
-                <h3>HAZARD IDENTIFICATION & CONTROL MEASURES</h3>
-                <table class="swms-hazard-table">
+                <h3>DOCUMENTATION & COMPLIANCE REQUIREMENTS</h3>
+                <div class="documentation-grid">
+                    <div class="doc-column">
+                        <h5>Documentation On-Site</h5>
+                        <div class="check-item">☑ QA0070FUS Diving Operations Manual</div>
+                        <div class="check-item">☑ Occupational Diving AS2299.1:2015</div>
+                        <div class="check-item">☑ Worksheet Package / Dive Log</div>
+                        <div class="check-item">☑ DCIEM Decompression Tables</div>
+                        <div class="check-item">☑ Safety Data Sheets (SDS)</div>
+                        <div class="check-item">☑ Emergency Response Plan</div>
+                    </div>
+                    <div class="doc-column">
+                        <h5>Legislation & Standards</h5>
+                        <div class="check-item">☑ AS/NZS 2299.1:2015 Occupational Diving</div>
+                        <div class="check-item">☑ WHS Regulation 2025 (NSW/WA)</div>
+                        <div class="check-item">☑ Environmental Protection Act 1986</div>
+                        <div class="check-item">☑ Marine Safety (DCV) National Law 2012</div>
+                        <div class="check-item">☑ Biosecurity Act 2015 (Cth)</div>
+                        <div class="check-item">☑ Anti-fouling & IWHC Guidelines 2015</div>
+                    </div>
+                    <div class="doc-column">
+                        <h5>High Risk Licences</h5>
+                        <div class="check-item">☑ ADAS Part 2 Occupational Diver or higher</div>
+                        <div class="check-item">☑ Current Dive Medical (within 12 months)</div>
+                        <div class="check-item">☑ First Aid, Advanced Resuscitation & O2</div>
+                        <div class="check-item">☑ White Card (Construction Induction)</div>
+                        <div class="check-item">☐ Vessel Operator (suitable for vessel)</div>
+                        <div class="check-item">☐ HRWL - Forklift / Crane / Rigging / EWP</div>
+                    </div>
+                    <div class="doc-column">
+                        <h5>Job Specific Docs</h5>
+                        <div class="check-item">☑ Client SWMS / JSA / Risk Assessment</div>
+                        <div class="check-item">☑ Permit to Work (PTW)</div>
+                        <div class="check-item">☑ Isolation Certificate / LOTO</div>
+                        <div class="check-item">☐ Hot Works Permit</div>
+                        <div class="check-item">☐ Confined Space Entry Permit</div>
+                        <div class="check-item">{{#if sapRequired}}☑{{else}}☐{{/if}} IWHC Approval / Biosecurity</div>
+                    </div>
+                    <div class="doc-column">
+                        <h5>Permits Required</h5>
+                        <div class="check-item">☑ General Works PTW</div>
+                        <div class="check-item">☑ Diving PTW</div>
+                        <div class="check-item">☐ Hot Works</div>
+                        <div class="check-item">{{#if activityWorkingAtHeights}}☑{{else}}☐{{/if}} Working at Heights</div>
+                        <div class="check-item">☑ Isolation - Ship Equipment</div>
+                        <div class="check-item">{{#if sapRequired}}☑{{else}}☐{{/if}} IWHC Approval</div>
+                    </div>
+                    <div class="doc-column">
+                        <h5>PPE Required</h5>
+                        <div class="check-item">☑ Long Pants/Shirt/Overalls</div>
+                        <div class="check-item">☑ High-Vis Vest</div>
+                        <div class="check-item">☑ Safety Helmet</div>
+                        <div class="check-item">☑ Safety Glasses</div>
+                        <div class="check-item">☑ Task-Specific Gloves</div>
+                        <div class="check-item">☑ Steel Cap Boots</div>
+                        <div class="check-item">☑ PFD (within 3m water)</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hazard Categories Grid -->
+            <section class="swms-section">
+                <h3>HAZARD IDENTIFICATION CATEGORIES</h3>
+                <div class="hazard-category-grid">
+                    <div class="hazard-category">
+                        <h5>Work Location</h5>
+                        <div class="check-item">☐ Difficult Entry/Exit</div>
+                        <div class="check-item">☐ Oxygen Deficiency</div>
+                        <div class="check-item">☐ Engulfment Risk</div>
+                        <div class="check-item">☐ Temperature Extremes</div>
+                        <div class="check-item">☐ Defined Confined Space</div>
+                        <div class="check-item">☐ Entrapment Hazards</div>
+                        <div class="check-item">☐ Remote/Isolated Site</div>
+                    </div>
+                    <div class="hazard-category">
+                        <h5>Hazardous Area</h5>
+                        <div class="check-item">☐ Dangerous Goods</div>
+                        <div class="check-item">{{#if activityWorkingAtHeights}}☑{{else}}☐{{/if}} Working at Heights (>2m)</div>
+                        <div class="check-item">☐ Toxic Substances</div>
+                        <div class="check-item">☐ Difficult Rescue</div>
+                        <div class="check-item">☐ Hazardous Goods</div>
+                        <div class="check-item">☐ Asbestos Present</div>
+                        <div class="check-item">☐ Biological Hazards</div>
+                    </div>
+                    <div class="hazard-category">
+                        <h5>Environmental</h5>
+                        <div class="check-item">☑ Wind/Current/Tide</div>
+                        <div class="check-item">☑ Poor Visibility</div>
+                        <div class="check-item">☑ Maximum Depth</div>
+                        <div class="check-item">☑ Water/Air Temperature</div>
+                        <div class="check-item">☐ Invasive Marine Species</div>
+                        <div class="check-item">☐ Marine Mammals</div>
+                        <div class="check-item">☑ Vessel Traffic</div>
+                    </div>
+                    <div class="hazard-category">
+                        <h5>Task Related</h5>
+                        <div class="check-item">☑ Entry/Exit Methods</div>
+                        <div class="check-item">☑ Trained Personnel</div>
+                        <div class="check-item">☑ Lifeline Entanglement</div>
+                        <div class="check-item">{{#if activityHotWork}}☑{{else}}☐{{/if}} Cutting/Welding</div>
+                        <div class="check-item">☐ Dredging/Excavation</div>
+                        <div class="check-item">☑ Inspection</div>
+                        <div class="check-item">{{#if captureRequired}}☑{{else}}☐{{/if}} HP Water Blasting</div>
+                    </div>
+                    <div class="hazard-category">
+                        <h5>Isolation Required</h5>
+                        <div class="check-item">☐ Isolation - Electrical</div>
+                        <div class="check-item">☐ Isolation - Mechanical</div>
+                        <div class="check-item">☐ Isolation - Energy</div>
+                        <div class="check-item">☑ Isolation - Ship Equipment</div>
+                        <div class="check-item">☑ Isolation - Cathodic</div>
+                        <div class="check-item">{{#if activityCraneOps}}☑{{else}}☐{{/if}} Crane Operations</div>
+                        <div class="check-item">{{#if activityConfinedSpace}}☑{{else}}☐{{/if}} Confined Space</div>
+                    </div>
+                    <div class="hazard-category">
+                        <h5>PPE Categories</h5>
+                        <div class="check-item">☑ Sunscreen/Sun Protection</div>
+                        <div class="check-item">☑ Hearing Protection</div>
+                        <div class="check-item">☑ PFD (within 3m water)</div>
+                        <div class="check-item">☐ Full Face Respirator</div>
+                        <div class="check-item">☐ Fall Arrest Harness</div>
+                        <div class="check-item">☑ Cut Resistant Gloves</div>
+                        <div class="check-item">{{#if activityHotWork}}☑{{else}}☐{{/if}} Welding PPE</div>
+                    </div>
+                    <div class="hazard-category">
+                        <h5>Other</h5>
+                        <div class="check-item">☐ COVID-19 Protocols</div>
+                        <div class="check-item">☑ Fatigue Management</div>
+                        <div class="check-item">☑ Dive Profiles</div>
+                        <div class="check-item">☑ Buoyancy Control</div>
+                        <div class="check-item">☑ Hand Tools</div>
+                        <div class="check-item">☐ Vacuum/Suction</div>
+                        <div class="check-item">☑ Shipping Movements</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Emergency & Contact Information -->
+            <section class="swms-section">
+                <h3>EMERGENCY CONTACTS & FACILITIES</h3>
+                <div class="contacts-grid">
+                    <div class="contact-block">
+                        <h5>Franmarine Contacts</h5>
+                        <table>
+                            <tr><td>Sam Diamond</td><td class="phone">0410 850 638</td></tr>
+                            <tr><td>Kirby Hamilton</td><td class="phone">0439 389 261</td></tr>
+                            <tr><td>Hamish Brown</td><td class="phone">0458 234 067</td></tr>
+                            <tr><td>Matt Hilder</td><td class="phone">0452 123 732</td></tr>
+                            <tr><td>Belinda Brooks (HSEQ)</td><td class="phone">0437 007 342</td></tr>
+                            <tr><td>Perth Office</td><td class="phone">08 9437 3900</td></tr>
+                            <tr><td>NSW Office</td><td class="phone">02 7228 9691</td></tr>
+                        </table>
+                    </div>
+                    <div class="contact-block">
+                        <h5>First Aid Facilities</h5>
+                        <table>
+                            <tr><td>On-Site Dive Medic:</td><td>{{#if onSiteMedic}}☑ Yes  ☐ No{{else}}☐ Yes  ☑ No{{/if}}</td></tr>
+                            <tr><td>First Aid Box:</td><td>Dive System</td></tr>
+                            <tr><td>Stretcher:</td><td>{{#if equipment.stretcher}}Dive System{{else}}Site/Vessel{{/if}}</td></tr>
+                            <tr><td>Oxygen:</td><td>{{#if equipment.oxyviva}}Dive System (Oxy-Viva){{else}}Site/Vessel{{/if}}</td></tr>
+                            <tr><td>AED:</td><td>Site / Vessel</td></tr>
+                            <tr><td>Fire Extinguisher:</td><td>Dive System</td></tr>
+                            <tr><td>Spill Kit:</td><td>Dive System</td></tr>
+                        </table>
+                    </div>
+                    <div class="contact-block">
+                        <h5>Nearest Medical Facilities</h5>
+                        <table>
+                            <tr><td>Hospital:</td><td>Fiona Stanley Hospital</td></tr>
+                            <tr><td>Address:</td><td>Robin Warren Drive, Murdoch 6150</td></tr>
+                            <tr><td>Phone:</td><td class="phone">08 6152 5222</td></tr>
+                            <tr><td>Hyperbaric:</td><td>Fiona Stanley Hospital</td></tr>
+                            <tr><td>DAN Emergency:</td><td class="phone">1800 088 200</td></tr>
+                            <tr><td>Poisons Info:</td><td class="phone">13 11 26</td></tr>
+                            <tr><td>WorkSafe WA:</td><td class="phone">1300 307 877</td></tr>
+                        </table>
+                    </div>
+                    <div class="contact-block">
+                        <h5>Client & SimOps</h5>
+                        <table>
+                            <tr><td>Client Contact:</td><td>{{#if clientContact}}{{clientContact}}{{else}}<em>TBC</em>{{/if}}</td></tr>
+                            <tr><td>Client Phone:</td><td class="phone">{{#if clientPhone}}{{clientPhone}}{{else}}<em>TBC</em>{{/if}}</td></tr>
+                            <tr><td>SimOps Contact:</td><td>{{#if simopsContact}}{{simopsContact}}{{else}}<em>N/A</em>{{/if}}</td></tr>
+                            <tr><td>SimOps Phone:</td><td class="phone">{{#if simopsPhone}}{{simopsPhone}}{{else}}<em>N/A</em>{{/if}}</td></tr>
+                            <tr><td>Emergency Assembly:</td><td>{{#if emergencyAssembly}}{{emergencyAssembly}}{{else}}<em>TBC</em>{{/if}}</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Risk Assessment Matrix -->
+            <section class="swms-section page-break-before">
+                <h3>RISK ASSESSMENT MATRIX - AS/NZS ISO 31000:2018</h3>
+                <div class="risk-matrix-section">
+                    <div class="risk-matrix-grid">
+                        <div>
+                            <h4 style="font-size: 0.8rem; margin-bottom: var(--space-sm);">CONSEQUENCE RATING</h4>
+                            <table class="consequence-table">
+                                <thead>
+                                    <tr><th>Rating</th><th>Description</th><th>People</th><th>Environment</th><th>Assets</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1</td><td>Insignificant</td><td>No injury</td><td>No impact</td><td>&lt;$1K</td></tr>
+                                    <tr><td>2</td><td>Minor</td><td>First aid</td><td>Minor impact</td><td>$1K-$10K</td></tr>
+                                    <tr><td>3</td><td>Moderate</td><td>Medical treatment</td><td>Moderate impact</td><td>$10K-$100K</td></tr>
+                                    <tr><td>4</td><td>Major</td><td>Serious injury</td><td>Major impact</td><td>$100K-$1M</td></tr>
+                                    <tr><td>5</td><td>Catastrophic</td><td>Fatality</td><td>Severe damage</td><td>&gt;$1M</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 0.8rem; margin-bottom: var(--space-sm);">PROBABILITY</h4>
+                            <table class="probability-table">
+                                <thead>
+                                    <tr><th>Rating</th><th>Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>A</td><td>Almost Certain</td></tr>
+                                    <tr><td>B</td><td>Likely</td></tr>
+                                    <tr><td>C</td><td>Possible</td></tr>
+                                    <tr><td>D</td><td>Unlikely</td></tr>
+                                    <tr><td>E</td><td>Rare</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 0.8rem; margin-bottom: var(--space-sm);">RISK MATRIX</h4>
+                            <table class="risk-matrix-table">
+                                <thead>
+                                    <tr><th>P</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>A</td><td class="risk-H">H</td><td class="risk-H">H</td><td class="risk-E">E</td><td class="risk-E">E</td><td class="risk-E">E</td></tr>
+                                    <tr><td>B</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-H">H</td><td class="risk-E">E</td><td class="risk-E">E</td></tr>
+                                    <tr><td>C</td><td class="risk-L">L</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-E">E</td><td class="risk-E">E</td></tr>
+                                    <tr><td>D</td><td class="risk-L">L</td><td class="risk-L">L</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-E">E</td></tr>
+                                    <tr><td>E</td><td class="risk-L">L</td><td class="risk-L">L</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-H">H</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="risk-legend">
+                        <div class="legend-item">
+                            <span class="legend-badge E">E</span>
+                            <div><strong>Extreme</strong> - STOP WORK. Senior management action required.</div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-badge H">H</span>
+                            <div><strong>High</strong> - Additional controls required before proceeding.</div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-badge M">M</span>
+                            <div><strong>Medium</strong> - Supervisor attention. Implement controls.</div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-badge L">L</span>
+                            <div><strong>Low</strong> - Manage by routine procedures.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PART A: DIVE OPERATIONS HAZARDS -->
+            <div class="part-header">
+                <h2>PART A: DIVE OPERATIONS HAZARDS</h2>
+            </div>
+
+            <!-- 1. Mandatory Hazards -->
+            <section class="swms-section">
+                <h3>1. MANDATORY HAZARDS - COVID-19, PSYCHOSOCIAL, REMOTE WORK & WASTE</h3>
+                <table class="hazard-table-comprehensive">
                     <thead>
                         <tr>
-                            <th>Step/Task</th>
-                            <th>Hazard</th>
-                            <th>Risk Rating</th>
-                            <th>Control Measures</th>
-                            <th>Residual Risk</th>
+                            <th style="width:3%">#</th>
+                            <th style="width:10%">Activity</th>
+                            <th style="width:10%">Hazard/Risk</th>
+                            <th style="width:10%">Potential Effect</th>
+                            <th style="width:12%">Legislative Reference</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Risk</th>
+                            <th class="col-controls">Control Measures</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Res</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1. Mobilisation</td>
-                            <td>Manual handling injury</td>
-                            <td class="risk-medium">MEDIUM</td>
-                            <td>Use mechanical aids, team lifting for heavy items, pre-lift assessment</td>
-                            <td class="risk-low">LOW</td>
+                            <td>1</td>
+                            <td>Infectious disease control</td>
+                            <td>Coming to work when sick</td>
+                            <td>Contamination, illness spread</td>
+                            <td>WHS Reg 2025 s38; Public Health Act 2010</td>
+                            <td>3</td>
+                            <td>C</td>
+                            <td class="risk-H">H</td>
+                            <td>Personnel avoid coming to work when sick. Daily cleaning. Regular hand washing.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
                         </tr>
                         <tr>
-                            <td>2. Equipment Setup</td>
-                            <td>Slips, trips, falls</td>
-                            <td class="risk-medium">MEDIUM</td>
-                            <td>Clear work area, maintain housekeeping, use appropriate footwear</td>
-                            <td class="risk-low">LOW</td>
+                            <td>2</td>
+                            <td>Managing psychosocial hazards</td>
+                            <td>High/low job demands, bullying</td>
+                            <td>Stress, mental health impacts</td>
+                            <td>WHS Reg 2025 Part 3.2 Div 2</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Regular team meetings. Code of conduct. EAP available. Zero tolerance policy.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
                         </tr>
                         <tr>
-                            <td>3. Diver Entry</td>
-                            <td>Drowning</td>
-                            <td class="risk-high">HIGH</td>
-                            <td>Secure dive ladder, standby diver ready, continuous surface monitoring</td>
-                            <td class="risk-low">LOW</td>
+                            <td>3</td>
+                            <td>Remote or isolated work</td>
+                            <td>Long travel, poor communications</td>
+                            <td>Mental health impacts, delayed emergency response</td>
+                            <td>WHS Reg 2025 s48</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Clear communication protocols. Regular check-ins. Backup comms (satellite phone, EPIRB).</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
                         </tr>
                         <tr>
-                            <td>4. Underwater Work</td>
-                            <td>Loss of air supply</td>
-                            <td class="risk-extreme">EXTREME</td>
-                            <td>Emergency bailout supply, pre-dive checks, continuous air monitoring, standby diver</td>
-                            <td class="risk-low">LOW</td>
+                            <td>4</td>
+                            <td>Waste handling and disposal</td>
+                            <td>Incorrect disposal, hazardous waste</td>
+                            <td>Environmental pollution, regulatory penalty</td>
+                            <td>WHS Reg 2025 s40; EPA Act 1986</td>
+                            <td>3</td>
+                            <td>C</td>
+                            <td class="risk-H">H</td>
+                            <td>Good housekeeping. Waste segregation. Hazardous waste by licensed contractor. Spill kits.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 2. Mobilisation Risks -->
+            <section class="swms-section">
+                <h3>2. MOBILISATION RISKS</h3>
+                <table class="hazard-table-comprehensive">
+                    <thead>
+                        <tr>
+                            <th style="width:3%">#</th>
+                            <th style="width:10%">Activity</th>
+                            <th style="width:10%">Hazard/Risk</th>
+                            <th style="width:10%">Potential Effect</th>
+                            <th style="width:12%">Legislative Reference</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Risk</th>
+                            <th class="col-controls">Control Measures</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Res</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Loading equipment with crane</td>
+                            <td>Excessive/uneven loading, dropped loads</td>
+                            <td>Equipment damage, vessel instability, injury/fatality</td>
+                            <td>WHS Reg 2025 Part 4.8; AS 2550</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Vessel crew trained. All rigging certified. Load plan prepared. PTW in place. Never under suspended loads.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
                         </tr>
                         <tr>
-                            <td>4. Underwater Work</td>
-                            <td>Entanglement</td>
-                            <td class="risk-high">HIGH</td>
-                            <td>Umbilical management, dive knife carried, standby diver ready for rescue</td>
-                            <td class="risk-medium">MEDIUM</td>
+                            <td>2</td>
+                            <td>Personnel verification</td>
+                            <td>Personnel lacking inductions/licences</td>
+                            <td>Regulatory breach, injury</td>
+                            <td>WHS Reg 2025 Part 4.5; AS/NZS 2299.1</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>All personnel in Training Matrix. Verify competencies prior to works. HRWL verified.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
                         </tr>
                         <tr>
-                            <td>4. Underwater Work</td>
-                            <td>Decompression illness</td>
-                            <td class="risk-high">HIGH</td>
-                            <td>Follow DCIEM tables, no-decompression limits, O2 kit on standby, DES contact available</td>
-                            <td class="risk-low">LOW</td>
+                            <td>3</td>
+                            <td>Extended driving</td>
+                            <td>Fatigue, vehicle breakdown</td>
+                            <td>Vehicle accident, injury/fatality</td>
+                            <td>WHS Reg 2025 s49 Fatigue</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Rotate drivers every 3 hours for >10 hour journeys. Pre-departure inspection. Regular check-ins.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
                         </tr>
                         <tr>
-                            <td>4. Underwater Work</td>
-                            <td>Cuts/abrasions from fouling</td>
-                            <td class="risk-medium">MEDIUM</td>
-                            <td>Protective dive suit, gloves, controlled cleaning technique</td>
-                            <td class="risk-low">LOW</td>
+                            <td>4</td>
+                            <td>Operations in strong current (>2 kts)</td>
+                            <td>Current exceeding safe limits</td>
+                            <td>Diver fatigue, lost off station, injury/fatality</td>
+                            <td>AS/NZS 2299.1:2015 s6.3</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>No diving in currents >2 knots. Wait for slack water. Relocate if necessary.</td>
+                            <td>4</td>
+                            <td>E</td>
+                            <td class="risk-H">H</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 3. Dive Operations Risks -->
+            <section class="swms-section page-break-before">
+                <h3>3. DIVE OPERATIONS RISKS</h3>
+                <table class="hazard-table-comprehensive">
+                    <thead>
+                        <tr>
+                            <th style="width:3%">#</th>
+                            <th style="width:10%">Activity</th>
+                            <th style="width:10%">Hazard/Risk</th>
+                            <th style="width:10%">Potential Effect</th>
+                            <th style="width:12%">Legislative Reference</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Risk</th>
+                            <th class="col-controls">Control Measures</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Res</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="section-header"><td colspan="12">BREATHING GAS, ISOLATIONS, AIR SUPPLY</td></tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Breathing gas quality</td>
+                            <td>Contaminated air/breathing gas</td>
+                            <td>CO/CO2 poisoning, injury/fatality</td>
+                            <td>AS/NZS 2299.1:2015 s7.3; WHS Reg 2025 Part 4.3</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Check combustion engines position. Intake upwind. Gas tested. Compressor filters maintained.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
                         </tr>
                         <tr>
-                            <td>5. Hull Cleaning</td>
-                            <td>Rotating equipment contact</td>
-                            <td class="risk-high">HIGH</td>
-                            <td>Isolation of vessel propulsion confirmed, vessel "cold ship" or locked out</td>
-                            <td class="risk-low">LOW</td>
+                            <td>2</td>
+                            <td>Vessel/equipment isolations</td>
+                            <td>Systems not isolated (propeller, thrusters)</td>
+                            <td>Diver injury/fatality</td>
+                            <td>AS/NZS 2299.1:2015 s6.5 LOTO; WHS Reg 2025 Part 4.6</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Supervisor conduct LOTO before diving. Physically verify. Keys held by Supervisor.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
                         </tr>
                         <tr>
-                            <td>5. Hull Cleaning</td>
-                            <td>Marine stingers/hazards</td>
-                            <td class="risk-medium">MEDIUM</td>
-                            <td>Full body suit, pre-dive inspection, diver briefing on local hazards</td>
-                            <td class="risk-low">LOW</td>
+                            <td>3</td>
+                            <td>Air supply management</td>
+                            <td>Loss of diver's air supply</td>
+                            <td>Diver drowning, fatality</td>
+                            <td>AS/NZS 2299.1:2015 s7.3-7.4</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Pre-dive checks. Loss of air drills. Bailout cylinders checked. Monitor pressure.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
                         </tr>
                         <tr>
-                            <td>6. Diver Recovery</td>
-                            <td>Fall from height</td>
-                            <td class="risk-high">HIGH</td>
-                            <td>Secure ladder, assisted exit, recovery system tested before dive</td>
-                            <td class="risk-low">LOW</td>
+                            <td>4</td>
+                            <td>Diver recovery</td>
+                            <td>Inadequate recovery capability</td>
+                            <td>Delayed recovery, further injury/fatality</td>
+                            <td>AS/NZS 2299.1:2015 s12; WHS Reg 2025 s43</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Recovery system set up for every dive. Recovery drill conducted. Stand-by diver ready.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
                         </tr>
                         <tr>
-                            <td>7. Waste Handling</td>
-                            <td>Biological contamination</td>
-                            <td class="risk-medium">MEDIUM</td>
-                            <td>Gloves worn, contained waste disposal, hand washing facilities</td>
-                            <td class="risk-low">LOW</td>
+                            <td>5</td>
+                            <td>Decompression management</td>
+                            <td>Decompression sickness (DCS)</td>
+                            <td>Serious injury, long-term disability, fatality</td>
+                            <td>AS/NZS 2299.1:2015 s11; DCIEM Tables</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Follow DCIEM tables. Record all profiles. Surface intervals observed. O2 available. DAN contacts.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
+                        </tr>
+                        <tr class="section-header"><td colspan="12">COMMUNICATIONS, STANDBY, EQUIPMENT</td></tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Standby diver readiness</td>
+                            <td>Standby diver not ready for deployment</td>
+                            <td>Delayed emergency response, diver fatality</td>
+                            <td>AS/NZS 2299.1:2015 s12</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Standby diver dressed and ready at all times. Equipment pre-checked. Umbilical longer than working diver.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Diver recall procedures</td>
+                            <td>Inability to recall diver in emergency</td>
+                            <td>Diver unaware of surface emergency</td>
+                            <td>AS/NZS 2299.1:2015 s9</td>
+                            <td>4</td>
+                            <td>D</td>
+                            <td class="risk-H">H</td>
+                            <td>Pre-agreed recall signals. Practice emergency recall. Diver acknowledges all recalls.</td>
+                            <td>2</td>
+                            <td>E</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Dive equipment inspection</td>
+                            <td>Equipment failure during dive</td>
+                            <td>Loss of breathing gas, communications</td>
+                            <td>AS/NZS 2299.1:2015 s8</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Pre-dive checks documented. Post-dive inspection. Equipment serviced per manufacturer schedule.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Bail-out cylinder management</td>
+                            <td>Empty or inadequate bail-out supply</td>
+                            <td>No emergency gas supply if primary fails</td>
+                            <td>AS/NZS 2299.1:2015 s7.4</td>
+                            <td>5</td>
+                            <td>D</td>
+                            <td class="risk-H">H</td>
+                            <td>Bail-out contents checked before every dive. Minimum pressure for dive depth/duration.</td>
+                            <td>3</td>
+                            <td>E</td>
+                            <td class="risk-M">M</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>Dive safety log maintenance</td>
+                            <td>Incomplete dive records</td>
+                            <td>DCS risk from unrecorded profiles</td>
+                            <td>AS/NZS 2299.1:2015 s13</td>
+                            <td>4</td>
+                            <td>D</td>
+                            <td class="risk-H">H</td>
+                            <td>All dives logged. Depths, times, intervals recorded. Daily log review by Supervisor.</td>
+                            <td>2</td>
+                            <td>E</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 5. Delta-P Hazards -->
+            <section class="swms-section page-break-before">
+                <h3>5. DIFFERENTIAL PRESSURE (DELTA-P) HAZARDS</h3>
+                <table class="hazard-table-comprehensive">
+                    <thead>
+                        <tr>
+                            <th style="width:3%">#</th>
+                            <th style="width:10%">Activity</th>
+                            <th style="width:10%">Hazard/Risk</th>
+                            <th style="width:10%">Potential Effect</th>
+                            <th style="width:12%">Legislative Reference</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Risk</th>
+                            <th class="col-controls">Control Measures</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Res</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Working near sea chests</td>
+                            <td>Differential pressure - sea chest suction</td>
+                            <td>Diver trapped against intake, drowning, crush injury, FATAL</td>
+                            <td>AS/NZS 2299.1:2015 s6.5; IMCA D 045; HSE DVIS 13</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>MANDATORY ISOLATION of all sea chests before diving. Physical verification of closure. Keys held by Dive Supervisor.</td>
+                            <td>4</td>
+                            <td>E</td>
+                            <td class="risk-H">H</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Cooling water intakes</td>
+                            <td>Differential pressure - pump suction</td>
+                            <td>Diver trapped against intake grating, FATAL</td>
+                            <td>AS/NZS 2299.1:2015 s6.5; IMCA D 045</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Isolate ALL pumps drawing from intakes. LOTO with keys held. Verify isolation with client.</td>
+                            <td>4</td>
+                            <td>E</td>
+                            <td class="risk-H">H</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Tunnel thrusters</td>
+                            <td>Differential pressure - thruster flow</td>
+                            <td>Diver sucked into thruster tunnel, propeller strike, FATAL</td>
+                            <td>AS/NZS 2299.1:2015 s6.5; IMCA D 014</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>MANDATORY thruster isolation and LOTO. Breakers locked out. Bridge notification.</td>
+                            <td>4</td>
+                            <td>E</td>
+                            <td class="risk-H">H</td>
+                        </tr>
+                        <tr class="section-header"><td colspan="12">PROPELLERS, SHAFTS & RUDDERS</td></tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Working near propellers</td>
+                            <td>Propeller rotation - current/vessel movement</td>
+                            <td>Amputation, severe lacerations, FATAL</td>
+                            <td>AS/NZS 2299.1:2015 s6.5; IMCA D 014</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Engine room LOTO. Shaft brake engaged. Shaft physically locked (chain/pipe wrench).</td>
+                            <td>4</td>
+                            <td>E</td>
+                            <td class="risk-H">H</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Propeller polishing/inspection</td>
+                            <td>Entanglement in propeller blades</td>
+                            <td>Diver trapped, entanglement, drowning</td>
+                            <td>AS/NZS 2299.1:2015 s6.5; IMCA D 014</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Methodical blade-by-blade approach. Umbilical management critical. Cutting tool available.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Rudder inspection</td>
+                            <td>Rudder movement - hydraulic/mechanical</td>
+                            <td>Crushing injury, entrapment, FATAL</td>
+                            <td>AS/NZS 2299.1:2015 s6.5; IMCA D 014</td>
+                            <td>5</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Steering gear isolated and LOTO. Bridge notified - no helm movements. Auto-pilot disabled.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 10. IWHC Risks -->
+            <section class="swms-section">
+                <h3>10. IN-WATER HULL CLEANING (IWHC) RISKS</h3>
+                <table class="hazard-table-comprehensive">
+                    <thead>
+                        <tr>
+                            <th style="width:3%">#</th>
+                            <th style="width:10%">Activity</th>
+                            <th style="width:10%">Hazard/Risk</th>
+                            <th style="width:10%">Potential Effect</th>
+                            <th style="width:12%">Legislative Reference</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Risk</th>
+                            <th class="col-controls">Control Measures</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Res</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>IWHC approval application</td>
+                            <td>Cleaning without approvals</td>
+                            <td>Non-compliance, regulatory penalty, biosecurity breach</td>
+                            <td>Anti-fouling Guidelines 2015 (DAFF); Biosecurity Act 2015</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Complete Port Services application. Receive approval prior to work. Consult DAFF decision support.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Filtration system operation</td>
+                            <td>Filtration system failure</td>
+                            <td>Environmental release, non-compliance</td>
+                            <td>Anti-fouling Guidelines 2015; Environmental Protection Act 1986</td>
+                            <td>3</td>
+                            <td>C</td>
+                            <td class="risk-H">H</td>
+                            <td>Shut down hydraulics if failure. Pre-start checks. Filter screens inspected. Backup filtration.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Effluent discharge</td>
+                            <td>Out of spec/unfiltered discharge</td>
+                            <td>Environmental pollution, IMS release</td>
+                            <td>Anti-fouling Guidelines 2015; Environmental Protection Act</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Adherence to operating procedures. Effluent log maintained. EMP compliance.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>IMS identification</td>
+                            <td>Invasive Marine Species missed</td>
+                            <td>IMS establishment, biosecurity breach</td>
+                            <td>Biosecurity Act 2015; DPIRD IMS Management Protocols</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Divers briefed on IMS ID. Samples taken. Report suspect organisms immediately.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PART B Header -->
+            <div class="part-header page-break-before">
+                <h2>PART B: SITE-SPECIFIC HAZARDS</h2>
+            </div>
+
+            <!-- Site-specific note -->
+            <section class="swms-section">
+                <div class="info-box">
+                    <p><strong>Site Type:</strong> {{siteTypeName}}{{#if requiresSecurityClearance}} <span style="color: #ea580c;">⚠️ Security Clearance Required</span>{{/if}}</p>
+                </div>
+                
+                <h3>APPLICABLE SITE-SPECIFIC SECTIONS</h3>
+                <table class="swms-check-table">
+                    <tbody>
+                        <tr><td>{{#if isDefenceSite}}☑{{else}}☐{{/if}}</td><td>12. Babcock / Defence (FBW/FBE/AMC)</td></tr>
+                        <tr><td>{{#if (eq siteType "anzac")}}☑{{else}}☐{{/if}}</td><td>13. ANZAC Class Frigates - Propeller Operations</td></tr>
+                        <tr><td>{{#if isFPASite}}☑{{else}}☐{{/if}}</td><td>14. Fremantle Ports Authority</td></tr>
+                        <tr><td>{{#if (eq siteType "dpworld")}}☑{{else}}☐{{/if}}</td><td>15. Operational Area (DP World, Svitzer)</td></tr>
+                        <tr><td>{{#if (eq siteType "navy")}}☑{{else}}☐{{/if}}</td><td>16. Other Navy Primes (FBE/FBW/AMC)</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3>SITE REQUIREMENTS</h3>
+                <table class="swms-check-table">
+                    <tbody>
+                        <tr><td>{{#if requiresPTW}}☑{{else}}☐{{/if}}</td><td>Permit to Work (PTW) Required</td></tr>
+                        <tr><td>{{#if requiresIsolation}}☑{{else}}☐{{/if}}</td><td>Isolation/LOTO Required</td></tr>
+                        <tr><td>{{#if requiresSiteInduction}}☑{{else}}☐{{/if}}</td><td>Site-Specific Induction Required</td></tr>
+                        <tr><td>{{#if requiresSecurityClearance}}☑{{else}}☐{{/if}}</td><td>Security Clearance Required</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PART C Header -->
+            <div class="part-header">
+                <h2>PART C: JOB SPECIFIC & OTHER OPERATIONS</h2>
+            </div>
+
+            <!-- 17. Job Specific Risks -->
+            <section class="swms-section">
+                <h3>17. JOB SPECIFIC RISKS</h3>
+                <table class="hazard-table-comprehensive">
+                    <thead>
+                        <tr>
+                            <th style="width:3%">#</th>
+                            <th style="width:10%">Activity</th>
+                            <th style="width:10%">Hazard/Risk</th>
+                            <th style="width:10%">Potential Effect</th>
+                            <th style="width:12%">Legislative Reference</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Risk</th>
+                            <th class="col-controls">Control Measures</th>
+                            <th class="col-c">C</th>
+                            <th class="col-p">P</th>
+                            <th class="col-risk">Res</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Vessel docking - Overhead work</td>
+                            <td>Dropped objects during docking</td>
+                            <td>Personnel injury</td>
+                            <td>WHS Reg 2025 Part 4.8</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Inform client of location. No overhead works above Divers. Hard hats if required.</td>
+                            <td>3</td>
+                            <td>D</td>
+                            <td class="risk-M">M</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Big Boy hull cleaning system</td>
+                            <td>Hydraulic failure, sharp brushes</td>
+                            <td>HP fluid injection, cuts, entanglement</td>
+                            <td>WHS Reg 2025 s207; AS 4024.1</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Pre-start checks. Spill kit available. Bio-friendly oil. System cold before approach.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Blanking operations</td>
+                            <td>Loss of blank, vessel flooding</td>
+                            <td>Blank sinks, vessel intake open</td>
+                            <td>AS/NZS 2299.1:2015 s10.6</td>
+                            <td>4</td>
+                            <td>C</td>
+                            <td class="risk-E">E</td>
+                            <td>Blank secured with retrieval line. Diver maintains control. Correct blank size verified.</td>
+                            <td>2</td>
+                            <td>D</td>
+                            <td class="risk-L">L</td>
                         </tr>
                         {{#each additionalHazards}}
                         <tr>
+                            <td>{{@index}}</td>
                             <td>{{step}}</td>
                             <td>{{hazard}}</td>
+                            <td>{{effect}}</td>
+                            <td>{{legislation}}</td>
+                            <td>{{consequence}}</td>
+                            <td>{{probability}}</td>
                             <td class="{{riskClass}}">{{riskRating}}</td>
                             <td>{{controls}}</td>
+                            <td>{{resConsequence}}</td>
+                            <td>{{resProbability}}</td>
                             <td class="{{residualClass}}">{{residualRating}}</td>
                         </tr>
                         {{/each}}
@@ -1885,51 +2881,153 @@
                 </table>
             </section>
 
-            <!-- Emergency Procedures Summary -->
+            <!-- PART D Header -->
+            <div class="part-header page-break-before">
+                <h2>PART D: ADMINISTRATION</h2>
+            </div>
+
+            <!-- 19. Emergency Contacts -->
             <section class="swms-section">
-                <h3>EMERGENCY PROCEDURES</h3>
-                <table class="swms-table">
+                <h3>19. EMERGENCY CONTACTS</h3>
+                <div class="emergency-grid">
+                    <div class="emergency-box primary">
+                        <h5>CRITICAL EMERGENCY</h5>
+                        <table>
+                            <tr><td>Emergency Services</td><td class="phone-big">000</td></tr>
+                            <tr><td>Water Police</td><td class="phone">13 14 44</td></tr>
+                            <tr><td>DAN Emergency Hotline</td><td class="phone">1800 088 200</td></tr>
+                            <tr><td>Poisons Information</td><td class="phone">13 11 26</td></tr>
+                        </table>
+                    </div>
+                    <div class="emergency-box">
+                        <h5>HOSPITALS & HYPERBARIC</h5>
+                        <table>
+                            <tr><td>Fiona Stanley Hospital</td><td class="phone">(08) 6152 2222</td></tr>
+                            <tr><td>Fremantle Hospital</td><td class="phone">(08) 9431 3333</td></tr>
+                            <tr><td>Royal Hobart Hospital</td><td class="phone">(03) 6222 8308</td></tr>
+                        </table>
+                    </div>
+                    <div class="emergency-box">
+                        <h5>REGULATORY</h5>
+                        <table>
+                            <tr><td>WorkSafe NSW</td><td class="phone">13 10 50</td></tr>
+                            <tr><td>WorkSafe WA</td><td class="phone">1300 307 877</td></tr>
+                            <tr><td>Franmarine Perth</td><td class="phone">08 9437 3900</td></tr>
+                            <tr><td>Franmarine NSW</td><td class="phone">02 7228 9691</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 20. Worker Acknowledgement -->
+            <section class="swms-section">
+                <h3>20. WORKER ACKNOWLEDGEMENT & SIGN-OFF</h3>
+                <p style="font-size: 0.8rem; margin-bottom: var(--space-md);">I have been consulted in the development of this SWMS, I understand the identified hazards and risk controls, and I agree to work in accordance with the SWMS. I have received site-specific induction and am aware of emergency procedures.</p>
+                <table class="worker-signoff-table">
                     <thead>
-                        <tr><th>Emergency</th><th>Response</th></tr>
+                        <tr>
+                            <th style="width: 5%">#</th>
+                            <th style="width: 20%">Name (Print)</th>
+                            <th style="width: 15%">Company</th>
+                            <th style="width: 25%">Signature</th>
+                            <th style="width: 12%">Date</th>
+                            <th style="width: 13%">Inducted By</th>
+                            <th style="width: 10%">Date</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Diver Distress</td>
-                            <td>Abort dive, deploy standby diver, recover casualty, administer O2, call DES 1800 088 200</td>
-                        </tr>
-                        <tr>
-                            <td>Medical Emergency</td>
-                            <td>Call 000, administer first aid, notify supervisor</td>
-                        </tr>
-                        <tr>
-                            <td>IMS Detection</td>
-                            <td>Stop work, photograph, do not disturb, call DPIRD (08) 9368 3657</td>
-                        </tr>
-                        <tr>
-                            <td>Fire</td>
-                            <td>Raise alarm, evacuate to muster point, call 000</td>
-                        </tr>
+                        <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>16</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>17</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>18</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>19</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>20</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                     </tbody>
                 </table>
             </section>
 
-            <!-- Sign-off -->
-            <section class="swms-section">
-                <h3>SWMS ACKNOWLEDGEMENT</h3>
-                <p>All personnel must sign below to confirm they have read, understood, and agree to follow this SWMS.</p>
-                <table class="swms-signoff-table">
+            <!-- 21. Legislative References -->
+            <section class="swms-section page-break-before">
+                <h3>21. KEY LEGISLATIVE REFERENCES</h3>
+                <table class="legislation-table">
                     <thead>
-                        <tr><th>Name</th><th>Signature</th><th>Date</th></tr>
+                        <tr>
+                            <th style="width: 25%">Reference</th>
+                            <th style="width: 50%">Full Title</th>
+                            <th style="width: 25%">Notes</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td></tr>
+                        <tr><td>WHS Regulation 2025 (NSW)</td><td>Work Health and Safety Regulation 2025</td><td>Commenced 22 August 2025</td></tr>
+                        <tr><td>AS/NZS 2299.1:2015</td><td>Occupational diving operations Part 1: Standard operational practice</td><td>Current Australian diving standard</td></tr>
+                        <tr><td>AS ISO 31000:2018</td><td>Risk management - Guidelines</td><td>Risk assessment framework</td></tr>
+                        <tr><td>IMCA D 045</td><td>Guidance on Differential Pressure Hazards</td><td>Delta-P hazard management</td></tr>
+                        <tr><td>IMCA D 014</td><td>Guidance on Propeller and Thruster Safety</td><td>Propeller/thruster isolation</td></tr>
+                        <tr><td>WHS Reg 2025 Part 4.6</td><td>Control of risk from plant (s139-142)</td><td>LOTO requirements</td></tr>
+                        <tr><td>WHS Reg 2025 Part 4.8</td><td>Diving work</td><td>Diving-specific requirements</td></tr>
+                        <tr><td>Marine Safety National Law 2012</td><td>National maritime safety legislation</td><td>Vessel operations</td></tr>
+                        <tr><td>Biosecurity Act 2015 (Cth)</td><td>Commonwealth biosecurity legislation</td><td>Biofouling/quarantine</td></tr>
+                        <tr><td>Anti-fouling Guidelines 2015</td><td>National Biofouling Management Guidelines</td><td>In-water cleaning requirements</td></tr>
+                        <tr><td>DCIEM Tables</td><td>Defence and Civil Institute of Environmental Medicine</td><td>Decompression tables</td></tr>
                     </tbody>
                 </table>
+            </section>
+
+            <!-- Document Approval -->
+            <section class="swms-section">
+                <h3>DOCUMENT APPROVAL</h3>
+                <div class="approval-section">
+                    <table class="approval-table">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Name</th>
+                                <th>Signature</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Prepared By (Dive Supervisor)</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewed By (Operations Manager)</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Approved By (HSE Manager)</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Client Representative</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- Document Control -->
@@ -1944,7 +3042,7 @@
                         <td>{{revisionDate}}</td>
                     </tr>
                 </table>
-                <p class="copyright-year">©{{currentYear}} Franmarine. All Rights Reserved.</p>
+                <p class="copyright-year">©{{currentYear}} Franmarine Underwater Services. All Rights Reserved.</p>
             </section>
         </div>
     </script>

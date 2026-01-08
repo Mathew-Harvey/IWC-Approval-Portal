@@ -3292,11 +3292,7 @@
                 UserMenu.init();
             }
             
-            // Bind auth events
-            document.getElementById('loginBtn')?.addEventListener('click', () => {
-                AuthState.signIn();
-            });
-            
+            // Bind auth events after init
             document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
                 e.preventDefault();
                 AuthState.signOut();
@@ -3318,6 +3314,32 @@
             document.addEventListener('click', () => {
                 document.getElementById('userMenuDropdown')?.classList.remove('active');
             });
+        });
+        
+    </script>
+    
+    <!-- Login button handler - separate to ensure it works immediately -->
+    <script>
+        // Bind login button as soon as DOM is ready (synchronous)
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    console.log('Sign In button clicked');
+                    // Try Clerk first, then fallback to login page
+                    if (typeof Clerk !== 'undefined') {
+                        try {
+                            Clerk.openSignIn();
+                        } catch (e) {
+                            console.error('Clerk.openSignIn failed:', e);
+                            window.location.href = '/login.html';
+                        }
+                    } else {
+                        window.location.href = '/login.html';
+                    }
+                });
+                console.log('✅ Login button handler attached');
+            }
         });
     </script>
     

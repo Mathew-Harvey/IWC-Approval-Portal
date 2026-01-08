@@ -3359,10 +3359,29 @@
                                 console.log('Clerk SDK loaded successfully');
                             }
                             
+                            // CHECK IF USER IS ALREADY SIGNED IN
+                            if (Clerk.user) {
+                                console.log('User already signed in:', Clerk.user.emailAddresses?.[0]?.emailAddress);
+                                // Update UI to show user is logged in
+                                if (typeof AuthState !== 'undefined') {
+                                    AuthState.clerkUser = Clerk.user;
+                                    AuthState.setUser({
+                                        email: Clerk.user.emailAddresses?.[0]?.emailAddress,
+                                        name: Clerk.user.fullName || Clerk.user.firstName,
+                                        picture: Clerk.user.imageUrl
+                                    });
+                                }
+                                // Hide login button, show user menu
+                                loginBtn.style.display = 'none';
+                                const userMenu = document.getElementById('userMenu');
+                                if (userMenu) userMenu.style.display = 'flex';
+                                return;
+                            }
+                            
                             console.log('Opening Clerk sign in modal...');
                             
                             // Open sign in modal
-                            await Clerk.openSignIn({
+                            Clerk.openSignIn({
                                 redirectUrl: window.location.href
                             });
                             
@@ -3374,7 +3393,23 @@
                         }
                     } catch (e) {
                         console.error('Sign in error:', e);
-                        // Show error to user briefly, then fallback
+                        // Check if error is because user is already signed in
+                        if (e.code === 'cannot_render_single_session_enabled' || 
+                            (e.message && e.message.includes('already signed in'))) {
+                            console.log('User is already signed in - updating UI');
+                            // Force UI update
+                            if (typeof Clerk !== 'undefined' && Clerk.user) {
+                                loginBtn.style.display = 'none';
+                                const userMenu = document.getElementById('userMenu');
+                                if (userMenu) userMenu.style.display = 'flex';
+                                if (typeof AuthState !== 'undefined') {
+                                    AuthState.clerkUser = Clerk.user;
+                                    AuthState.updateUI();
+                                }
+                            }
+                            return;
+                        }
+                        // Other error - show briefly then fallback
                         loginBtn.textContent = 'Error - Retrying...';
                         setTimeout(() => {
                             window.location.href = '/login.html';

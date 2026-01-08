@@ -25,56 +25,44 @@ const AuthState = {
         
         try {
             // Wait for Clerk to be ready
-            await Clerk.load();
+            if (!Clerk.loaded) {
+                await Clerk.load();
+            }
             
             // Get current user from Clerk
             this.clerkUser = Clerk.user;
             
+            console.log('AuthState init - Clerk user:', this.clerkUser ? 'Found' : 'Not found');
+            
             if (this.clerkUser) {
-                // Sync with our backend
-                try {
-                    const response = await API.auth.getUser();
-                    if (response.authenticated && response.user) {
-                        this.setUser(response.user);
-                    } else {
-                        // Sync user to backend
-                        await API.auth.sync().catch(() => {});
-                        const syncResponse = await API.auth.getUser().catch(() => ({}));
-                        if (syncResponse.user) {
-                            this.setUser(syncResponse.user);
-                        }
-                    }
-                } catch (e) {
-                    // Ignore auth errors - use Clerk user info as fallback
-                    // Still set basic user info from Clerk
-                    this.setUser({
-                        email: this.clerkUser.emailAddresses[0]?.emailAddress,
-                        name: this.clerkUser.fullName,
-                        picture: this.clerkUser.imageUrl
-                    });
-                }
+                console.log('User already signed in:', this.clerkUser.emailAddresses?.[0]?.emailAddress);
+                
+                // IMMEDIATELY set user from Clerk data (don't wait for backend)
+                this.setUser({
+                    email: this.clerkUser.emailAddresses?.[0]?.emailAddress,
+                    name: this.clerkUser.fullName || this.clerkUser.firstName,
+                    picture: this.clerkUser.imageUrl
+                });
+                
+                // Then try to sync with backend in background (non-blocking)
+                this.syncWithBackend().catch(() => {
+                    console.log('Backend sync failed - using Clerk data only');
+                });
             }
             
             // Listen for Clerk auth changes
             Clerk.addListener(({ user }) => {
+                console.log('Clerk auth changed:', user ? 'signed in' : 'signed out');
                 if (user) {
                     this.clerkUser = user;
-                    // Silently try to sync - don't break if it fails
-                    API.auth.sync()
-                        .then(() => API.auth.getUser())
-                        .then(response => {
-                            if (response?.user) {
-                                this.setUser(response.user);
-                            }
-                        })
-                        .catch(() => {
-                            // Use Clerk user info as fallback
-                            this.setUser({
-                                email: user.emailAddresses?.[0]?.emailAddress,
-                                name: user.fullName,
-                                picture: user.imageUrl
-                            });
-                        });
+                    // Immediately update UI with Clerk data
+                    this.setUser({
+                        email: user.emailAddresses?.[0]?.emailAddress,
+                        name: user.fullName || user.firstName,
+                        picture: user.imageUrl
+                    });
+                    // Sync with backend in background
+                    this.syncWithBackend().catch(() => {});
                 } else {
                     this.setUser(null);
                     this.clerkUser = null;
@@ -88,6 +76,27 @@ const AuthState = {
         this.initialized = true;
         this.updateUI();
         return this.user;
+    },
+    
+    // Separate method for backend sync (non-blocking)
+    async syncWithBackend() {
+        if (!this.clerkUser) return;
+        
+        try {
+            const response = await API.auth.getUser();
+            if (response.authenticated && response.user) {
+                this.setUser(response.user);
+            } else {
+                await API.auth.sync();
+                const syncResponse = await API.auth.getUser();
+                if (syncResponse?.user) {
+                    this.setUser(syncResponse.user);
+                }
+            }
+        } catch (e) {
+            // Silently fail - we already have Clerk data
+            console.log('Backend sync error (non-critical):', e.message);
+        }
     },
     
     // ============================================

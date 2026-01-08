@@ -1222,72 +1222,41 @@ body {
 
 /* Print Styles */
 @media print {
-    .no-print,
-    .mobile-nav,
-    .preview-toggle,
-    header,
-    .header,
-    .app-header,
-    .output-tabs,
-    .output-actions,
-    .form-panel,
-    .progress-container,
-    .autosave-indicator,
-    .form-notification,
-    .modal,
-    nav,
-    button:not(.print-include) {
+    .no-print {
         display: none !important;
     }
 
     body {
         background: white;
         font-size: 11pt;
-        margin: 0;
-        padding: 0;
     }
 
     .app-container {
         display: block;
-        min-height: auto;
     }
 
     .main-content {
         display: block;
         padding: 0;
-        grid-template-columns: 1fr;
+    }
+
+    .form-panel {
+        display: none;
     }
 
     .output-panel {
-        display: block !important;
         box-shadow: none;
         border-radius: 0;
         max-height: none;
-        position: static;
-        width: 100%;
-        height: auto;
     }
 
     .output-content {
         padding: 0;
         overflow: visible;
-        height: auto;
     }
 
-    .tab-content {
-        display: block !important;
-    }
-
-    .tab-content.active {
-        display: block !important;
-    }
-
-    .wms-document,
-    .erp-document,
-    .whsmp-document,
-    .swms-document {
+    .wms-document {
         max-width: none;
-        width: 100%;
     }
 
     .wms-section {

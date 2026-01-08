@@ -1,0 +1,345 @@
+// Prisma Schema for IWC Approval Portal
+// PostgreSQL 17 on Render
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User & Authentication
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  picture       String?
+  clerkId       String    @unique  // Clerk user ID
+  role          UserRole  @default(USER)
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+  
+  // Relations
+  jobs          Job[]
+  crewMembers   CrewMember[]
+  vessels       Vessel[]
+  settings      UserSettings?
+  
+  @@index([email])
+  @@index([clerkId])
+}
+
+// Note: Session table is created automatically by connect-pg-simple
+// It uses its own schema: (sid, sess, expire)
+
+model UserSettings {
+  id                    String  @id @default(cuid())
+  userId                String  @unique
+  user                  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Default jurisdiction
+  defaultJurisdiction   String  @default("AU-WA")
+  
+  // API Keys (encrypted)
+  marinesia_api_key     String?
+  aisstream_api_key     String?
+  
+  // Preferences
+  autoSaveEnabled       Boolean @default(true)
+  autoSaveInterval      Int     @default(30) // seconds
+  showProgressBar       Boolean @default(true)
+  
+  // Company defaults
+  companyName           String?
+  companyLogo           String? // Base64 or URL
+  companyPhone          String?
+  companyEmail          String?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPERVISOR
+}
+
+// ============================================
+// Jobs (Main Form Data)
+// ============================================
+
+model Job {
+  id                    String      @id @default(cuid())
+  jobNumber             String      @unique
+  status                JobStatus   @default(DRAFT)
+  
+  // User relation
+  userId                String
+  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Vessel relation
+  vesselId              String?
+  vessel                Vessel?     @relation(fields: [vesselId], references: [id])
+  
+  // Job Details
+  jurisdiction          String      @default("AU-WA")
+  clientName            String?
+  proposedStartDate     DateTime?
+  proposedEndDate       DateTime?
+  cleaningLocation      String?
+  portName              String?
+  berthWharf            String?
+  
+  // Biofouling Assessment
+  afcType               String?
+  afcCondition          String?
+  afcExpiryDate         DateTime?
+  foulingRating         Int?        @default(0)
+  foulingCover          Int?        @default(0)
+  biofoulingOrigin      String?
+  noProhibitedBiocides  Boolean     @default(true)
+  
+  // Scope of Work
+  scopeHull             Boolean     @default(true)
+  scopeNicheAreas       Boolean     @default(true)
+  scopePropeller        Boolean     @default(false)
+  scopeSeaChests        Boolean     @default(false)
+  
+  // Dive Parameters
+  maxDepth              Int?
+  bottomTime            String?
+  decompressionProfile  String?
+  breathingGas          String?     @default("air")
+  
+  // Equipment (stored as JSON for flexibility)
+  equipment             Json?
+  
+  // Contacts
+  clientContactName     String?
+  clientContactPhone    String?
+  simOpsContactName     String?
+  simOpsContactPhone    String?
+  
+  // Site-specific
+  siteType              String?     @default("standard")
+  ptwRequired           Boolean     @default(false)
+  isolationRequired     Boolean     @default(false)
+  siteInductionRequired Boolean     @default(false)
+  securityClearance     Boolean     @default(false)
+  
+  // Emergency/First Aid
+  emergencyAssemblyPoint String?
+  onSiteDiveMedic       Boolean     @default(false)
+  
+  // High Risk Activities (stored as JSON array)
+  highRiskActivities    Json?
+  
+  // Additional activities and hazards
+  additionalActivities  Json?
+  siteSpecificHazards   Json?
+  
+  // Form data snapshot (complete form as JSON for backup)
+  formDataSnapshot      Json?
+  
+  // Timestamps
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  submittedAt           DateTime?
+  completedAt           DateTime?
+  
+  // Relations
+  crewAssignments       JobCrew[]
+  documents             Document[]
+  
+  @@index([userId])
+  @@index([vesselId])
+  @@index([jobNumber])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model JobCrew {
+  id            String      @id @default(cuid())
+  
+  jobId         String
+  job           Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  
+  crewMemberId  String
+  crewMember    CrewMember  @relation(fields: [crewMemberId], references: [id])
+  
+  role          CrewRole    @default(DIVER)
+  
+  createdAt     DateTime    @default(now())
+  
+  @@unique([jobId, crewMemberId])
+  @@index([jobId])
+  @@index([crewMemberId])
+}
+
+enum JobStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum CrewRole {
+  DIVE_SUPERVISOR
+  DIVER
+  DIVE_TENDER
+  ROV_OPERATOR
+  VESSEL_MASTER
+  OTHER
+}
+
+// ============================================
+// Crew Members (Crew Database)
+// ============================================
+
+model CrewMember {
+  id              String    @id @default(cuid())
+  
+  // Owner
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Basic Info
+  name            String
+  email           String?
+  phone           String?
+  position        String?   @default("Diver")
+  
+  // Certifications
+  adasCertNumber  String?
+  adasCertExpiry  DateTime?
+  diveMedicalExpiry DateTime?
+  firstAidExpiry  DateTime?
+  o2AdminExpiry   DateTime?
+  whiteCardNumber String?
+  
+  // High Risk Work Licenses
+  hrwlForklift    Boolean   @default(false)
+  hrwlCrane       Boolean   @default(false)
+  hrwlRigging     Boolean   @default(false)
+  hrwlEwp         Boolean   @default(false)
+  
+  // Status
+  isActive        Boolean   @default(true)
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  jobAssignments  JobCrew[]
+  
+  @@index([userId])
+  @@index([name])
+}
+
+// ============================================
+// Vessels
+// ============================================
+
+model Vessel {
+  id                    String    @id @default(cuid())
+  
+  // Owner (optional - can be shared)
+  userId                String?
+  user                  User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Vessel Identification
+  imoNumber             String?   @unique
+  mmsi                  String?
+  vesselName            String
+  vesselType            String?
+  flagState             String?
+  callSign              String?
+  
+  // Dimensions
+  loa                   Float?    // Length Overall (meters)
+  beam                  Float?    // Beam (meters)
+  draft                 Float?    // Draft (meters)
+  grossTonnage          Float?
+  
+  // AFC Information
+  afcType               String?
+  afcManufacturer       String?
+  afcAppliedDate        DateTime?
+  afcExpiryDate         DateTime?
+  
+  // Last cleaning info
+  lastCleaningDate      DateTime?
+  lastCleaningPort      String?
+  
+  // Operating Profile
+  operatingProfile      String?   // commercial, recreational, naval
+  primaryTradeRoute     String?
+  
+  // Images (URLs or Base64)
+  vesselImage           String?
+  gaDrawing             String?
+  
+  // Cached API data
+  apiDataSnapshot       Json?
+  apiDataUpdatedAt      DateTime?
+  
+  // Timestamps
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  // Relations
+  jobs                  Job[]
+  
+  @@index([imoNumber])
+  @@index([vesselName])
+  @@index([userId])
+}
+
+// ============================================
+// Documents (Generated PDFs, etc.)
+// ============================================
+
+model Document {
+  id            String        @id @default(cuid())
+  
+  jobId         String
+  job           Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  
+  type          DocumentType
+  filename      String
+  mimeType      String        @default("application/pdf")
+  
+  // Storage - could be base64, URL, or file path
+  content       String?       // Base64 for small docs
+  url           String?       // URL for cloud storage
+  
+  // Metadata
+  version       Int           @default(1)
+  generatedAt   DateTime      @default(now())
+  
+  @@index([jobId])
+  @@index([type])
+}
+
+enum DocumentType {
+  WMS           // Work Method Statement
+  SWMS          // Safe Work Method Statement
+  ERP           // Emergency Response Plan
+  WHSMP         // WHS Management Plan
+  DIVE_PLAN     // Dive Plan
+  APPROVAL      // IWC Approval Document
+  OTHER
+}
+

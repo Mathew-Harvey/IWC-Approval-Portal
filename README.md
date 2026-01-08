@@ -1,158 +1,231 @@
-# IWC Notification Package Generator
+# IWC Approval Portal
 
-A web application for generating In-Water Cleaning (IWC) notification packages and Work Method Statements (WMS) for Franmarine Underwater Services.
+**In-Water Cleaning Notification Package Generator**  
+Franmarine Underwater Services
 
-## 🚀 Live Demo
+## Overview
 
-**Production URL:** (Your Render URL here)
+A comprehensive web application for generating IWC (In-Water Cleaning) documentation packages including Work Method Statements (WMS), Safe Work Method Statements (SWMS), Emergency Response Plans (ERP), and WHS Management Plans.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Frontend (SPA)                        │
+│   HTML/JS/CSS with Handlebars templates                     │
+│   Google OAuth Login  │  Form Validation  │  PDF Generation  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Express.js Backend                        │
+│   API Routes  │  Passport.js Auth  │  Session Management    │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    PostgreSQL 17 (Render)                    │
+│   Users  │  Jobs  │  Crew  │  Vessels  │  Documents          │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Features
 
-- **Auto-generates Work Method Statements (WMS)** - Complete documentation aligned with Exposure Draft 2024 and OEMP requirements
-- **Notification email generation** - Ready-to-send email text for DPIRD and FPA
-- **Automatic scenario determination** - Calculates capture/SAP requirements based on AFC type, fouling rating, and scope
-- **Vessel database** - Saves vessel details for repeat jobs
-- **Dual API integration** - Marinesia + AISStream for comprehensive vessel lookup
-- **Print-friendly output** - Generate PDF via browser print function
+- 🔐 **Google OAuth Authentication** - Secure sign-in, no passwords
+- 📋 **Job Management** - Create, save, and track IWC jobs
+- 👥 **Crew Database** - Manage team members with certification tracking
+- 🚢 **Vessel Database** - Store and reuse vessel information
+- 📄 **Document Generation** - WMS, SWMS, ERP, WHSMP templates
+- 🌏 **Multi-Jurisdiction** - AU-WA, NZ, SG, US-CA, JP support
+- 💾 **Autosave** - Never lose your work
+- 📊 **Progress Tracking** - Form completion indicator
 
-## Deployment on Render
+## Tech Stack
 
-### Quick Deploy
+- **Frontend**: Vanilla JS, Handlebars.js, CSS3
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL 17 with Prisma ORM
+- **Auth**: Google OAuth 2.0 via Passport.js
+- **Hosting**: Render.com
 
-1. **Fork or push this repo to GitHub**
+## Quick Start
 
-2. **Create a new Web Service on Render:**
-   - Go to [Render Dashboard](https://dashboard.render.com)
-   - New → Web Service
-   - Connect your GitHub repo
-   - Settings:
-     - **Runtime:** Node
-     - **Build Command:** `npm install`
-     - **Start Command:** `npm start`
+### Prerequisites
 
-3. **Set Environment Variables (required):**
-   - `MARINESIA_API_KEY` - Your Marinesia API key (required)
-   - `AISSTREAM_API_KEY` - Your AISStream API key (optional)
-   - `NODE_ENV` - `production`
+- Node.js 18+
+- PostgreSQL 17 (or Render database)
+- Google Cloud Console project with OAuth credentials
 
-4. **Deploy!** Render will build and deploy automatically.
+### Local Development
 
-### Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `PORT` | No | Auto-set by Render |
-| `NODE_ENV` | No | `production` for production |
-| `MARINESIA_API_KEY` | **Yes** | Marinesia API key - Get at [marinesia.com](https://marinesia.com) |
-| `AISSTREAM_API_KEY` | No | AISStream API key - Get at [aisstream.io](https://aisstream.io) |
-
-**Note:** See [SETUP.md](SETUP.md) for detailed local development setup instructions.
-
-## Local Development
-
-### Setup
-
-1. **Install dependencies:**
+1. **Clone and install:**
    ```bash
+   git clone <repository-url>
+   cd iwc-approval-portal
    npm install
    ```
 
-2. **Create `.env` file:**
+2. **Configure environment:**
    ```bash
-   # Copy the example file
-   cp .env.example .env
-   
-   # Or create manually with these variables:
-   ```
-   
-   Create a `.env` file in the root directory with:
-   ```env
-   MARINESIA_API_KEY=your_marinesia_api_key_here
-   AISSTREAM_API_KEY=your_aisstream_api_key_here
-   NODE_ENV=development
-   PORT=3001
+   cp env.example .env
+   # Edit .env with your values
    ```
 
-3. **Start the server:**
+3. **Set up database:**
    ```bash
-   npm start
+   npm run db:generate   # Generate Prisma client
+   npm run db:push       # Push schema to database
    ```
 
-4. **Open browser:**
+4. **Start development server:**
+   ```bash
+   npm run dev
    ```
-   http://localhost:3001
+
+5. **Open browser:**
+   ```
+   http://localhost:3000
    ```
 
-**Note:** The `.env` file is already in `.gitignore` and will not be committed to the repository.
+### Environment Variables
 
-## API Endpoints
-
-| Endpoint | Description |
+| Variable | Description |
 |----------|-------------|
-| `GET /health` | Health check (used by Render) |
-| `GET /api/marinesia/vessel/:mmsi/profile` | Get vessel by MMSI |
-| `GET /api/marinesia/vessel/profile?filters=...` | Search vessels |
-| `GET /api/aisstream/search?query=...` | Search AIS cache |
-| `GET /api/aisstream/status` | AISStream connection status |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `SESSION_SECRET` | Session encryption key (32+ chars) |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `GOOGLE_CALLBACK_URL` | OAuth callback URL |
+| `CLIENT_URL` | Frontend URL (for CORS) |
 
-## Regulatory Alignment
+### Google OAuth Setup
 
-This tool generates documentation aligned with:
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials:
+   - Application type: Web application
+   - Authorized redirect URIs:
+     - `http://localhost:3000/api/auth/google/callback` (development)
+     - `https://your-app.onrender.com/api/auth/google/callback` (production)
+5. Copy Client ID and Client Secret to `.env`
 
-- **Australian Anti-fouling and In-water Cleaning Guidelines (Exposure Draft 2024)**
-  - Section 2.2: Required Outcomes
-  - Section 2.3: Application of Standards
-  - Section 2.4: Decision Support Tools
+## Deployment to Render
 
-- **Fremantle Port Authority OEMP**
-  - Section 6.1.2: Risk Categories
-  - Section 6.1.3-6.1.4: Biosecurity Assessment
-  - Section 7.2: Sampling Protocols
+### Automatic (Blueprint)
 
-## Scenario Logic
+1. Connect your GitHub repo to Render
+2. Use the `render.yaml` blueprint
+3. Add environment variables in Render dashboard
+4. Deploy!
 
-| Operation | Capture | SAP |
-|-----------|---------|-----|
-| Hull grooming (FR≤20), non-biocidal AFC | No | No |
-| Hull grooming (FR≤20), biocidal AFC | Yes | Yes |
-| Hull cleaning (FR 30-80) | Yes | Yes |
-| Propeller polish (FR≤80, ≤5% cover) | No | No |
-| Niche areas | Yes | Yes |
+### Manual
 
-**High Risk Triggers:**
-- FR ≥90
-- Non-regional biofouling
-- IMS suspected
-- AFC damaged/unknown/expired
+1. **Create PostgreSQL database:**
+   - Add > New PostgreSQL
+   - Name: `iwc-portal-db`
+   - PostgreSQL Version: 17
+
+2. **Create Web Service:**
+   - Add > New Web Service
+   - Connect repository
+   - Build Command: `npm install && npx prisma generate`
+   - Start Command: `npm start`
+
+3. **Configure Environment Variables:**
+   - `DATABASE_URL`: From PostgreSQL dashboard (Internal URL)
+   - `SESSION_SECRET`: Generate secure random string
+   - `GOOGLE_CLIENT_ID`: From Google Cloud Console
+   - `GOOGLE_CLIENT_SECRET`: From Google Cloud Console
+   - `GOOGLE_CALLBACK_URL`: `https://your-app.onrender.com/api/auth/google/callback`
+   - `CLIENT_URL`: `https://your-app.onrender.com`
+   - `NODE_ENV`: `production`
 
 ## Project Structure
 
 ```
-IWC-Approval-Portal/
-├── proxy-server.js         # Node.js API server
-├── package.json            # Dependencies
-├── render.yaml             # Render deployment config
-├── index.html              # Main application
-├── css/
-│   └── styles.css
-├── js/
-│   ├── app.js              # Main application logic
-│   ├── templates.js        # Handlebars templates
-│   ├── services/
-│   │   ├── storage.js      # LocalStorage
-│   │   ├── jobNumber.js    # Job number generation
-│   │   └── vesselApi.js    # API integration
-│   └── utils/
-│       └── scenarioLogic.js
+iwc-approval-portal/
+├── prisma/
+│   ├── schema.prisma     # Database schema
+│   └── seed.js           # Database seed script
+├── public/               # Frontend static files
+│   ├── css/
+│   ├── js/
+│   │   ├── services/     # API, Auth, Storage
+│   │   ├── jurisdictions/ # Multi-jurisdiction configs
+│   │   └── utils/        # Form enhancements
+│   ├── img/
+│   ├── index.html        # Main application
+│   └── login.html        # Login page
+├── server/
+│   ├── config/
+│   │   └── passport.js   # OAuth configuration
+│   ├── middleware/
+│   │   └── auth.js       # Auth middleware
+│   ├── routes/
+│   │   ├── auth.js       # Login/logout routes
+│   │   ├── jobs.js       # Job CRUD
+│   │   ├── crew.js       # Crew management
+│   │   ├── vessels.js    # Vessel database
+│   │   └── users.js      # User settings
+│   └── index.js          # Express server
+├── package.json
+├── render.yaml           # Render deployment config
+└── env.example           # Environment template
 ```
 
-## Technology Stack
+## API Endpoints
 
-- **Frontend:** HTML5, CSS3, Vanilla JS
-- **Backend:** Node.js, Express
-- **APIs:** Marinesia (vessel profiles), AISStream (real-time AIS)
-- **Templating:** Handlebars.js
-- **Hosting:** Render
+### Authentication
+- `GET /api/auth/google` - Initiate Google OAuth
+- `GET /api/auth/google/callback` - OAuth callback
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/logout` - Logout
+
+### Jobs
+- `GET /api/jobs` - List jobs
+- `POST /api/jobs` - Create job
+- `GET /api/jobs/:id` - Get job
+- `PUT /api/jobs/:id` - Update job
+- `DELETE /api/jobs/:id` - Delete job
+
+### Crew
+- `GET /api/crew` - List crew members
+- `POST /api/crew` - Add crew member
+- `PUT /api/crew/:id` - Update crew member
+- `DELETE /api/crew/:id` - Delete crew member
+
+### Vessels
+- `GET /api/vessels` - List vessels
+- `POST /api/vessels` - Add/update vessel
+- `GET /api/vessels/imo/:imo` - Get by IMO
+
+### User
+- `GET /api/users/profile` - Get profile
+- `GET /api/users/settings` - Get settings
+- `PUT /api/users/settings` - Update settings
+- `GET /api/users/dashboard` - Dashboard stats
+
+## Document Types
+
+| Document | Purpose |
+|----------|---------|
+| **WMS** | Work Method Statement - scope and procedures |
+| **SWMS** | Safe Work Method Statement - hazards and controls |
+| **ERP** | Emergency Response Plan - emergency procedures |
+| **WHSMP** | WHS Management Plan - safety management system |
+
+## Multi-Jurisdiction Support
+
+The application supports different regulatory frameworks:
+
+| Code | Region | Key Regulations |
+|------|--------|-----------------|
+| `AU-WA` | Western Australia | WHS Reg 2025, Biosecurity Act |
+| `NZ` | New Zealand | HSWA 2015, Biosecurity Act |
+| `SG` | Singapore | WSH Act, MPA regulations |
+| `US-CA` | California, USA | Cal/OSHA, EPA Clean Water |
+| `JP` | Japan | Industrial Safety, Port laws |
 
 ## License
 
@@ -160,6 +233,6 @@ Proprietary - Franmarine Underwater Services
 
 ## Support
 
-Franmarine Underwater Services
-- Address: 13 Possner Way, Henderson WA 6166
-- Website: www.franmarine.com.au
+For technical support, contact:
+- Perth Office: 08 9437 3900
+- NSW Office: 02 7228 9691

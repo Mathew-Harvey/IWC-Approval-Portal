@@ -1,32 +1,47 @@
 {
   "name": "iwc-approval-portal",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "IWC Notification Package Generator for Franmarine Underwater Services",
-  "main": "proxy-server.js",
+  "main": "server/index.js",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node proxy-server.js",
-    "dev": "node proxy-server.js"
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "dev:watch": "npx nodemon server/index.js",
+    "db:generate": "npx prisma generate",
+    "db:push": "npx prisma db push",
+    "db:migrate": "npx prisma migrate dev",
+    "db:studio": "npx prisma studio",
+    "db:seed": "node prisma/seed.js"
   },
   "keywords": [
     "iwc",
     "in-water-cleaning",
     "biofouling",
     "marinesia",
-    "franmarine"
+    "franmarine",
+    "diving",
+    "swms"
   ],
   "author": "Franmarine Underwater Services",
   "license": "ISC",
   "dependencies": {
+    "@clerk/express": "^1.0.0",
+    "@prisma/client": "^5.22.0",
+    "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^4.18.2",
-    "http-proxy-middleware": "^2.0.6",
-    "ws": "^8.19.0"
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "http-proxy-middleware": "^3.0.3",
+    "morgan": "^1.10.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
-    "serve": "^14.2.5"
+    "nodemon": "^3.1.7",
+    "prisma": "^5.22.0"
   }
 }

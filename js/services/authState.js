@@ -135,18 +135,40 @@ const AuthState = {
     // Actions (using Clerk)
     // ============================================
     
-    signIn() {
-        if (typeof Clerk !== 'undefined') {
-            Clerk.openSignIn();
-        } else {
+    async signIn() {
+        try {
+            if (typeof Clerk !== 'undefined') {
+                // Ensure Clerk is loaded before opening sign in
+                if (!Clerk.loaded) {
+                    await Clerk.load();
+                }
+                await Clerk.openSignIn({
+                    redirectUrl: window.location.href
+                });
+            } else {
+                window.location.href = '/login.html';
+            }
+        } catch (error) {
+            console.error('Sign in error:', error);
             window.location.href = '/login.html';
         }
     },
     
-    signUp() {
-        if (typeof Clerk !== 'undefined') {
-            Clerk.openSignUp();
-        } else {
+    async signUp() {
+        try {
+            if (typeof Clerk !== 'undefined') {
+                // Ensure Clerk is loaded before opening sign up
+                if (!Clerk.loaded) {
+                    await Clerk.load();
+                }
+                await Clerk.openSignUp({
+                    redirectUrl: window.location.href
+                });
+            } else {
+                window.location.href = '/login.html';
+            }
+        } catch (error) {
+            console.error('Sign up error:', error);
             window.location.href = '/login.html';
         }
     },

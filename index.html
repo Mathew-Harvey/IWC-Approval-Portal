@@ -3263,23 +3263,27 @@
                 }
             }
             
-            // Wait for Clerk to be available
+            // Wait for Clerk to be available (longer timeout for slow free servers)
             const waitForClerk = () => new Promise((resolve) => {
                 if (typeof Clerk !== 'undefined') {
                     resolve();
-                } else {
-                    const check = setInterval(() => {
-                        if (typeof Clerk !== 'undefined') {
-                            clearInterval(check);
-                            resolve();
-                        }
-                    }, 100);
-                    // Timeout after 5 seconds
-                    setTimeout(() => {
-                        clearInterval(check);
-                        resolve();
-                    }, 5000);
+                    return;
                 }
+                
+                const startTime = Date.now();
+                const timeout = 15000; // 15 seconds for slow servers
+                
+                const check = setInterval(() => {
+                    if (typeof Clerk !== 'undefined') {
+                        clearInterval(check);
+                        console.log('✅ Clerk SDK loaded');
+                        resolve();
+                    } else if (Date.now() - startTime > timeout) {
+                        clearInterval(check);
+                        console.warn('⚠️ Clerk SDK not loaded after timeout - continuing without auth');
+                        resolve();
+                    }
+                }, 100);
             });
             
             await waitForClerk();
@@ -3323,30 +3327,64 @@
         // Bind login button as soon as DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             const loginBtn = document.getElementById('loginBtn');
+            let isLoading = false;
+            
             if (loginBtn) {
-                loginBtn.addEventListener('click', async function() {
+                loginBtn.addEventListener('click', async function(event) {
+                    // CRITICAL: Prevent any default behavior and bubbling
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    // Prevent double-clicks while loading
+                    if (isLoading) {
+                        console.log('Already loading, please wait...');
+                        return;
+                    }
+                    
                     console.log('Sign In button clicked');
                     
-                    // Check if Clerk is available
-                    if (typeof Clerk !== 'undefined') {
-                        try {
+                    // Show loading state (for slow servers)
+                    const originalText = loginBtn.textContent;
+                    loginBtn.textContent = 'Loading...';
+                    loginBtn.disabled = true;
+                    isLoading = true;
+                    
+                    try {
+                        // Check if Clerk is available
+                        if (typeof Clerk !== 'undefined') {
                             // Make sure Clerk is loaded first
                             if (!Clerk.loaded) {
-                                console.log('Loading Clerk...');
+                                console.log('Loading Clerk SDK...');
                                 await Clerk.load();
+                                console.log('Clerk SDK loaded successfully');
                             }
-                            console.log('Opening Clerk sign in...');
-                            Clerk.openSignIn({
+                            
+                            console.log('Opening Clerk sign in modal...');
+                            
+                            // Open sign in modal
+                            await Clerk.openSignIn({
                                 redirectUrl: window.location.href
                             });
-                        } catch (e) {
-                            console.error('Clerk error:', e);
-                            // Fallback to login page
+                            
+                        } else {
+                            // Clerk not loaded at all - fallback to login page
+                            console.log('Clerk not available, redirecting to login page');
                             window.location.href = '/login.html';
+                            return;
                         }
-                    } else {
-                        console.log('Clerk not available, redirecting to login page');
-                        window.location.href = '/login.html';
+                    } catch (e) {
+                        console.error('Sign in error:', e);
+                        // Show error to user briefly, then fallback
+                        loginBtn.textContent = 'Error - Retrying...';
+                        setTimeout(() => {
+                            window.location.href = '/login.html';
+                        }, 1000);
+                        return;
+                    } finally {
+                        // Reset button state (only if not navigating away)
+                        isLoading = false;
+                        loginBtn.textContent = originalText;
+                        loginBtn.disabled = false;
                     }
                 });
                 console.log('✅ Login button handler attached');

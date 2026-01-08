@@ -175,38 +175,92 @@
         // Run immediately
         initClerk();
         
+        // Function to wait for Clerk with timeout
+        function waitForClerk(timeout = 15000) {
+            return new Promise((resolve) => {
+                if (typeof Clerk !== 'undefined') {
+                    resolve(true);
+                    return;
+                }
+                
+                const startTime = Date.now();
+                const check = setInterval(() => {
+                    if (typeof Clerk !== 'undefined') {
+                        clearInterval(check);
+                        resolve(true);
+                    } else if (Date.now() - startTime > timeout) {
+                        clearInterval(check);
+                        resolve(false);
+                    }
+                }, 100);
+            });
+        }
+        
         window.addEventListener('load', async () => {
-            // Wait for Clerk to initialize
-            if (typeof Clerk === 'undefined') {
-                document.getElementById('clerk-auth').innerHTML = `
+            const authDiv = document.getElementById('clerk-auth');
+            
+            // Show loading message
+            authDiv.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p style="color: var(--gray-500); margin-top: 1rem;">Loading authentication...</p>
+            `;
+            
+            // Wait for Clerk to be available (up to 15 seconds for slow servers)
+            const clerkAvailable = await waitForClerk(15000);
+            
+            if (!clerkAvailable || typeof Clerk === 'undefined') {
+                authDiv.innerHTML = `
                     <p style="color: var(--danger);">
-                        Authentication system not configured.<br>
-                        Please set up Clerk credentials.
+                        Authentication system is still loading...<br>
+                        This may take a moment on free servers.
                     </p>
-                    <a href="/" class="btn btn-secondary" style="margin-top: 1rem;">Continue without signing in</a>
+                    <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 1rem;">
+                        Retry Loading
+                    </button>
+                    <a href="/" class="btn btn-secondary" style="margin-top: 1rem; margin-left: 0.5rem;">
+                        Continue without signing in
+                    </a>
                 `;
                 return;
             }
             
-            await Clerk.load();
-            
-            // If already signed in, redirect
-            if (Clerk.user) {
-                const returnUrl = sessionStorage.getItem('returnUrl') || '/';
-                sessionStorage.removeItem('returnUrl');
-                window.location.href = returnUrl;
-                return;
+            try {
+                // Load Clerk
+                await Clerk.load();
+                
+                // If already signed in, redirect
+                if (Clerk.user) {
+                    const returnUrl = sessionStorage.getItem('returnUrl') || '/';
+                    sessionStorage.removeItem('returnUrl');
+                    window.location.href = returnUrl;
+                    return;
+                }
+                
+                // Clear loading state and mount sign-in component
+                authDiv.innerHTML = '';
+                
+                Clerk.mountSignIn(authDiv, {
+                    afterSignInUrl: '/',
+                    afterSignUpUrl: '/',
+                    signUpUrl: '/login.html'
+                });
+            } catch (error) {
+                console.error('Clerk initialization error:', error);
+                authDiv.innerHTML = `
+                    <p style="color: var(--danger);">
+                        Error loading authentication.<br>
+                        ${error.message || 'Please try again.'}
+                    </p>
+                    <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 1rem;">
+                        Retry
+                    </button>
+                    <a href="/" class="btn btn-secondary" style="margin-top: 1rem; margin-left: 0.5rem;">
+                        Continue without signing in
+                    </a>
+                `;
             }
-            
-            // Mount the sign-in component
-            const authDiv = document.getElementById('clerk-auth');
-            authDiv.innerHTML = '';
-            
-            Clerk.mountSignIn(authDiv, {
-                afterSignInUrl: '/',
-                afterSignUpUrl: '/',
-                signUpUrl: '/login.html'
-            });
         });
     </script>
 </body>

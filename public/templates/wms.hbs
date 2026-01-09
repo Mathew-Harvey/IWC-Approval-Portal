@@ -18,11 +18,11 @@
 --}}
 
 <style>
-/* CSS Variables */
-:root {
-    --primary: #0ea5e9;
-    --primary-dark: #0284c7;
-    --primary-light: #7dd3fc;
+/* CSS Variables - Scoped to document to avoid affecting main app */
+.wms-document {
+    --doc-primary: #0ea5e9;
+    --doc-primary-dark: #0284c7;
+    --doc-primary-light: #7dd3fc;
     --accent: #f59e0b;
     --success: #10b981;
     --warning: #f59e0b;
@@ -86,13 +86,13 @@
 
 .cover-title h1 {
     font-size: 24pt;
-    color: var(--primary);
+    color: var(--doc-primary);
     margin-bottom: 10px;
 }
 
 .cover-title h2 {
     font-size: 18pt;
-    color: var(--primary);
+    color: var(--doc-primary);
     margin-bottom: 30px;
 }
 
@@ -141,9 +141,9 @@
 
 .wms-toc h2 {
     font-size: 14pt;
-    color: var(--primary);
+    color: var(--doc-primary);
     margin-bottom: 20px;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 2px solid var(--doc-primary);
     padding-bottom: 10px;
 }
 
@@ -170,15 +170,15 @@
 
 .wms-section h2 {
     font-size: 14pt;
-    color: var(--primary);
+    color: var(--doc-primary);
     margin-bottom: 15px;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 2px solid var(--doc-primary);
     padding-bottom: 8px;
 }
 
 .wms-section h3 {
     font-size: 12pt;
-    color: var(--primary-dark);
+    color: var(--doc-primary-dark);
     margin: 20px 0 10px;
     text-transform: uppercase;
 }
@@ -270,7 +270,7 @@
 }
 
 .framework-box h4 {
-    color: var(--primary);
+    color: var(--doc-primary);
     margin-bottom: 10px;
     font-size: 11pt;
 }
@@ -278,7 +278,7 @@
 .framework-arrow {
     text-align: center;
     font-size: 20pt;
-    color: var(--primary);
+    color: var(--doc-primary);
     margin: 5px 0;
 }
 

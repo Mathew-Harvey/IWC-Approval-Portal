@@ -13,11 +13,11 @@
 --}}
 
 <style>
-/* CSS Variables */
-:root {
-    --primary: #0ea5e9;
-    --primary-dark: #0284c7;
-    --primary-light: #7dd3fc;
+/* CSS Variables - Scoped to document to avoid affecting main app */
+.erp-document {
+    --doc-primary: #0ea5e9;
+    --doc-primary-dark: #0284c7;
+    --doc-primary-light: #7dd3fc;
     --accent: #f59e0b;
     --success: #10b981;
     --warning: #f59e0b;
@@ -174,7 +174,7 @@
 
 .wms-section h3 {
     font-size: 12pt;
-    color: var(--primary-dark);
+    color: var(--doc-primary-dark);
     margin: 20px 0 10px;
     text-transform: uppercase;
 }
@@ -258,7 +258,7 @@
 }
 
 .hospital-directions h3 {
-    color: var(--primary);
+    color: var(--doc-primary);
     margin-bottom: 10px;
 }
 
@@ -266,7 +266,7 @@
 .procedure-box {
     background: var(--gray-50);
     border: 1px solid var(--gray-300);
-    border-left: 4px solid var(--primary);
+    border-left: 4px solid var(--doc-primary);
     border-radius: var(--radius-md);
     padding: 15px 20px;
     margin: 15px 0;

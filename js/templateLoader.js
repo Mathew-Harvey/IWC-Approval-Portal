@@ -225,7 +225,7 @@ const Templates = {
     }
 };
 
-// Export for browser
-if (typeof window !== 'undefined') {
-    window.Templates = Templates;
-}
+// Make Templates globally available immediately
+// This ensures it's available before other scripts try to use it
+window.Templates = Templates;
+console.log('📄 Templates object created');

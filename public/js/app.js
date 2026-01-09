@@ -15,8 +15,8 @@ const App = {
      * Initialize the application
      */
     async init() {
-        // Initialize templates
-        Templates.init();
+        // Initialize templates (must await since it's async)
+        await Templates.init();
 
         // Initialize jurisdiction system
         this.initJurisdiction();

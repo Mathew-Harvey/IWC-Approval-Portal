@@ -1,0 +1,635 @@
+{{!-- 
+  Work Health and Safety Management Plan (WHSMP) Template
+  Standalone template with embedded styles
+  
+  Required data:
+  - companyLogo, vesselImage (optional images)
+  - vesselName, jobNumber, clientName, revisionDate
+  - cleaningLocation, proposedMonth, proposedYear
+  - hasAdditionalActivities, additionalActivities
+  - authorName, currentYear
+--}}
+
+<style>
+/* CSS Variables */
+:root {
+    --primary: #0ea5e9;
+    --primary-dark: #0284c7;
+    --primary-light: #7dd3fc;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --white: #ffffff;
+    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* Base Document Styles */
+.wms-document.whsmp-document {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+}
+
+/* Cover Page */
+.wms-cover {
+    text-align: center;
+    padding: 60px 40px;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cover-logo {
+    margin-bottom: 30px;
+}
+
+.cover-logo img,
+.company-logo {
+    max-width: 200px;
+    max-height: 100px;
+}
+
+.cover-header {
+    text-align: right;
+}
+
+.doc-type {
+    font-size: 10pt;
+    color: #666;
+}
+
+.cover-title h1 {
+    font-size: 22pt;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.cover-title h3 {
+    font-size: 16pt;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.cover-title h4 {
+    font-size: 14pt;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.job-number {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.location,
+.date {
+    font-size: 12pt;
+    color: #555;
+    margin-top: 10px;
+}
+
+.vessel-image-container {
+    margin: 30px 0;
+}
+
+.vessel-image {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: var(--radius-md);
+}
+
+.cover-footer {
+    margin-top: auto;
+}
+
+.confidential {
+    font-size: 12pt;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+/* Table of Contents */
+.wms-toc {
+    padding: 40px;
+}
+
+.wms-toc h2 {
+    font-size: 14pt;
+    color: var(--primary);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+}
+
+.toc-list li {
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--gray-300);
+}
+
+.toc-list a {
+    color: #333;
+    text-decoration: none;
+}
+
+/* Sections */
+.wms-section {
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.wms-section h2 {
+    font-size: 14pt;
+    color: var(--primary);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 8px;
+}
+
+.wms-section h3 {
+    font-size: 12pt;
+    color: var(--primary-dark);
+    margin: 20px 0 10px;
+    text-transform: uppercase;
+}
+
+.wms-section p {
+    margin-bottom: 12px;
+}
+
+.wms-section ul,
+.wms-section ol {
+    margin: 10px 0 15px 25px;
+}
+
+.wms-section li {
+    margin-bottom: 6px;
+}
+
+/* Tables */
+.wms-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 10pt;
+}
+
+.wms-table caption {
+    text-align: left;
+    font-weight: bold;
+    padding: 8px 0;
+    color: var(--gray-700);
+}
+
+.wms-table th,
+.wms-table td {
+    border: 1px solid var(--gray-300);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.wms-table th {
+    background: var(--gray-100);
+    font-weight: 600;
+}
+
+.wms-table tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+/* Risk Matrix */
+.risk-matrix {
+    margin: 20px 0;
+}
+
+.risk-matrix td {
+    text-align: center;
+    font-weight: bold;
+    padding: 6px 10px;
+}
+
+.risk-low,
+.wms-table .risk-low {
+    background: #dcfce7 !important;
+    color: #166534;
+}
+
+.risk-medium,
+.wms-table .risk-medium {
+    background: #fef9c3 !important;
+    color: #854d0e;
+}
+
+.risk-high,
+.wms-table .risk-high {
+    background: #fed7aa !important;
+    color: #c2410c;
+}
+
+.risk-extreme,
+.wms-table .risk-extreme {
+    background: #fecaca !important;
+    color: #dc2626;
+}
+
+/* Hierarchy List */
+.hierarchy-list {
+    counter-reset: hierarchy;
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.hierarchy-list li {
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    background: var(--gray-50);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-sm);
+}
+
+.hierarchy-list li:nth-child(1) { border-left-color: #dc2626; }
+.hierarchy-list li:nth-child(2) { border-left-color: #ea580c; }
+.hierarchy-list li:nth-child(3) { border-left-color: #ca8a04; }
+.hierarchy-list li:nth-child(4) { border-left-color: #16a34a; }
+.hierarchy-list li:nth-child(5) { border-left-color: #2563eb; }
+.hierarchy-list li:nth-child(6) { border-left-color: #7c3aed; }
+
+/* Document Control */
+.document-control {
+    margin-top: 40px;
+}
+
+.control-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 10pt;
+}
+
+.control-table th,
+.control-table td {
+    border: 1px solid var(--gray-300);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.control-table th {
+    background: var(--gray-100);
+    width: 150px;
+}
+
+/* Copyright Notice */
+.copyright-notice {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-300);
+    font-size: 9pt;
+    color: var(--gray-600);
+}
+
+.copyright-year {
+    font-weight: bold;
+}
+
+/* Page Break Helpers */
+.page-break-before {
+    page-break-before: always;
+}
+
+.page-break-after {
+    page-break-after: always;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .wms-document.whsmp-document {
+        max-width: none;
+        width: 100%;
+    }
+    
+    .wms-cover {
+        height: 100vh;
+    }
+    
+    .wms-section {
+        page-break-inside: avoid;
+    }
+    
+    .risk-low, .risk-medium, .risk-high, .risk-extreme {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>
+
+<div class="wms-document whsmp-document">
+    <!-- Cover Page -->
+    <div class="wms-cover page-break-after">
+        {{#if companyLogo}}
+        <div class="cover-logo">
+            <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+        </div>
+        {{/if}}
+        <div class="cover-header">
+            <p class="doc-type">PROJECT MANAGEMENT PLAN</p>
+        </div>
+        <div class="cover-title">
+            <h1>WORK HEALTH AND SAFETY MANAGEMENT PLAN</h1>
+            <h3>In Water Hull Clean – '{{vesselName}}'</h3>
+            <h4>{{clientName}}</h4>
+            <p class="location">{{cleaningLocation}}</p>
+            <p class="job-number">{{jobNumber}}</p>
+            <p class="date">{{proposedMonth}} {{proposedYear}}</p>
+        </div>
+        {{#if vesselImage}}
+        <div class="vessel-image-container">
+            <img src="{{vesselImage}}" alt="{{vesselName}}" class="vessel-image">
+        </div>
+        {{/if}}
+        <div class="cover-footer">
+            <p class="confidential">CONFIDENTIAL</p>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="wms-toc page-break-after">
+        <h2>TABLE OF CONTENTS</h2>
+        <ol class="toc-list">
+            <li><a href="#whsmp-purpose">PURPOSE OF DOCUMENT</a></li>
+            <li><a href="#whsmp-team">PROJECT WHS TEAM</a></li>
+            <li><a href="#whsmp-legislation">LEGISLATION & STANDARDS</a></li>
+            <li><a href="#whsmp-hazard">HAZARD IDENTIFICATION & RISK MANAGEMENT</a></li>
+            <li><a href="#whsmp-personnel">PERSONNEL & TRAINING</a></li>
+            <li><a href="#whsmp-operations">DAILY OPERATIONS</a></li>
+            <li><a href="#whsmp-ppe">PERSONAL PROTECTIVE EQUIPMENT</a></li>
+            <li><a href="#whsmp-incident">INCIDENT REPORTING</a></li>
+        </ol>
+    </div>
+
+    <!-- 1. Purpose -->
+    <section id="whsmp-purpose" class="wms-section">
+        <h2>1 PURPOSE OF DOCUMENT</h2>
+        <h3>PURPOSE</h3>
+        <p>This Work Health and Safety Management Plan (WHSMP) has been developed to outline the work health and safety relationship between Franmarine and {{clientName}}. The WHSMP demonstrates Franmarine's ability to exceed all work health and safety requirements whilst working towards our own safety objective of zero injuries.</p>
+        <p>The Franmarine Health and Safety Management System is certified by DNV to ISO 45001:2018 Occupational health and safety management systems under the scope of management of diving and integrated underwater services provided to the defence, infrastructure, shipping and oil and gas industries.</p>
+        <p>All Diving Operations will be carried out in accordance with AS/NZS 2299.1:2015 Occupational Diving Operations as a minimum, using Surface Supplied Breathing Apparatus.</p>
+
+        <h3>SAFETY OBJECTIVES</h3>
+        <p>The aim of Franmarine, through their HSEQ Policies, is to identify, assess and control potential risks and hazards. We believe that injury in the workplace is entirely preventable.</p>
+        <ul>
+            <li>Franmarine has a goal of <strong>zero injuries</strong> for every project</li>
+            <li>Franmarine fully supports employees requiring rehabilitation and return to work programs</li>
+            <li>All levels of management shall have direct involvement and demonstrate commitment to Health and Safety</li>
+            <li>All personnel have duty of care responsibilities related to health and safety</li>
+        </ul>
+
+        <h3>FRANMARINE POLICIES</h3>
+        <table class="wms-table">
+            <tbody>
+                <tr><td>FRA-POL-012</td><td>Health & Safety Policy</td></tr>
+                <tr><td>FRA-POL-007</td><td>Environmental Policy</td></tr>
+                <tr><td>FRA-POL-006</td><td>Quality Policy</td></tr>
+                <tr><td>FRA-POL-009</td><td>Rehabilitation and Return to Work Policy</td></tr>
+                <tr><td>FRA-POL-011</td><td>Training Policy and Development</td></tr>
+                <tr><td>FRA-POL-008</td><td>Fitness for Work Policy</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 2. Project WHS Team -->
+    <section id="whsmp-team" class="wms-section">
+        <h2>2 PROJECT WHS TEAM</h2>
+        <p>Whilst each and every employee of Franmarine takes responsibility for WHS very seriously, the Management Team below hold the following statutory responsibilities.</p>
+        <table class="wms-table">
+            <caption>Table 1: Roles and Responsibilities</caption>
+            <thead>
+                <tr><th>Name</th><th>Role</th><th>WHS Responsibility</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Adam Falconer-West</td>
+                    <td>Chief Executive Officer</td>
+                    <td>Provision of a work environment without risk to health and safety</td>
+                </tr>
+                <tr>
+                    <td>Sam Diamond</td>
+                    <td>Operations Manager West</td>
+                    <td>Safe Systems of Work and Plant and Equipment. Provision of supervision and training</td>
+                </tr>
+                <tr>
+                    <td>Kirby Hamilton</td>
+                    <td>Operations Manager East</td>
+                    <td>Ensuring Staff understand their roles. Safe use, handling and storage of Plant</td>
+                </tr>
+                <tr>
+                    <td>TBC</td>
+                    <td>Project Manager</td>
+                    <td>Onsite Inspection of workplace to assess for risks</td>
+                </tr>
+                <tr>
+                    <td>Belinda Brooks</td>
+                    <td>HSEQ Manager</td>
+                    <td>WHS Audits, Safe Systems of work. Regular monitoring of worker health. Incident Management</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 3. Legislation -->
+    <section id="whsmp-legislation" class="wms-section page-break-before">
+        <h2>3 LEGISLATION & STANDARDS</h2>
+        <p>All Franmarine diving operations will conform to all applicable Acts and Regulations, including:</p>
+        <table class="wms-table">
+            <tbody>
+                <tr><td>Work Health and Safety Act 2020 (WA)</td></tr>
+                <tr><td>Work Health and Safety (General) Regulations 2022 (WA)</td></tr>
+                <tr><td>Environmental Protection Act 1986 (WA)</td></tr>
+                <tr><td>Dangerous Goods (Road and Rail transport) Act 2008</td></tr>
+                <tr><td>Marine Safety Act 1998</td></tr>
+            </tbody>
+        </table>
+
+        <h3>STANDARDS</h3>
+        <p>All Franmarine operations conducted according to AS/NZS 2299.1:2015 Occupational diving operations, Part 1: Standard operational practice.</p>
+    </section>
+
+    <!-- 4. Hazard Identification -->
+    <section id="whsmp-hazard" class="wms-section">
+        <h2>4 HAZARD IDENTIFICATION & RISK MANAGEMENT</h2>
+        <p>Franmarine has procedures in place for the systematic review of health and safety hazards and risk over the life cycle of the diving project.</p>
+        <p>When the risk is assessed as high, a Safe Work Method Statement (SWMS) shall be developed. A SWMS must be included with all diving tasks as diving works are designated high risk works.</p>
+
+        <h3>RISK MATRIX</h3>
+        <table class="wms-table risk-matrix">
+            <thead>
+                <tr>
+                    <th>Likelihood</th>
+                    <th>Insignificant</th>
+                    <th>Minor</th>
+                    <th>Moderate</th>
+                    <th>Major</th>
+                    <th>Catastrophic</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Almost Certain</td><td class="risk-high">HIGH</td><td class="risk-high">HIGH</td><td class="risk-extreme">EXTREME</td><td class="risk-extreme">EXTREME</td><td class="risk-extreme">EXTREME</td></tr>
+                <tr><td>Likely</td><td class="risk-medium">MEDIUM</td><td class="risk-high">HIGH</td><td class="risk-high">HIGH</td><td class="risk-extreme">EXTREME</td><td class="risk-extreme">EXTREME</td></tr>
+                <tr><td>Possible</td><td class="risk-low">LOW</td><td class="risk-medium">MEDIUM</td><td class="risk-high">HIGH</td><td class="risk-high">HIGH</td><td class="risk-extreme">EXTREME</td></tr>
+                <tr><td>Unlikely</td><td class="risk-low">LOW</td><td class="risk-low">LOW</td><td class="risk-medium">MEDIUM</td><td class="risk-medium">MEDIUM</td><td class="risk-high">HIGH</td></tr>
+                <tr><td>Rare</td><td class="risk-low">LOW</td><td class="risk-low">LOW</td><td class="risk-low">LOW</td><td class="risk-medium">MEDIUM</td><td class="risk-medium">MEDIUM</td></tr>
+            </tbody>
+        </table>
+
+        <h3>HIERARCHY OF CONTROLS</h3>
+        <ol class="hierarchy-list">
+            <li><strong>Eliminate</strong> - Remove the hazard completely</li>
+            <li><strong>Substitute</strong> - Replace a hazardous process/substance with one which is less hazardous</li>
+            <li><strong>Isolation</strong> - Remove the person from the hazardous environment</li>
+            <li><strong>Engineering</strong> - Provide physical barriers or engineered modifications</li>
+            <li><strong>Administrative</strong> - Establish policies, procedures and work practices</li>
+            <li><strong>PPE</strong> - Use equipment that provides protection to individuals</li>
+        </ol>
+
+        {{#if hasAdditionalActivities}}
+        <h3>ADDITIONAL HIGH RISK ACTIVITIES</h3>
+        <p>This project includes the following additional high risk work activities that require specific hazard controls:</p>
+        <ul>
+            {{#each additionalActivities}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+        <p>Refer to the Safe Work Method Statement (SWMS) for detailed hazard analysis and control measures for these activities.</p>
+        {{/if}}
+    </section>
+
+    <!-- 5. Personnel & Training -->
+    <section id="whsmp-personnel" class="wms-section page-break-before">
+        <h2>5 PERSONNEL & TRAINING</h2>
+        <p>All personnel assigned to this project shall be qualified and experienced as per the Franmarine Diving Operation Manual requirements.</p>
+
+        <h3>AIR DIVING SUPERVISOR QUALIFICATIONS</h3>
+        <ul>
+            <li>ADAS Part 3 (or equivalent) Diving Supervisor certification</li>
+            <li>Current AS/NZS 2299.1 medical fitness certificate</li>
+            <li>Current first aid and oxygen administration certifications</li>
+            <li>Project-specific inductions as required</li>
+        </ul>
+
+        <h3>DIVER QUALIFICATIONS</h3>
+        <ul>
+            <li>ADAS Part 2 (or equivalent) Occupational Diver certification</li>
+            <li>Current AS/NZS 2299.1 medical fitness certificate</li>
+            <li>Current first aid certification</li>
+        </ul>
+    </section>
+
+    <!-- 6. Daily Operations -->
+    <section id="whsmp-operations" class="wms-section">
+        <h2>6 DAILY OPERATIONS</h2>
+
+        <h3>TOOLBOX MEETINGS</h3>
+        <p>All Supervisors are required to hold "Toolbox" meetings at the start of each shift to discuss current activities, highlighting any hazards and safety matters.</p>
+
+        <h3>FATIGUE MANAGEMENT</h3>
+        <p>All employees should monitor themselves and others for signs of fatigue. The Franmarine Fatigue Assessment Checklist HSE-FOR-008 shall be used when concerns arise.</p>
+
+        <h3>ALCOHOL AND DRUGS</h3>
+        <p>Franmarine has <strong>zero tolerance</strong> to alcohol and illicit drugs in the workplace. All Employees shall comply with any random drug and alcohol testing.</p>
+    </section>
+
+    <!-- 7. PPE -->
+    <section id="whsmp-ppe" class="wms-section">
+        <h2>7 PERSONAL PROTECTIVE EQUIPMENT</h2>
+        <p>Franmarine shall provide the following PPE to all personnel as a minimum:</p>
+        <table class="wms-table">
+            <thead>
+                <tr><th>Equipment</th><th>Standard</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Safety Helmet (hard hat)</td><td>AS/NZS 1801</td></tr>
+                <tr><td>Safety Glasses</td><td>AS/NZS 1337</td></tr>
+                <tr><td>Safety Footwear (steel toe)</td><td>AS/NZS 2210.3</td></tr>
+                <tr><td>High Visibility Clothing</td><td>AS/NZS 4602</td></tr>
+                <tr><td>Hearing Protection</td><td>AS/NZS 1270</td></tr>
+                <tr><td>Safety Gloves</td><td>AS/NZS 2161</td></tr>
+            </tbody>
+        </table>
+        <p>The minimum on-site requirement is a hard hat, steel toe capped boots and high visibility clothing with reflective strips.</p>
+    </section>
+
+    <!-- 8. Incident Reporting -->
+    <section id="whsmp-incident" class="wms-section">
+        <h2>8 INCIDENT REPORTING</h2>
+        <p>All incidents, near misses, and hazards must be reported immediately to the Dive Supervisor.</p>
+        <p>For full details on Franmarine Accident and Incidents, see Incident and Investigation Procedure HSE-PRO-025.</p>
+
+        <h3>INCIDENT CLASSIFICATION</h3>
+        <table class="wms-table">
+            <thead>
+                <tr><th>Classification</th><th>Description</th><th>Reporting</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Near Miss</td><td>Event with potential for injury/damage</td><td>Internal report within 24 hours</td></tr>
+                <tr><td>Minor Injury</td><td>First aid treatment only</td><td>Internal report within 24 hours</td></tr>
+                <tr><td>Medical Treatment</td><td>Requires medical professional</td><td>Client and WorkSafe notification</td></tr>
+                <tr><td>Serious Incident</td><td>Hospitalization, dangerous occurrence</td><td>Immediate WorkSafe notification</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Document Control -->
+    <section class="wms-section document-control">
+        <table class="control-table">
+            <tr>
+                <th>Document</th>
+                <th>Revision Number</th>
+                <th>Date</th>
+                <th>Notes</th>
+                <th>Changes Approved by</th>
+            </tr>
+            <tr>
+                <td>{{jobNumber}}-WHSMP</td>
+                <td>01</td>
+                <td>{{revisionDate}}</td>
+                <td>Document Created</td>
+                <td>{{authorName}}</td>
+            </tr>
+        </table>
+
+        <div class="copyright-notice">
+            <p class="copyright-year">©{{currentYear}} Franmarine. All Rights Reserved.</p>
+        </div>
+    </section>
+</div>
+

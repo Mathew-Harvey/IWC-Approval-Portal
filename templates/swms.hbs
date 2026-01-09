@@ -1,0 +1,780 @@
+{{!-- 
+  Safe Work Method Statement (SWMS) Template
+  Standalone template with embedded styles
+  
+  Required data:
+  - companyLogo, vesselImage (optional images)
+  - vesselName, jobNumber, clientName, revisionDate
+  - cleaningLocation, proposedMonth, proposedYear
+  - authorName, gasType, maxDepth, bottomTime, decoProfile
+  - personnel (array), hasPersonnel
+  - equipment object: divePanel, recovery, diveHats, comms, firstAid, etc.
+  - sapRequired, captureRequired
+  - siteTypeName, siteType, isDefenceSite, isFPASite
+  - requiresPTW, requiresIsolation, requiresSiteInduction, requiresSecurityClearance
+  - activityConfinedSpace, activityHotWork, activityWorkingAtHeights, activityCraneOps
+  - clientContact, clientPhone, simopsContact, simopsPhone, emergencyAssembly
+  - onSiteMedic, additionalHazards (array)
+  - currentYear
+--}}
+
+<style>
+/* CSS Variables */
+:root {
+    --primary: #0ea5e9;
+    --primary-dark: #0284c7;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+}
+
+/* Base Document */
+.wms-document.swms-document {
+    font-family: var(--font-sans);
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #333;
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+}
+
+/* Cover Page */
+.wms-cover {
+    text-align: center;
+    padding: 60px 40px;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cover-logo { margin-bottom: 30px; }
+.cover-logo img, .company-logo { max-width: 200px; max-height: 100px; }
+.cover-header { text-align: right; }
+.doc-type { font-size: 10pt; color: #666; }
+.cover-title h1 { font-size: 22pt; color: var(--primary); margin-bottom: 10px; }
+.cover-title h3 { font-size: 14pt; color: #333; margin-bottom: 10px; }
+.cover-title h4 { font-size: 12pt; color: #555; margin-bottom: 10px; }
+.job-number { font-size: 12pt; font-weight: bold; margin-top: 15px; }
+.location, .date { font-size: 11pt; color: #555; margin-top: 8px; }
+.vessel-image-container { margin: 25px 0; }
+.vessel-image { max-width: 100%; max-height: 250px; border-radius: var(--radius-md); }
+.cover-footer { margin-top: auto; }
+.confidential { font-size: 11pt; font-weight: bold; color: var(--accent); }
+
+/* SWMS Header */
+.swms-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    border-bottom: 2px solid var(--primary);
+    background: var(--gray-50);
+}
+
+.swms-logo img { max-height: 60px; }
+.swms-title-block h1 { font-size: 14pt; color: var(--primary); margin: 0; }
+.swms-title-block h2 { font-size: 10pt; color: var(--gray-600); margin: 4px 0 0; font-weight: normal; }
+
+/* Sections */
+.swms-section {
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.swms-section h3 {
+    font-size: 11pt;
+    color: var(--primary-dark);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--primary);
+}
+
+.swms-section h4 { font-size: 10pt; color: var(--gray-700); margin: var(--space-md) 0 var(--space-sm); }
+.swms-section h5 { font-size: 9pt; color: var(--gray-600); margin: 0 0 var(--space-sm); font-weight: 600; }
+
+/* Header Grid */
+.swms-header-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.swms-info-block { background: var(--gray-50); border-radius: var(--radius-sm); padding: var(--space-md); }
+.swms-info-table { width: 100%; font-size: 9pt; }
+.swms-info-table td { padding: 4px 8px; }
+.swms-info-table td:first-child { width: 40%; }
+
+/* Tables */
+.swms-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: var(--space-sm) 0;
+}
+
+.swms-table th, .swms-table td {
+    border: 1px solid var(--gray-300);
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.swms-table th { background: var(--gray-100); font-weight: 600; }
+.swms-table tr:nth-child(even) { background: var(--gray-50); }
+
+/* Equipment Grid */
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-xs);
+    font-size: 8pt;
+    margin-bottom: var(--space-md);
+}
+
+.equipment-item {
+    padding: 4px 8px;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+}
+
+.equipment-item.checked { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+/* Dive Parameters */
+.dive-params {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    background: var(--gray-50);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+}
+
+.dive-param label { font-size: 8pt; color: var(--gray-600); }
+.dive-param .value { font-size: 11pt; font-weight: bold; color: var(--primary-dark); }
+
+/* Documentation Grid */
+.documentation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    font-size: 8pt;
+}
+
+.doc-column { background: var(--gray-50); padding: var(--space-sm); border-radius: var(--radius-sm); }
+.check-item { padding: 2px 0; }
+
+/* Hazard Categories */
+.hazard-category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+    font-size: 8pt;
+}
+
+.hazard-category {
+    background: var(--gray-50);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--warning);
+}
+
+.hazard-category h5 { color: var(--gray-700); margin-bottom: var(--space-xs); }
+
+/* Contacts Grid */
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    font-size: 8pt;
+}
+
+.contact-block {
+    background: var(--gray-50);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+}
+
+.contact-block table { width: 100%; }
+.contact-block td { padding: 3px 0; }
+.contact-block .phone { font-weight: 600; color: var(--primary-dark); }
+
+/* Risk Matrix Section */
+.risk-matrix-section { margin: var(--space-md) 0; }
+
+.risk-matrix-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-md);
+    font-size: 8pt;
+}
+
+.consequence-table, .probability-table, .risk-matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.consequence-table th, .consequence-table td,
+.probability-table th, .probability-table td,
+.risk-matrix-table th, .risk-matrix-table td {
+    border: 1px solid var(--gray-300);
+    padding: 4px 6px;
+    text-align: center;
+    font-size: 8pt;
+}
+
+/* Risk Levels */
+.risk-L { background: #dcfce7 !important; color: #166534; font-weight: bold; }
+.risk-M { background: #fef9c3 !important; color: #854d0e; font-weight: bold; }
+.risk-H { background: #fed7aa !important; color: #c2410c; font-weight: bold; }
+.risk-E { background: #fecaca !important; color: #dc2626; font-weight: bold; }
+
+/* Risk Legend */
+.risk-legend {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    font-size: 8pt;
+}
+
+.legend-item { display: flex; align-items: center; gap: var(--space-sm); }
+.legend-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 10pt;
+}
+
+.legend-badge.E { background: #fecaca; color: #dc2626; }
+.legend-badge.H { background: #fed7aa; color: #c2410c; }
+.legend-badge.M { background: #fef9c3; color: #854d0e; }
+.legend-badge.L { background: #dcfce7; color: #166534; }
+
+/* Part Headers */
+.part-header {
+    background: var(--primary);
+    color: white;
+    padding: var(--space-md);
+    margin: var(--space-lg) 0 var(--space-md);
+}
+
+.part-header h2 { margin: 0; font-size: 12pt; }
+
+/* Hazard Tables */
+.hazard-table-comprehensive {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin: var(--space-sm) 0;
+}
+
+.hazard-table-comprehensive th,
+.hazard-table-comprehensive td {
+    border: 1px solid var(--gray-300);
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.hazard-table-comprehensive th { background: var(--gray-100); font-weight: 600; }
+.hazard-table-comprehensive .col-c, .hazard-table-comprehensive .col-p { width: 3%; text-align: center; }
+.hazard-table-comprehensive .col-risk { width: 4%; text-align: center; }
+.hazard-table-comprehensive .col-controls { width: 25%; }
+
+.hazard-table-comprehensive .section-header td {
+    background: var(--gray-200);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 8pt;
+}
+
+/* Info Box */
+.info-box {
+    background: rgba(14, 165, 233, 0.1);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+/* Check Table */
+.swms-check-table {
+    width: 100%;
+    font-size: 9pt;
+    margin: var(--space-sm) 0;
+}
+
+.swms-check-table td { padding: 4px 8px; }
+.swms-check-table td:first-child { width: 30px; text-align: center; }
+
+/* Emergency Grid */
+.emergency-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.emergency-box {
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    font-size: 8pt;
+}
+
+.emergency-box.primary {
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid var(--danger);
+}
+
+.emergency-box h5 { color: var(--gray-700); margin-bottom: var(--space-sm); }
+.emergency-box table { width: 100%; }
+.emergency-box td { padding: 3px 0; }
+.emergency-box .phone { font-weight: 600; }
+.emergency-box .phone-big { font-size: 14pt; font-weight: bold; color: var(--danger); }
+
+/* Worker Sign-off */
+.worker-signoff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+}
+
+.worker-signoff-table th,
+.worker-signoff-table td {
+    border: 1px solid var(--gray-300);
+    padding: 8px;
+    height: 30px;
+}
+
+.worker-signoff-table th { background: var(--gray-100); }
+
+/* Document Control */
+.document-control { margin-top: var(--space-lg); }
+
+.control-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin-bottom: var(--space-md);
+}
+
+.control-table th, .control-table td {
+    border: 1px solid var(--gray-300);
+    padding: 6px 10px;
+}
+
+.control-table th { background: var(--gray-100); width: 120px; }
+
+.copyright-notice {
+    font-size: 8pt;
+    color: var(--gray-600);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--gray-300);
+}
+
+/* Page Breaks */
+.page-break-before { page-break-before: always; }
+.page-break-after { page-break-after: always; }
+
+/* Print Styles */
+@media print {
+    body { background: white; margin: 0; padding: 0; }
+    .wms-document.swms-document { max-width: none; }
+    .wms-cover { height: 100vh; }
+    .swms-section { page-break-inside: avoid; }
+    .hazard-table-comprehensive { page-break-inside: auto; }
+    .hazard-table-comprehensive tr { page-break-inside: avoid; }
+    .risk-L, .risk-M, .risk-H, .risk-E {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>
+
+<div class="wms-document swms-document">
+    <!-- Cover Page -->
+    <div class="wms-cover page-break-after">
+        {{#if companyLogo}}
+        <div class="cover-logo">
+            <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+        </div>
+        {{/if}}
+        <div class="cover-header">
+            <p class="doc-type">PROJECT MANAGEMENT PLAN</p>
+        </div>
+        <div class="cover-title">
+            <h1>SAFE WORK METHOD STATEMENT</h1>
+            <p style="font-size: 0.9rem; color: #666;">FRANMARINE UNDERWATER SERVICES - ROV HULL CLEANING & COMMERCIAL DIVING OPERATIONS</p>
+            <h3>In Water Hull Clean – '{{vesselName}}'</h3>
+            <h4>{{clientName}}</h4>
+            <p class="location">{{cleaningLocation}}</p>
+            <p class="job-number">{{jobNumber}}</p>
+            <p class="date">{{proposedMonth}} {{proposedYear}}</p>
+        </div>
+        {{#if vesselImage}}
+        <div class="vessel-image-container">
+            <img src="{{vesselImage}}" alt="{{vesselName}}" class="vessel-image">
+        </div>
+        {{/if}}
+        <div class="cover-footer">
+            <p class="confidential">CONFIDENTIAL</p>
+        </div>
+    </div>
+
+    <!-- Header Info Section -->
+    <div class="swms-header">
+        {{#if companyLogo}}
+        <div class="swms-logo">
+            <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+        </div>
+        {{/if}}
+        <div class="swms-title-block">
+            <h1>SAFE WORK METHOD STATEMENT (SWMS)</h1>
+            <h2>FRANMARINE UNDERWATER SERVICES - ROV HULL CLEANING & COMMERCIAL DIVING OPERATIONS</h2>
+        </div>
+    </div>
+
+    <!-- Project Details Grid -->
+    <section class="swms-section">
+        <div class="swms-header-grid">
+            <div class="swms-info-block">
+                <h4>Job Information</h4>
+                <table class="swms-info-table">
+                    <tr><td><strong>Job Number:</strong></td><td>{{jobNumber}}</td></tr>
+                    <tr><td><strong>Date of Job:</strong></td><td>{{revisionDate}}</td></tr>
+                    <tr><td><strong>SWMS Number:</strong></td><td>{{jobNumber}}-SWMS</td></tr>
+                    <tr><td><strong>Created By:</strong></td><td>{{authorName}}</td></tr>
+                </table>
+            </div>
+            <div class="swms-info-block">
+                <h4>Client & Location</h4>
+                <table class="swms-info-table">
+                    <tr><td><strong>Principal Contractor:</strong></td><td>{{clientName}}</td></tr>
+                    <tr><td><strong>Project/Work Activity:</strong></td><td>In Water Hull Clean</td></tr>
+                    <tr><td><strong>Workplace Location:</strong></td><td>{{cleaningLocation}}</td></tr>
+                    <tr><td><strong>Client Reviewed:</strong></td><td>☐ Yes  ☐ No</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Personnel Section -->
+        <div class="swms-info-block">
+            <h4>PERSONNEL: NAME, POSITION & COMPANY</h4>
+            <table class="swms-table">
+                <thead>
+                    <tr><th>Name</th><th>Position</th><th>Company</th><th>ADAS Cert</th></tr>
+                </thead>
+                <tbody>
+                    {{#each personnel}}
+                    <tr>
+                        <td>{{name}}</td>
+                        <td>{{position}}</td>
+                        <td>{{company}}</td>
+                        <td>{{adasCert}}</td>
+                    </tr>
+                    {{/each}}
+                    {{#unless hasPersonnel}}
+                    <tr><td colspan="4" style="text-align: center; color: #666; font-style: italic;">Personnel to be assigned</td></tr>
+                    {{/unless}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Equipment & Dive Parameters -->
+    <section class="swms-section">
+        <h3>EQUIPMENT & DIVE PARAMETERS</h3>
+        <div class="equipment-grid">
+            <div class="equipment-item {{#if equipment.divePanel}}checked{{/if}}">{{#if equipment.divePanel}}☑{{else}}☐{{/if}} Dive Panel</div>
+            <div class="equipment-item checked">☑ Gas Mix ({{gasType}})</div>
+            <div class="equipment-item {{#if equipment.recovery}}checked{{/if}}">{{#if equipment.recovery}}☑{{else}}☐{{/if}} Recovery System</div>
+            <div class="equipment-item {{#if equipment.diveHats}}checked{{/if}}">{{#if equipment.diveHats}}☑{{else}}☐{{/if}} Dive Hats</div>
+            <div class="equipment-item {{#if equipment.comms}}checked{{/if}}">{{#if equipment.comms}}☑{{else}}☐{{/if}} Comms</div>
+            <div class="equipment-item {{#if equipment.firstAid}}checked{{/if}}">{{#if equipment.firstAid}}☑{{else}}☐{{/if}} First Aid Kit</div>
+            <div class="equipment-item {{#if equipment.umbilicals}}checked{{/if}}">{{#if equipment.umbilicals}}☑{{else}}☐{{/if}} Umbilicals</div>
+            <div class="equipment-item {{#if equipment.compressor}}checked{{/if}}">{{#if equipment.compressor}}☑{{else}}☐{{/if}} LP Compressor</div>
+            <div class="equipment-item {{#if equipment.diveFlag}}checked{{/if}}">{{#if equipment.diveFlag}}☑{{else}}☐{{/if}} Dive Flag</div>
+            <div class="equipment-item {{#if equipment.bailout}}checked{{/if}}">{{#if equipment.bailout}}☑{{else}}☐{{/if}} Bailout Cylinders</div>
+            <div class="equipment-item {{#if equipment.stretcher}}checked{{/if}}">{{#if equipment.stretcher}}☑{{else}}☐{{/if}} Stretcher</div>
+            <div class="equipment-item {{#if equipment.oxyviva}}checked{{/if}}">{{#if equipment.oxyviva}}☑{{else}}☐{{/if}} Oxy-Viva</div>
+            <div class="equipment-item {{#if equipment.hpWasher}}checked{{/if}}">{{#if equipment.hpWasher}}☑{{else}}☐{{/if}} HP Washer</div>
+            <div class="equipment-item {{#if equipment.rov}}checked{{/if}}">{{#if equipment.rov}}☑{{else}}☐{{/if}} ROV System</div>
+            <div class="equipment-item {{#if equipment.bigBoy}}checked{{/if}}">{{#if equipment.bigBoy}}☑{{else}}☐{{/if}} Big Boy</div>
+            <div class="equipment-item {{#if equipment.filterUnit}}checked{{/if}}">{{#if equipment.filterUnit}}☑{{else}}☐{{/if}} Filter Unit</div>
+        </div>
+        <div class="dive-params">
+            <div class="dive-param">
+                <label>Expected Max Depth (m)</label>
+                <div class="value">{{maxDepth}}m</div>
+            </div>
+            <div class="dive-param">
+                <label>Expected Bottom Time (min)</label>
+                <div class="value">{{bottomTime}}</div>
+            </div>
+            <div class="dive-param">
+                <label>Decompression Profile</label>
+                <div class="value">{{decoProfile}}</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Risk Assessment Matrix -->
+    <section class="swms-section page-break-before">
+        <h3>RISK ASSESSMENT MATRIX - AS/NZS ISO 31000:2018</h3>
+        <div class="risk-matrix-section">
+            <div class="risk-matrix-grid">
+                <div>
+                    <h4>CONSEQUENCE RATING</h4>
+                    <table class="consequence-table">
+                        <thead>
+                            <tr><th>Rating</th><th>Description</th><th>People</th><th>Environment</th><th>Assets</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Insignificant</td><td>No injury</td><td>No impact</td><td>&lt;$1K</td></tr>
+                            <tr><td>2</td><td>Minor</td><td>First aid</td><td>Minor impact</td><td>$1K-$10K</td></tr>
+                            <tr><td>3</td><td>Moderate</td><td>Medical treatment</td><td>Moderate impact</td><td>$10K-$100K</td></tr>
+                            <tr><td>4</td><td>Major</td><td>Serious injury</td><td>Major impact</td><td>$100K-$1M</td></tr>
+                            <tr><td>5</td><td>Catastrophic</td><td>Fatality</td><td>Severe damage</td><td>&gt;$1M</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h4>PROBABILITY</h4>
+                    <table class="probability-table">
+                        <thead><tr><th>Rating</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td>A</td><td>Almost Certain</td></tr>
+                            <tr><td>B</td><td>Likely</td></tr>
+                            <tr><td>C</td><td>Possible</td></tr>
+                            <tr><td>D</td><td>Unlikely</td></tr>
+                            <tr><td>E</td><td>Rare</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h4>RISK MATRIX</h4>
+                    <table class="risk-matrix-table">
+                        <thead><tr><th>P</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+                        <tbody>
+                            <tr><td>A</td><td class="risk-H">H</td><td class="risk-H">H</td><td class="risk-E">E</td><td class="risk-E">E</td><td class="risk-E">E</td></tr>
+                            <tr><td>B</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-H">H</td><td class="risk-E">E</td><td class="risk-E">E</td></tr>
+                            <tr><td>C</td><td class="risk-L">L</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-E">E</td><td class="risk-E">E</td></tr>
+                            <tr><td>D</td><td class="risk-L">L</td><td class="risk-L">L</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-E">E</td></tr>
+                            <tr><td>E</td><td class="risk-L">L</td><td class="risk-L">L</td><td class="risk-M">M</td><td class="risk-H">H</td><td class="risk-H">H</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="risk-legend">
+                <div class="legend-item"><span class="legend-badge E">E</span><div><strong>Extreme</strong> - STOP WORK</div></div>
+                <div class="legend-item"><span class="legend-badge H">H</span><div><strong>High</strong> - Additional controls required</div></div>
+                <div class="legend-item"><span class="legend-badge M">M</span><div><strong>Medium</strong> - Supervisor attention</div></div>
+                <div class="legend-item"><span class="legend-badge L">L</span><div><strong>Low</strong> - Routine procedures</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PART A: DIVE OPERATIONS HAZARDS -->
+    <div class="part-header">
+        <h2>PART A: DIVE OPERATIONS HAZARDS</h2>
+    </div>
+
+    <!-- Core Diving Hazards -->
+    <section class="swms-section">
+        <h3>CORE DIVE OPERATIONS RISKS</h3>
+        <table class="hazard-table-comprehensive">
+            <thead>
+                <tr>
+                    <th>#</th><th>Activity</th><th>Hazard/Risk</th><th>Potential Effect</th>
+                    <th>C</th><th>P</th><th>Risk</th><th class="col-controls">Control Measures</th>
+                    <th>C</th><th>P</th><th>Res</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="section-header"><td colspan="11">BREATHING GAS & AIR SUPPLY</td></tr>
+                <tr>
+                    <td>1</td><td>Breathing gas quality</td><td>Contaminated air/gas</td><td>CO/CO2 poisoning, fatality</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>Check engine position. Intake upwind. Gas tested. Compressor filters maintained.</td>
+                    <td>3</td><td>D</td><td class="risk-M">M</td>
+                </tr>
+                <tr>
+                    <td>2</td><td>Air supply management</td><td>Loss of diver's air</td><td>Diver drowning, fatality</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>Pre-dive checks. Bailout cylinders checked. Monitor pressure. Loss of air drills.</td>
+                    <td>3</td><td>D</td><td class="risk-M">M</td>
+                </tr>
+                <tr class="section-header"><td colspan="11">ISOLATIONS & RECOVERY</td></tr>
+                <tr>
+                    <td>3</td><td>Vessel isolations</td><td>Systems not isolated</td><td>Diver injury/fatality</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>Supervisor conduct LOTO. Physically verify. Keys held by Supervisor.</td>
+                    <td>3</td><td>D</td><td class="risk-M">M</td>
+                </tr>
+                <tr>
+                    <td>4</td><td>Diver recovery</td><td>Inadequate recovery</td><td>Delayed recovery, fatality</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>Recovery system ready. Recovery drills conducted. Stand-by diver ready.</td>
+                    <td>3</td><td>D</td><td class="risk-M">M</td>
+                </tr>
+                <tr>
+                    <td>5</td><td>Standby diver readiness</td><td>Standby not ready</td><td>Delayed emergency response</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>Standby dressed and ready. Equipment pre-checked. Umbilical longer than working diver.</td>
+                    <td>3</td><td>D</td><td class="risk-M">M</td>
+                </tr>
+                <tr class="section-header"><td colspan="11">DIFFERENTIAL PRESSURE (DELTA-P)</td></tr>
+                <tr>
+                    <td>6</td><td>Sea chests/intakes</td><td>Delta-P suction</td><td>Diver trapped, FATAL</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>MANDATORY isolation of all sea chests. Physical verification. Keys held by Supervisor.</td>
+                    <td>4</td><td>E</td><td class="risk-H">H</td>
+                </tr>
+                <tr>
+                    <td>7</td><td>Thrusters</td><td>Thruster flow/rotation</td><td>Diver sucked in, FATAL</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>MANDATORY thruster isolation and LOTO. Breakers locked out. Bridge notification.</td>
+                    <td>4</td><td>E</td><td class="risk-H">H</td>
+                </tr>
+                <tr>
+                    <td>8</td><td>Propellers</td><td>Propeller rotation</td><td>Amputation, FATAL</td>
+                    <td>5</td><td>C</td><td class="risk-E">E</td>
+                    <td>Engine room LOTO. Shaft brake engaged. Shaft physically locked.</td>
+                    <td>4</td><td>E</td><td class="risk-H">H</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- IWHC Specific Hazards -->
+    <section class="swms-section">
+        <h3>IN-WATER HULL CLEANING (IWHC) RISKS</h3>
+        <table class="hazard-table-comprehensive">
+            <thead>
+                <tr>
+                    <th>#</th><th>Activity</th><th>Hazard/Risk</th><th>Potential Effect</th>
+                    <th>C</th><th>P</th><th>Risk</th><th class="col-controls">Control Measures</th>
+                    <th>C</th><th>P</th><th>Res</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td><td>IWHC approval</td><td>Cleaning without approvals</td><td>Regulatory penalty, biosecurity breach</td>
+                    <td>4</td><td>C</td><td class="risk-E">E</td>
+                    <td>Complete Port Services application. Receive approval prior to work.</td>
+                    <td>2</td><td>D</td><td class="risk-L">L</td>
+                </tr>
+                <tr>
+                    <td>2</td><td>Filtration operation</td><td>System failure</td><td>Environmental release</td>
+                    <td>3</td><td>C</td><td class="risk-H">H</td>
+                    <td>Shut down if failure. Pre-start checks. Filter screens inspected.</td>
+                    <td>2</td><td>D</td><td class="risk-L">L</td>
+                </tr>
+                <tr>
+                    <td>3</td><td>Effluent discharge</td><td>Unfiltered discharge</td><td>Environmental pollution, IMS release</td>
+                    <td>4</td><td>C</td><td class="risk-E">E</td>
+                    <td>Follow operating procedures. Effluent log maintained. EMP compliance.</td>
+                    <td>2</td><td>D</td><td class="risk-L">L</td>
+                </tr>
+                <tr>
+                    <td>4</td><td>IMS identification</td><td>IMS missed</td><td>IMS establishment, biosecurity breach</td>
+                    <td>4</td><td>C</td><td class="risk-E">E</td>
+                    <td>Divers briefed on IMS ID. Samples taken. Report suspect organisms immediately.</td>
+                    <td>2</td><td>D</td><td class="risk-L">L</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Emergency Contacts -->
+    <section class="swms-section page-break-before">
+        <h3>EMERGENCY CONTACTS</h3>
+        <div class="emergency-grid">
+            <div class="emergency-box primary">
+                <h5>CRITICAL EMERGENCY</h5>
+                <table>
+                    <tr><td>Emergency Services</td><td class="phone-big">000</td></tr>
+                    <tr><td>Water Police</td><td class="phone">13 14 44</td></tr>
+                    <tr><td>DAN Emergency Hotline</td><td class="phone">1800 088 200</td></tr>
+                    <tr><td>Poisons Information</td><td class="phone">13 11 26</td></tr>
+                </table>
+            </div>
+            <div class="emergency-box">
+                <h5>HOSPITALS & HYPERBARIC</h5>
+                <table>
+                    <tr><td>Fiona Stanley Hospital</td><td class="phone">(08) 6152 2222</td></tr>
+                    <tr><td>Fremantle Hospital</td><td class="phone">(08) 9431 3333</td></tr>
+                </table>
+            </div>
+            <div class="emergency-box">
+                <h5>FRANMARINE CONTACTS</h5>
+                <table>
+                    <tr><td>Franmarine Perth</td><td class="phone">08 9437 3900</td></tr>
+                    <tr><td>Franmarine NSW</td><td class="phone">02 7228 9691</td></tr>
+                    <tr><td>WorkSafe WA</td><td class="phone">1300 307 877</td></tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Worker Acknowledgement -->
+    <section class="swms-section">
+        <h3>WORKER ACKNOWLEDGEMENT & SIGN-OFF</h3>
+        <p style="font-size: 8pt; margin-bottom: var(--space-md);">I have been consulted in the development of this SWMS, I understand the identified hazards and risk controls, and I agree to work in accordance with the SWMS.</p>
+        <table class="worker-signoff-table">
+            <thead>
+                <tr><th>#</th><th>Name (Print)</th><th>Company</th><th>Signature</th><th>Date</th><th>Inducted By</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Document Control -->
+    <section class="swms-section document-control">
+        <table class="control-table">
+            <tr><th>Document</th><th>Revision</th><th>Date</th><th>Notes</th><th>Approved by</th></tr>
+            <tr>
+                <td>{{jobNumber}}-SWMS</td>
+                <td>01</td>
+                <td>{{revisionDate}}</td>
+                <td>Document Created</td>
+                <td>{{authorName}}</td>
+            </tr>
+        </table>
+        <div class="copyright-notice">
+            <p>©{{currentYear}} Franmarine. All Rights Reserved.</p>
+        </div>
+    </section>
+</div>
+

@@ -1,0 +1,150 @@
+{{!-- 
+  Email Notification Template
+  Standalone template with embedded styles
+  
+  Required data:
+  - vesselName, jobNumber, cleaningLocation
+  - imoNumber, mmsiNumber, vesselType, vesselLOA, vesselBeam
+  - afcProductName, afcApplicationDate, afcServiceLife, afcTypeText
+  - noProhibitedBiocides, recentPortCalls, operatingProfile
+  - scopeAreasText, proposedStartDate, estimatedDuration
+  - foulingRating, foulingCover, cleaningScenario
+  - captureRequired, sapRequired, highRisk
+  - authorName
+--}}
+
+<style>
+/* Email Template Styles */
+.email-content {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    color: #333;
+}
+
+.email-content h3 {
+    color: #0ea5e9;
+    margin: 20px 0 10px;
+    font-size: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 5px;
+}
+
+.email-content p {
+    margin: 12px 0;
+}
+
+.email-content hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 15px 0;
+}
+
+.email-content ol {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.email-content li {
+    margin: 5px 0;
+}
+
+.email-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.email-table th,
+.email-table td {
+    border: 1px solid #cbd5e1;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.email-table th {
+    background: #f1f5f9;
+    font-weight: 600;
+    width: 180px;
+}
+
+.email-table tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.email-content strong {
+    color: #1e293b;
+}
+
+/* Print Styles */
+@media print {
+    .email-content {
+        max-width: none;
+        padding: 0;
+    }
+}
+</style>
+
+<div class="email-content">
+    <p><strong>Subject:</strong> IWC Notification - {{vesselName}} - {{jobNumber}} - {{cleaningLocation}}</p>
+    <hr>
+    <p>Hi Bec, Sam,</p>
+
+    <p>Please find below our notification for the proposed in-water clean of '{{vesselName}}'.</p>
+
+    <h3>NOTIFICATION PACKAGE</h3>
+    <table class="email-table">
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Vessel Name</td><td>{{vesselName}}</td></tr>
+        <tr><td>IMO Number</td><td>{{imoNumber}}</td></tr>
+        {{#if mmsiNumber}}<tr><td>MMSI</td><td>{{mmsiNumber}}</td></tr>{{/if}}
+        <tr><td>Vessel Type</td><td>{{vesselType}}</td></tr>
+        <tr><td>LOA</td><td>{{vesselLOA}} m{{#if vesselBeam}} × {{vesselBeam}} m beam{{/if}}</td></tr>
+        <tr><td>AFC Type</td><td>{{afcProductName}} ({{afcTypeText}})</td></tr>
+        <tr><td>AFC Applied</td><td>{{afcApplicationDate}}</td></tr>
+        <tr><td>AFC Service Life</td><td>{{afcServiceLife}} months</td></tr>
+        <tr><td>Prohibited Biocides</td><td>{{#if noProhibitedBiocides}}Confirmed none present{{else}}Not confirmed{{/if}}</td></tr>
+        <tr><td>Recent Port Calls</td><td>{{recentPortCalls}}</td></tr>
+        <tr><td>Operating Profile</td><td>{{operatingProfile}}</td></tr>
+        <tr><td>Proposed Scope</td><td>{{scopeAreasText}}</td></tr>
+        <tr><td>Proposed Location</td><td>{{cleaningLocation}}</td></tr>
+        <tr><td>Proposed Date</td><td>{{proposedStartDate}} ({{estimatedDuration}} days)</td></tr>
+        <tr><td>Preliminary Biofouling</td><td>FR {{foulingRating}}, {{foulingCover}} cover</td></tr>
+    </table>
+
+    <h3>DETERMINED REQUIREMENTS</h3>
+    <table class="email-table">
+        <tr><th>Operation</th><th>Capture</th><th>SAP</th></tr>
+        <tr>
+            <td>{{cleaningScenario}}</td>
+            <td>{{#if captureRequired}}Yes{{else}}No{{/if}}</td>
+            <td>{{#if sapRequired}}Yes{{else}}No{{/if}}</td>
+        </tr>
+    </table>
+
+    {{#if highRisk}}
+    <p><strong>⚠️ Note:</strong> This vessel has been flagged as high risk and requires case-by-case assessment under DPIRD direction (OEMP 6.1.2).</p>
+    {{/if}}
+
+    <p>The full Work Method Statement is attached.</p>
+
+    <p>Please confirm:</p>
+    <ol>
+        <li>Acceptable biosecurity risk based on vessel history</li>
+        <li>Lead time required for clearance beyond the 48hr inspection report submission</li>
+    </ol>
+
+    <p>Happy to call if easier to discuss.</p>
+
+    <p>Kind regards,</p>
+    <p>
+        <strong>{{authorName}}</strong><br>
+        Franmarine Underwater Services<br>
+        13 Possner Way, Henderson WA 6166
+    </p>
+</div>
+

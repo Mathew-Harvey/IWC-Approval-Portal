@@ -1552,7 +1552,7 @@ const App = {
     /**
      * Generate WMS document
      */
-    generateWMS() {
+    async generateWMS() {
         const formData = this.getFormData();
         
         // Validate required fields
@@ -1568,7 +1568,7 @@ const App = {
         }
 
         const templateData = this.prepareTemplateData(formData);
-        const html = Templates.render('wms', templateData);
+        const html = await Templates.render('wms', templateData);
 
         const outputContent = document.getElementById('outputContent');
         outputContent.innerHTML = html;
@@ -1580,7 +1580,7 @@ const App = {
     /**
      * Generate notification email
      */
-    generateEmail() {
+    async generateEmail() {
         const formData = this.getFormData();
         
         // Validate required fields
@@ -1590,7 +1590,7 @@ const App = {
         }
 
         const templateData = this.prepareTemplateData(formData);
-        const html = Templates.render('email', templateData);
+        const html = await Templates.render('email', templateData);
 
         const emailContent = document.getElementById('emailContent');
         emailContent.innerHTML = html;
@@ -1602,13 +1602,13 @@ const App = {
     /**
      * Generate Emergency Response Plan
      */
-    generateERP() {
+    async generateERP() {
         const formData = this.getFormData();
         
         if (!this.validateBasicFields(formData)) return;
 
         const templateData = this.prepareTemplateData(formData);
-        const html = Templates.render('erp', templateData);
+        const html = await Templates.render('erp', templateData);
 
         document.getElementById('outputContent').innerHTML = html;
         this.switchTab('erp');
@@ -1617,13 +1617,13 @@ const App = {
     /**
      * Generate Work Health and Safety Management Plan
      */
-    generateWHSMP() {
+    async generateWHSMP() {
         const formData = this.getFormData();
         
         if (!this.validateBasicFields(formData)) return;
 
         const templateData = this.prepareTemplateData(formData);
-        const html = Templates.render('whsmp', templateData);
+        const html = await Templates.render('whsmp', templateData);
 
         document.getElementById('outputContent').innerHTML = html;
         this.switchTab('whsmp');
@@ -1632,13 +1632,13 @@ const App = {
     /**
      * Generate Safe Work Method Statement
      */
-    generateSWMS() {
+    async generateSWMS() {
         const formData = this.getFormData();
         
         if (!this.validateBasicFields(formData)) return;
 
         const templateData = this.prepareTemplateData(formData);
-        const html = Templates.render('swms', templateData);
+        const html = await Templates.render('swms', templateData);
 
         document.getElementById('outputContent').innerHTML = html;
         this.switchTab('swms');
@@ -1647,25 +1647,33 @@ const App = {
     /**
      * Generate all documents
      */
-    generateAllDocuments() {
+    async generateAllDocuments() {
         const formData = this.getFormData();
         
         if (!this.validateBasicFields(formData)) return;
 
         const templateData = this.prepareTemplateData(formData);
         
-        // Generate WMS first (shown by default)
-        const wmsHtml = Templates.render('wms', templateData);
+        // Generate all documents in parallel
+        const [wmsHtml, erpHtml, whsmpHtml, swmsHtml, emailHtml] = await Promise.all([
+            Templates.render('wms', templateData),
+            Templates.render('erp', templateData),
+            Templates.render('whsmp', templateData),
+            Templates.render('swms', templateData),
+            Templates.render('email', templateData)
+        ]);
+        
+        // Show WMS first
         document.getElementById('outputContent').innerHTML = wmsHtml;
         this.switchTab('wms');
         
         // Store all generated documents
         this.generatedDocs = {
             wms: wmsHtml,
-            erp: Templates.render('erp', templateData),
-            whsmp: Templates.render('whsmp', templateData),
-            swms: Templates.render('swms', templateData),
-            email: Templates.render('email', templateData)
+            erp: erpHtml,
+            whsmp: whsmpHtml,
+            swms: swmsHtml,
+            email: emailHtml
         };
         
         alert('All documents generated! Use the tabs to switch between them.');
@@ -1715,7 +1723,7 @@ const App = {
     /**
      * Switch output tab
      */
-    switchTab(tab) {
+    async switchTab(tab) {
         this.activeTab = tab;
         
         // Update tab buttons
@@ -1736,25 +1744,7 @@ const App = {
         const formData = this.getFormData();
         if (formData.vesselName && formData.clientName) {
             const templateData = this.prepareTemplateData(formData);
-            let html = '';
-            
-            switch(tab) {
-                case 'wms':
-                    html = Templates.render('wms', templateData);
-                    break;
-                case 'erp':
-                    html = Templates.render('erp', templateData);
-                    break;
-                case 'whsmp':
-                    html = Templates.render('whsmp', templateData);
-                    break;
-                case 'swms':
-                    html = Templates.render('swms', templateData);
-                    break;
-                case 'email':
-                    html = Templates.render('email', templateData);
-                    break;
-            }
+            const html = await Templates.render(tab, templateData);
             
             if (html) {
                 document.getElementById('outputContent').innerHTML = html;

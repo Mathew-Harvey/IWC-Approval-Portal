@@ -1,0 +1,320 @@
+/**
+ * Base Document Styles
+ * Shared CSS variables and common styles for all document templates
+ * This file is imported by each standalone template
+ */
+
+/* CSS Variables */
+:root {
+    --primary: #0ea5e9;
+    --primary-dark: #0284c7;
+    --primary-light: #7dd3fc;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --white: #ffffff;
+    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* Base Document Styles */
+.wms-document {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+}
+
+/* Cover Page */
+.wms-cover {
+    text-align: center;
+    padding: 60px 40px;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cover-logo {
+    margin-bottom: 30px;
+}
+
+.cover-logo img,
+.company-logo {
+    max-width: 200px;
+    max-height: 100px;
+}
+
+.cover-header {
+    text-align: right;
+}
+
+.doc-number,
+.doc-type,
+.revision-date {
+    font-size: 10pt;
+    color: #666;
+}
+
+.cover-title h1 {
+    font-size: 24pt;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.cover-title h2 {
+    font-size: 18pt;
+    color: var(--primary);
+    margin-bottom: 30px;
+}
+
+.cover-title h3 {
+    font-size: 16pt;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.cover-title h4 {
+    font-size: 14pt;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.job-number {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.location,
+.date {
+    font-size: 12pt;
+    color: #555;
+    margin-top: 10px;
+}
+
+.vessel-image-container {
+    margin: 30px 0;
+}
+
+.vessel-image {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: var(--radius-md);
+}
+
+.cover-footer {
+    margin-top: auto;
+}
+
+.confidential {
+    font-size: 12pt;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.website {
+    font-size: 10pt;
+    color: #666;
+}
+
+/* Table of Contents */
+.wms-toc {
+    padding: 40px;
+}
+
+.wms-toc h2 {
+    font-size: 14pt;
+    color: var(--primary);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+}
+
+.toc-list li {
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--gray-300);
+}
+
+.toc-list a {
+    color: #333;
+    text-decoration: none;
+}
+
+/* Sections */
+.wms-section {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.wms-section h2 {
+    font-size: 14pt;
+    color: var(--primary);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 8px;
+}
+
+.wms-section h3 {
+    font-size: 12pt;
+    color: var(--primary-dark);
+    margin: 20px 0 10px;
+    text-transform: uppercase;
+}
+
+.wms-section h4 {
+    font-size: 11pt;
+    color: var(--gray-700);
+    margin: 15px 0 8px;
+}
+
+.wms-section p {
+    margin-bottom: 12px;
+}
+
+.wms-section ul,
+.wms-section ol {
+    margin: 10px 0 15px 25px;
+}
+
+.wms-section li {
+    margin-bottom: 6px;
+}
+
+/* Tables */
+.wms-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 10pt;
+}
+
+.wms-table caption {
+    text-align: left;
+    font-weight: bold;
+    padding: 8px 0;
+    color: var(--gray-700);
+}
+
+.wms-table th,
+.wms-table td {
+    border: 1px solid var(--gray-300);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.wms-table th {
+    background: var(--gray-100);
+    font-weight: 600;
+}
+
+.wms-table tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+/* Control Table */
+.control-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 10pt;
+}
+
+.control-table th,
+.control-table td {
+    border: 1px solid var(--gray-300);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.control-table th {
+    background: var(--gray-100);
+    width: 150px;
+}
+
+/* Copyright Notice */
+.copyright-notice {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-300);
+    font-size: 9pt;
+    color: var(--gray-600);
+}
+
+.copyright-notice h4 {
+    color: var(--gray-700);
+    margin-bottom: 10px;
+}
+
+.copyright-notice p {
+    margin-bottom: 8px;
+}
+
+.copyright-year {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Document Control Section */
+.document-control {
+    margin-top: 40px;
+}
+
+/* Page Break Helpers */
+.page-break-before {
+    page-break-before: always;
+}
+
+.page-break-after {
+    page-break-after: always;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .wms-document {
+        max-width: none;
+        width: 100%;
+    }
+    
+    .wms-cover {
+        height: 100vh;
+    }
+    
+    .wms-section {
+        page-break-inside: avoid;
+    }
+    
+    .cover-logo img,
+    .vessel-image {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+

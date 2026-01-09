@@ -1,0 +1,867 @@
+{{!-- 
+  Work Method Statement (WMS) Template
+  Standalone template with embedded styles
+  
+  Required data:
+  - companyLogo, vesselImage, generalArrangement (optional images)
+  - vesselName, jobNumber, clientName, revisionDate
+  - cleaningLocation, proposedStartDate, estimatedDuration
+  - cleaningTypeText, scopeAreasText, hasCustomScope
+  - afcProductName, afcApplicationDate, afcServiceLife, afcTypeText
+  - foulingRating, foulingTypeText, foulingCover, biofoulingOrigin
+  - operatingProfile, operatingProfileCompliance, recentPortCalls
+  - cleaningPathway, cleaningScenario, checklistItems
+  - captureRequired, sapRequired, sapDocument, highRisk
+  - afsCertValid, noProhibitedBiocides, afcWithinServiceLife
+  - hasAdditionalActivities, additionalActivities
+  - imsTrackingDoc, authorName, currentYear
+--}}
+
+<style>
+/* CSS Variables */
+:root {
+    --primary: #0ea5e9;
+    --primary-dark: #0284c7;
+    --primary-light: #7dd3fc;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --white: #ffffff;
+    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* Base Document Styles */
+.wms-document {
+    font-family: var(--font-sans);
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+}
+
+/* Cover Page */
+.wms-cover {
+    text-align: center;
+    padding: 60px 40px;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cover-logo {
+    margin-bottom: 30px;
+}
+
+.cover-logo img,
+.company-logo {
+    max-width: 200px;
+    max-height: 100px;
+}
+
+.cover-header {
+    text-align: right;
+}
+
+.doc-number,
+.revision-date {
+    font-size: 10pt;
+    color: #666;
+}
+
+.cover-title h1 {
+    font-size: 24pt;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.cover-title h2 {
+    font-size: 18pt;
+    color: var(--primary);
+    margin-bottom: 30px;
+}
+
+.cover-title h3 {
+    font-size: 16pt;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.job-number {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.vessel-image-container {
+    margin: 30px 0;
+}
+
+.vessel-image {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: var(--radius-md);
+}
+
+.cover-footer {
+    margin-top: auto;
+}
+
+.confidential {
+    font-size: 12pt;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.website {
+    font-size: 10pt;
+    color: #666;
+}
+
+/* Table of Contents */
+.wms-toc {
+    padding: 40px;
+}
+
+.wms-toc h2 {
+    font-size: 14pt;
+    color: var(--primary);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+}
+
+.toc-list li {
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--gray-300);
+}
+
+.toc-list a {
+    color: #333;
+    text-decoration: none;
+}
+
+/* Sections */
+.wms-section {
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.wms-section h2 {
+    font-size: 14pt;
+    color: var(--primary);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 8px;
+}
+
+.wms-section h3 {
+    font-size: 12pt;
+    color: var(--primary-dark);
+    margin: 20px 0 10px;
+    text-transform: uppercase;
+}
+
+.wms-section p {
+    margin-bottom: 12px;
+}
+
+.wms-section ul,
+.wms-section ol {
+    margin: 10px 0 15px 25px;
+}
+
+.wms-section li {
+    margin-bottom: 6px;
+}
+
+/* Tables */
+.wms-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 10pt;
+}
+
+.wms-table caption {
+    text-align: left;
+    font-weight: bold;
+    padding: 8px 0;
+    color: var(--gray-700);
+}
+
+.wms-table th,
+.wms-table td {
+    border: 1px solid var(--gray-300);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.wms-table th {
+    background: var(--gray-100);
+    font-weight: 600;
+}
+
+.wms-table tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+/* Checklist Table */
+.checklist-table .status-confirmed {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.checklist-table .status-pending {
+    color: var(--warning);
+    font-weight: 600;
+}
+
+.checklist-table .status-incomplete {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+/* General Arrangement Image */
+.ga-image-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.ga-image {
+    max-width: 100%;
+    max-height: 500px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+}
+
+/* Decision Framework */
+.decision-framework {
+    margin: 20px 0;
+}
+
+.framework-box {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    padding: 15px 20px;
+    margin-bottom: 10px;
+}
+
+.framework-box h4 {
+    color: var(--primary);
+    margin-bottom: 10px;
+    font-size: 11pt;
+}
+
+.framework-arrow {
+    text-align: center;
+    font-size: 20pt;
+    color: var(--primary);
+    margin: 5px 0;
+}
+
+.check-list {
+    list-style: none;
+    padding: 0;
+}
+
+.check-list li {
+    padding: 4px 0 4px 25px;
+    position: relative;
+}
+
+.check-list li::before {
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.check-list li.check-pass::before {
+    content: "✓";
+    color: var(--success);
+}
+
+.check-list li.check-fail::before {
+    content: "✗";
+    color: var(--danger);
+}
+
+.check-list li.check-pending::before {
+    content: "○";
+    color: var(--warning);
+}
+
+.requirements-table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.requirements-table td {
+    padding: 6px 10px;
+    border: 1px solid var(--gray-300);
+}
+
+.requirements-table td.required {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+    font-weight: 600;
+}
+
+.requirements-table td.not-required {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    font-weight: 600;
+}
+
+/* Warning Box */
+.warning-box {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-md);
+    padding: 15px 20px;
+    margin: 20px 0;
+}
+
+.warning-box h4 {
+    color: var(--danger);
+    margin-bottom: 10px;
+}
+
+/* Document Control */
+.document-control {
+    margin-top: 40px;
+}
+
+.control-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 10pt;
+}
+
+.control-table th,
+.control-table td {
+    border: 1px solid var(--gray-300);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.control-table th {
+    background: var(--gray-100);
+    width: 150px;
+}
+
+/* Copyright Notice */
+.copyright-notice {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-300);
+    font-size: 9pt;
+    color: var(--gray-600);
+}
+
+.copyright-notice h4 {
+    color: var(--gray-700);
+    margin-bottom: 10px;
+}
+
+.copyright-notice p {
+    margin-bottom: 8px;
+}
+
+.copyright-year {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Appendix List */
+.appendix-list {
+    list-style: none;
+    padding: 0;
+}
+
+.appendix-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+/* Page Break Helpers */
+.page-break-before {
+    page-break-before: always;
+}
+
+.page-break-after {
+    page-break-after: always;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .wms-document {
+        max-width: none;
+        width: 100%;
+    }
+    
+    .wms-cover {
+        height: 100vh;
+    }
+    
+    .wms-section {
+        page-break-inside: avoid;
+    }
+    
+    .cover-logo img,
+    .vessel-image,
+    .ga-image {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>
+
+<div class="wms-document">
+    <!-- Cover Page -->
+    <div class="wms-cover page-break-after">
+        {{#if companyLogo}}
+        <div class="cover-logo">
+            <img src="{{companyLogo}}" alt="Company Logo" class="company-logo">
+        </div>
+        {{/if}}
+        <div class="cover-header">
+            <p class="doc-number">OPS-DOC-001</p>
+            <p class="revision-date">Revision Date: {{revisionDate}}</p>
+        </div>
+        <div class="cover-title">
+            <h1>In Water Hull Cleaning</h1>
+            <h2>WORK METHOD STATEMENT</h2>
+            <h3>IN WATER HULL CLEAN</h3>
+            <h3>'{{vesselName}}'</h3>
+            <p class="job-number">{{jobNumber}}</p>
+        </div>
+        {{#if vesselImage}}
+        <div class="vessel-image-container">
+            <img src="{{vesselImage}}" alt="{{vesselName}}" class="vessel-image">
+        </div>
+        {{/if}}
+        <div class="cover-footer">
+            <p class="confidential">CONFIDENTIAL</p>
+            <p class="website">www.franmarine.com.au</p>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="wms-toc page-break-after">
+        <h2>TABLE OF CONTENTS</h2>
+        <ol class="toc-list">
+            <li><a href="#purpose">PURPOSE OF DOCUMENT</a></li>
+            <li><a href="#acronyms">ACRONYMS</a></li>
+            <li><a href="#definitions">STATUTORY DEFINITIONS</a></li>
+            <li><a href="#legislation">LEGISLATION AND STANDARDS</a></li>
+            <li><a href="#scope">SCOPE OF WORK</a></li>
+            <li><a href="#activity">ACTIVITY PLAN</a></li>
+            <li><a href="#methodology">TASK SPECIFIC METHODOLOGY</a></li>
+            <li><a href="#framework">AUSTRALIAN IN-WATER CLEANING DECISION FRAMEWORK</a></li>
+            <li><a href="#roles">ROLES AND RESPONSIBILITIES</a></li>
+            <li><a href="#appendices">APPENDICES</a></li>
+        </ol>
+    </div>
+
+    <!-- 1. Purpose -->
+    <section id="purpose" class="wms-section">
+        <h2>1 PURPOSE OF DOCUMENT</h2>
+        <p>This Work Method Statement (WMS) outlines the scope, methodology, safety controls, and compliance procedures associated with the deployment and operation of In-Water Hull Cleaning (IWHC) systems. It incorporates regulatory compliance frameworks, environmental protection protocols, hardware integration, and operational workflows applicable to a wide range of IWHC scenarios.</p>
+        <p>This WMS serves as the cover document for the In Water Hull Cleaning (IWHC) operations, defined as the entire package of documents that control all aspects of the operation, listed below.</p>
+        <ol>
+            <li>The Work Method Statement (WMS),</li>
+            <li>Safe Work Method Statement (SWMS) or Job Hazard and Environmental Analysis (JHEA),</li>
+            <li>Work Health and Safety Management Plan (WHSMP),</li>
+            <li>Emergency Response Plan (ERP).</li>
+        </ol>
+    </section>
+
+    <!-- 2. Acronyms -->
+    <section id="acronyms" class="wms-section">
+        <h2>2 ACRONYMS</h2>
+        <p>Table 1, below defines the acronyms that may be used in the WMS.</p>
+        <table class="wms-table">
+            <caption>Table 1: Table of Acronyms</caption>
+            <tbody>
+                <tr><td>ADAS</td><td>Australian Diver Accreditation Scheme</td></tr>
+                <tr><td>AFC</td><td>Anti-Fouling Coating</td></tr>
+                <tr><td>ALARP</td><td>As Low As Reasonably Possible</td></tr>
+                <tr><td>DAFF</td><td>Department of Agriculture, Forestry and Fisheries</td></tr>
+                <tr><td>DPIRD</td><td>Department of Primary Industries and Regional Development</td></tr>
+                <tr><td>ERP</td><td>Emergency Response Plan</td></tr>
+                <tr><td>FPA</td><td>Fremantle Port Authority</td></tr>
+                <tr><td>FR</td><td>Fouling Rating</td></tr>
+                <tr><td>FUS</td><td>Franmarine Underwater Services</td></tr>
+                <tr><td>IMS</td><td>Invasive Marine Species</td></tr>
+                <tr><td>IWHC</td><td>In Water Hull Cleaning</td></tr>
+                <tr><td>JHEA</td><td>Job Hazard and Environmental Analysis</td></tr>
+                <tr><td>LOA</td><td>Length Overall</td></tr>
+                <tr><td>OEMP</td><td>Operations Environmental Management Plan</td></tr>
+                <tr><td>PIC</td><td>Person in Charge</td></tr>
+                <tr><td>PPE</td><td>Personal Protective Equipment</td></tr>
+                <tr><td>SAP</td><td>Sampling and Analysis Plan</td></tr>
+                <tr><td>SWMS</td><td>Safe Work Method Statement</td></tr>
+                <tr><td>WHSMP</td><td>Work Health and Safety Management Plan</td></tr>
+                <tr><td>WMS</td><td>Work Method Statement</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 3. Statutory Definitions -->
+    <section id="definitions" class="wms-section">
+        <h2>3 STATUTORY DEFINITIONS</h2>
+        <p>Table 2, below, contains the statutory definitions used within the WMS.</p>
+        <table class="wms-table">
+            <caption>Table 2: Statutory Definitions</caption>
+            <tbody>
+                <tr><td>CLIENT</td><td>{{clientName}}</td></tr>
+                <tr><td>DESIGNATED AUTHORITY</td><td>WorkSafe (WA)</td></tr>
+                <tr><td>SHALL</td><td>A mandatory instruction</td></tr>
+                <tr><td>SHOULD</td><td>A recommended instruction</td></tr>
+                <tr><td>SIMOPS</td><td>A work process where diving and other work activities are undertaken concurrently at the same location</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 4. Legislation and Standards -->
+    <section id="legislation" class="wms-section">
+        <h2>4 LEGISLATION AND STANDARDS</h2>
+        <p>The Franmarine Health, Safety, Environmental and Quality (HSEQ) manual forms the basis for the WMS. Our HSEQ Management System is certified by DNV to ISO 9001, ISO 14001 and ISO 45001. FUS are certified under the Scope of Management of diving, integrated underwater and general services provided to the defence, infrastructure, shipping and oil and gas industries.</p>
+        <p>All FUS diving operations will conform to all relevant Australian and International Standards and legislation, with Diving Operations specifically controlled by AS/NZS 2299.1:2015.</p>
+        <p>Internal management documents referenced by this WMS are listed in Table 3, below.</p>
+        <table class="wms-table">
+            <caption>Table 3: Franmarine Project Management Procedures</caption>
+            <thead>
+                <tr><th>Document</th><th>Document Number</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Diving Operations Manual</td><td>OPS-PRO-001</td></tr>
+                <tr><td>Hazard Awareness & Risk Management</td><td>HSE-PRO-001</td></tr>
+                <tr><td>Franmarine Vessel Safety Management System</td><td>VSL-SMS-001</td></tr>
+                <tr><td>HSEQ Management Manual</td><td>HSE-MAN-001</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 5. Scope of Work -->
+    <section id="scope" class="wms-section page-break-before">
+        <h2>5 SCOPE OF WORK</h2>
+        <p>As part of the vessels regular biofouling management practices, Franmarine have been engaged by {{clientName}} to make an application to undertake a {{cleaningTypeText}} to remove all biofouling from underwater surfaces on the vessel '{{vesselName}}'. The scope is scheduled to be completed over {{estimatedDuration}} days, commencing {{proposedStartDate}}.</p>
+        {{#if hasCustomScope}}
+        <h3>Custom Scope Description</h3>
+        <p>{{scopeAreasText}}</p>
+        <p>The methodology below outlines the proposed treatment plan.</p>
+        {{else}}
+        <p>The scope of work and methodology below outlines the proposed treatment plan.</p>
+        {{/if}}
+        <ul>
+            {{#unless hasCustomScope}}
+            <li>Remove all macrofouling from {{scopeAreasText}} using MarineStream clean with capture filtration system.</li>
+            {{/unless}}
+            <li>All cleaning activities shall be conducted from the hardstand with '{{vesselName}}' alongside at the {{cleaningLocation}}.</li>
+            <li>All diving equipment shall be in accordance with AS/NZS 2299.1:2015 at a minimum.</li>
+            <li>Risk assessment using the Decision Support Tool for In-Water Cleaning from the Australian anti-fouling and in-water cleaning guidelines - Exposure draft (2025) Department of Agriculture, Fisheries and Forestry, Canberra (hereafter "2025 IWHC draft guidelines") has determined the cleaning method to be used as non-abrasive hand cleaning, in accordance with the updated environmental risk classification framework.</li>
+        </ul>
+        {{#if hasAdditionalActivities}}
+        <h3>Additional Activities</h3>
+        <p>The following additional activities are included in this scope:</p>
+        <ul>
+            {{#each additionalActivities}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+        {{/if}}
+
+        {{#if generalArrangement}}
+        <h3>General Arrangement</h3>
+        <p>The following General Arrangement drawing provides an overview of the vessel layout:</p>
+        <div class="ga-image-container">
+            <img src="{{generalArrangement}}" alt="General Arrangement - {{vesselName}}" class="ga-image">
+        </div>
+        {{/if}}
+
+        <h3>Decision Support Tool Checklist</h3>
+        <p>The following checklist from the Decision Support Tool (refer chapter 8) has been completed to demonstrate compliance with the {{cleaningPathway}} pathway:</p>
+        <table class="wms-table checklist-table">
+            <caption>Table 4: Checklist for {{cleaningPathway}} Cleaning Pathway</caption>
+            <thead>
+                <tr><th>Timing</th><th>Criteria</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {{#each checklistItems}}
+                <tr>
+                    <td>{{timing}}</td>
+                    <td>{{criteria}}</td>
+                    <td class="status-{{statusClass}}">{{status}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <h3>Compliance Basis</h3>
+        <p>This has been met due to the following:</p>
+        <ul>
+            <li>Antifoul coating present and in its planned in-service period.
+                <ul><li>{{afcProductName}} applied {{afcApplicationDate}}.</li></ul>
+            </li>
+            <li>Biofouling type – {{foulingTypeText}} of {{biofoulingOrigin}} origin;
+                <ul><li>{{operatingProfile}}</li></ul>
+                {{#if imsTrackingDoc}}<ul><li>See document {{imsTrackingDoc}} for full operating profile since last dry docking.</li></ul>{{/if}}
+            </li>
+            <li>Cleaning methodology complies with the conditions for removal and/or treatment of biofouling as laid out in the Decision Support Tool for in-water cleaning.
+                <ul>
+                    <li>Diver operated hand tools with non-abrasive cleaning heads to be used in conjunction with high-pressure water.</li>
+                    {{#if sapRequired}}
+                    <li>O2 Marine will be engaged as an independent scientific organization to assess our cleaning methods through implementing the Sampling Analysis Plan (SAP). This assessment will demonstrate that the proposed cleaning method meets the required outcomes for capture, biosecurity, and chemical contamination standards as specified in the 2025 guidelines.</li>
+                    <li>{{sapDocument}} to be used.</li>
+                    {{/if}}
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <!-- 6. Activity Plan -->
+    <section id="activity" class="wms-section">
+        <h2>6 ACTIVITY PLAN</h2>
+        
+        <h3>PREMOBILISATION</h3>
+        <ul>
+            <li>Project kick-off meeting and confirmation of scope and client's expectations.</li>
+            <li>Project documentation reviewed and approved by client.</li>
+            <li>Franmarine will prepare all project plant & equipment and function test systems in house prior to mobilisation.</li>
+            <li>All diving specific equipment to be compliant with AS/NZS 2299.1.2015</li>
+        </ul>
+
+        <h3>MOBILISATION</h3>
+        <ul>
+            <li>Franmarine will mobilise all plant & equipment out of Franmarine base; 13 Possner Way, Henderson WA on the mutually agreed upon start date.</li>
+            <li>Relevant inductions, SWMS review, project familiarisation and daily toolbox meetings will be conducted as and when required.</li>
+        </ul>
+
+        <h3>CLEAN</h3>
+        <ul>
+            <li>Cleaning will be conducted using diver-operated tools suitable for the hull's coating type and fouling condition.</li>
+            <li>Biofouling will be removed systematically from all accessible areas, following a top-to-bottom, bow-to-stern sequence.</li>
+            {{#if captureRequired}}
+            <li>Wastewater and debris will be continuously captured via suction and processed through filtration and UV treatment systems.</li>
+            {{/if}}
+            <li>Cleaning activities will be monitored in real time via surface control, with adjustments made as needed to ensure effective and compliant removal.</li>
+        </ul>
+
+        <h3>POST-CLEAN INSPECTION</h3>
+        <ul>
+            <li>A diver will complete a visual inspection of all cleaned areas to verify cleaning quality and confirm biofouling removal.</li>
+            <li>CCTV footage and photos will be used to document surface condition, waste containment effectiveness, and any residual fouling.</li>
+            <li>Inspection findings will be logged and included in the final job report, with results reviewed alongside the client.</li>
+        </ul>
+
+        <h3>DEMOBILISATION</h3>
+        <ul>
+            <li>Demobilisation will occur on completion of the above scope to the satisfaction of {{clientName}}. All project associated plant, and equipment will be removed from site and the site confirmed as clean, as to return the site to the same condition that it was prior to the project.</li>
+            <li>Final vehicle demobilisation and wash up will be at Franmarine Base; 13 Possner Way, Henderson WA, where all project associated equipment will be washed, inspected and replenished for future works.</li>
+            <li>Biofouling waste will be treated as controlled waste and disposed of by a waste contractor (Clean-Away)</li>
+        </ul>
+    </section>
+
+    <!-- 7. Task Specific Methodology -->
+    <section id="methodology" class="wms-section page-break-before">
+        <h2>7 TASK SPECIFIC METHODOLOGY</h2>
+
+        <h3>BIOFOULING REMOVAL</h3>
+        <p>All biofouling on the {{scopeAreasText}} will be removed using dive hand tools {{#if captureRequired}}with capture and filtration{{else}}appropriate to the fouling level{{/if}}. The treatment process must avoid damaging anti-fouling coatings wherever possible and comply with containment and waste capture protocols outlined in the 2025 IWHC Exposure Draft.</p>
+        <p>Helmet-mounted CCTV will be used to record all cleaning activities, with footage retained as part of job documentation. This video will serve two primary purposes: to measure the capture standard and to verify visual compliance by showing whether any visible debris escapes the system.</p>
+        {{#if captureRequired}}
+        <p>Cleaning methods will utilise vacuum heads with removable scraper blades, with waste filtered through a 10-micron unit. The Dive Supervisor will assess each method's effectiveness in real-time and consult Franmarine Operations Management before implementing alternative methods. If switching cleaning heads, each head type must be tested individually, and the changeover documented as per IWHC assessment protocols. This approach supports reactive management strategies for unacceptable discharge.</p>
+        {{/if}}
+        <p>Should IMS be detected during operations, DPIRD will be notified immediately, and further works will be conducted under their discretion and authority.</p>
+
+        <h3>REGULATORY COMPLIANCE</h3>
+        <p>The cleaning methodology aligns with the Decision Support Tool outlined in Chapter 8 of the 2025 IWHC draft guidelines and supports the operational standards proposed by regulatory bodies. Real-time video chat (via MarineStream) ensures regulatory oversight during operations is available, satisfying the compliance verification requirements introduced in the latest Exposure Draft.</p>
+        <p>{{operatingProfileCompliance}}</p>
+        <p>Franmarines in-water cleaning process is agnostic to vessel type and aligns with the standards proposed in the WA regulatory environment. DPIRD is a key stakeholder in marine pest management. As such, all IMS risks must be addressed through inspection, sampling, and reporting.</p>
+        <p>All planned operations will conform with Fremantle Port Authority requirements, and approvals are expected to follow formal permit-to-operate processes. Any methodology adjustments or contingency measures implemented during the project must be documented in SAP and made available to regulators for review.</p>
+
+        {{#if sapRequired}}
+        <h3>CHEMICAL CONTAMINATION MANAGEMENT</h3>
+        <p>To ensure compliance with the chemical contamination standards set by the 2025 IWHC draft guidelines, a comprehensive Sampling Analysis Plan (SAP) has been developed. This SAP governs all sampling and monitoring of discharge during cleaning operations and ensures that effluent does not contain toxicants in concentrations exceeding limits listed in the ANZG 2018 guidelines for marine water quality.</p>
+        <p>Sampling will occur at three spatially distinct sites (e.g. above, below, and downstream of the cleaning head), with testing repeated over three occasions during cleaning operations. A control site and an ambient location will also be included to provide baseline comparisons. The SAP includes analyte testing for TSS, biocides, copper, and zinc, as well as QA/QC procedures. All sample rationale must be documented and traceable.</p>
+        <p>Sampling containers will be prepared and deployed by trained personnel in line with pre-approved procedures. Data will be assessed for statistical variation using appropriate methods (e.g. ANOVA), ensuring sufficient replication and compliance with exposure thresholds.</p>
+        <p>Franmarine will provide vessel-specific operational information to FPA and other regulators to support pre-approval processes. The SAP includes reactive measures if live fauna or unacceptable chemical levels are detected and outlines the steps to notify regulators and repeat viability testing where applicable.</p>
+        {{/if}}
+    </section>
+
+    <!-- 8. Decision Framework -->
+    <section id="framework" class="wms-section page-break-before">
+        <h2>8 AUSTRALIAN IN-WATER CLEANING DECISION FRAMEWORK</h2>
+        <p>This framework provides guidance for assessing in-water cleaning activities based on the 2025 IWHC draft guidelines. The decision process follows these key checkpoints:</p>
+
+        <div class="decision-framework">
+            <div class="framework-box">
+                <h4>1. DOCUMENT CHECK</h4>
+                <ul class="check-list">
+                    <li class="{{#if afsCertValid}}check-pass{{else}}check-fail{{/if}}">Valid AFS Certificate</li>
+                    <li class="{{#if noProhibitedBiocides}}check-pass{{else}}check-fail{{/if}}">No prohibited biocides</li>
+                    <li class="{{#if afcWithinServiceLife}}check-pass{{else}}check-fail{{/if}}">AFC within service life</li>
+                    <li class="check-pending">Biofouling assessed and documented</li>
+                </ul>
+            </div>
+
+            <div class="framework-arrow">▼</div>
+
+            <div class="framework-box">
+                <h4>2. SCENARIO DETERMINATION</h4>
+                <p><strong>Determined Scenario:</strong> {{cleaningScenario}}</p>
+                <ul>
+                    <li>Fouling Rating: FR {{foulingRating}}</li>
+                    <li>Biofouling Origin: {{biofoulingOrigin}}</li>
+                    <li>AFC Type: {{afcTypeText}}</li>
+                </ul>
+            </div>
+
+            <div class="framework-arrow">▼</div>
+
+            <div class="framework-box">
+                <h4>3. PATHWAY REQUIREMENTS</h4>
+                <table class="requirements-table">
+                    <tr>
+                        <td>Capture Standard</td>
+                        <td class="{{#if captureRequired}}required{{else}}not-required{{/if}}">{{#if captureRequired}}Required{{else}}Not Required{{/if}}</td>
+                    </tr>
+                    <tr>
+                        <td>Biosecurity Standard</td>
+                        <td class="{{#if captureRequired}}required{{else}}not-required{{/if}}">{{#if captureRequired}}Required{{else}}Not Required{{/if}}</td>
+                    </tr>
+                    <tr>
+                        <td>Chemical Contamination Standard</td>
+                        <td class="{{#if sapRequired}}required{{else}}not-required{{/if}}">{{#if sapRequired}}Required (SAP){{else}}Not Required{{/if}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="framework-arrow">▼</div>
+
+            <div class="framework-box">
+                <h4>4. APPROVAL PROCESS</h4>
+                <ol>
+                    <li>Submit notification package to FPA and DPIRD</li>
+                    <li>DPIRD reviews vessel history, confirms acceptable risk</li>
+                    <li>Pre-clean inspection by DPIRD-recognised inspector (≥48hrs before clean)</li>
+                    <li>DPIRD clearance to proceed</li>
+                    <li>If IMS detected → site to DPIRD custody</li>
+                    <li>If no IMS → proceed with clean</li>
+                    <li>Post-clean inspection</li>
+                    <li>Final Report to FPA and DPIRD (≤20 business days)</li>
+                </ol>
+            </div>
+        </div>
+
+        {{#if highRisk}}
+        <div class="warning-box">
+            <h4>⚠️ HIGH RISK VESSEL</h4>
+            <p>This vessel has been determined to be high risk. High risk vessels (FR≥90, non-regional biofouling, IMS suspected, AFC damaged/unknown/expired) are assessed case-by-case under DPIRD direction (OEMP 6.1.2). DPIRD leads the assessment process.</p>
+        </div>
+        {{/if}}
+    </section>
+
+    <!-- 9. Roles and Responsibilities -->
+    <section id="roles" class="wms-section">
+        <h2>9 ROLES AND RESPONSIBILITIES</h2>
+
+        <h3>FRANMARINE</h3>
+        <p>Franmarine is the authority in control of the workplace defined in Section 5 Scope of Work, and as such, has an overall authority in making emergency response decisions within the workplace.</p>
+
+        <h3>PERSONNEL</h3>
+        <p>Franmarine shall provide personnel and equipment to carry out the proposed scope of works in accordance with AS/NZS 2299.1:2015 at a minimum.</p>
+        <p>Full responsibilities of employees are listed in Work Health and Safety Management Plan. Steps that must be taken by both FUS and its personnel to identify and mitigate workplace hazards are listed in the Safe Work Method Statement.</p>
+
+        <h3>DIVING AND NON-DIVING EMERGENCIES</h3>
+        <p>Franmarine has developed an Emergency Response Plan specifically for this project. A copy of this document will be held in the project file with the Supervisor on site.</p>
+        <p>The ERP will be discussed with all personnel involved in the operation prior to commencement of diving operations. This discussion will be led by the Dive Supervisor and the Client Representative.</p>
+    </section>
+
+    <!-- 10. Appendices -->
+    <section id="appendices" class="wms-section">
+        <h2>10 APPENDICES</h2>
+        <p>The following documents are appended to this WMS:</p>
+        <ul class="appendix-list">
+            <li><strong>Appendix No. 1</strong> – Safe Work Method Statement (SWMS)</li>
+            <li><strong>Appendix No. 2</strong> – Health and Safety Management Plan (WHSMP)</li>
+            <li><strong>Appendix No. 3</strong> – Emergency Response Plan (ERP)</li>
+            <li><strong>Appendix No. 4</strong> – IWC-PRO-010 IWCT In Water Cleaning Technology Manual</li>
+            {{#if sapRequired}}
+            <li><strong>Appendix No. 5</strong> – {{sapDocument}}</li>
+            {{/if}}
+        </ul>
+    </section>
+
+    <!-- Document Control -->
+    <section class="wms-section document-control">
+        <table class="control-table">
+            <tr>
+                <th>Document</th>
+                <th>Revision Number</th>
+                <th>Date</th>
+                <th>Notes</th>
+                <th>Changes Approved by</th>
+            </tr>
+            <tr>
+                <td rowspan="2">{{jobNumber}}-Work Method Statement</td>
+                <td>01</td>
+                <td>{{revisionDate}}</td>
+                <td>Document Created</td>
+                <td>{{authorName}}</td>
+            </tr>
+        </table>
+
+        <table class="control-table">
+            <tr>
+                <th>Job Number</th>
+                <td>{{jobNumber}}</td>
+            </tr>
+            <tr>
+                <th>Distribution List</th>
+                <td>{{clientName}}, FPA, DPIRD</td>
+            </tr>
+        </table>
+
+        <div class="copyright-notice">
+            <h4>Copyright Notice</h4>
+            <p>Franmarine is the sole owner of the intellectual property contained in any documentation bearing its name. All materials, including internet pages, document and online graphics, audio and video, are protected by copyright law.</p>
+            <p>The contents are intended only for the named recipient. If you are not the intended recipient you are hereby notified that any unauthorised use, reproduction, disclosure or distribution the information contained in this document.</p>
+            <p>Apart from any fair dealing for the purpose of private study, research, criticism or review as permitted under the provisions of the Copyright Act 1968, no part of this document may be reproduced, transmitted in any form or re-used for any commercial purposes whatsoever without the prior written permission of Franmarine.</p>
+            <p>This document represents the status of the topic at the date shown, and is subject to change without notice. The latest version of this document is available from Document Control.</p>
+            <p class="copyright-year">©{{currentYear}} Franmarine. All Rights Reserved.</p>
+        </div>
+    </section>
+</div>
+
